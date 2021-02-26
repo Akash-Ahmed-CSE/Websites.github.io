@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Project - 01 </title>
+	<meta mane="viewport" content="width=device-width,initial-scale=1">
+	
+</head>
+<style type="text/css">
+	html{
+		background-color: #869960;
+	}
+	
+.container{
+	max-width: 940px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	padding-left: 40px;
+	padding-right: 40px;
+	box-sizing: border-box;
+}
+@media screen and (max-width: 480px){
+	.container{
+		padding-right: 20px;
+		padding-left: 20px;
+	}
+}
+
+
+
+
+.content-area{
+	border-top: 3px solid #e5e9dc;
+	border-bottom:3px solid #e5e9dc;
+
+}
+@media screen and (max-width: 480px){
+	.container-are{
+		padding-top: 20px;
+	}
+}
+.main-area{
+	width: 66%;
+	float: left;
+	padding-right: 40px;
+	box-sizing: border-box;
+
+}
+.sidebar{
+	width: 34%;
+	float: left;
+	background-color:#e5e9dc;
+	padding:20px 40px;
+	box-sizing: border-box;
+	font-size: 85%; 
+}
+
+@media screen and (max-width: 700px){
+
+	.main-are,
+	.sidebar{
+		width: auto;
+		float:left;
+	}
+	.main-area{
+		padding-right: 0;
+	}
+
+}
+
+
+
+.group:before,
+.group{
+content: "";
+display: table;
+}
+.group:after{
+
+clear: both;
+}
+.group{
+	zoom:1;
+}
+
+body{
+	font-family: Tahoma;
+	font-size: 87%;
+}
+
+header h1{
+	margin: 0;
+	font-weight: normal;
+	font-size: 165%;
+
+	}
+header p{
+	margin: 0;
+}
+header{
+	padding-top: 20px;
+	
+	color: #617140;
+}
+
+footer{
+	text-align: center;
+	font-size: 85%;
+	color: #999;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+/*Site Navigation */
+.site-nav{
+	margin-top: 20px;
+
+}
+.site-nav a{
+	display: block;
+	color:#617140;
+	text-decoration: none;
+	padding: 10px 20px;
+	border: 3px solid #e5e9dc; 
+	border-bottom: none;
+	
+}
+.site-nav ul{
+	padding: 0;
+	margin: 0;
+}
+.site-nav li{
+	list-style: none;
+	float: left;
+	margin-right: 5px;
+
+}
+
+.site-nav a:hover{
+	background-color: #e5e9dc;
+	}
+
+/* End Site Navigation*/
+
+img{
+	max-width: 100%;
+	height: auto;
+}
+
+/*Banner Overlayout*/
+.image-banner{
+	position: relative;
+	
+}
+.image-banner img{
+	display: block;
+}
+
+.banner-discreaption{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color: #fff;
+	background-color: rgba(0,0,0,.65);
+	padding: 15px 25px;
+
+}
+
+
+
+@media screen and (max-width: 480px){
+
+		.hidesmall{
+			display: none;
+		}
+}
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<body>
+	<div class="container"> 
+
+<header>
+	<h1> Website title</h1>
+	<p>Website slogan included here.</p>
+
+<nav class="site-nav">
+	<ul class="group">
+		<li><a href="#">Home</a></li>
+		<li><a href="#">About</a></li>
+		<li><a href="#">Postfolio</a></li>
+		<li><a href="#">Contact us</a></li>
+	</ul>
+</nav>
+
+
+
+</header>
+
+
+<div class="content-area group">
+	
+<div  class="main-area">
+	<p>This is the main area or colm.We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new. Take breaks when needed, and go over the examples as many times as needed.We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new. Take breaks when needed,Take breaks when needed, and go over the examples as many times as needed.</p>
+	<div class="image-banner hidesmall">
+	<img src="c.jpg">
+	<div class="banner-discreaption">
+	<p>Find a good source of knowledge be it a tutor or online videos or study material and strengthen your basics. Understanding basics is a must for further constructing your programming skills.</p>
+		</div> 
+			</div>
+
+	 <p>Find a good source of knowledge be it a tutor or online videos or study material and strengthen your basics. Understanding basics is a must for further constructing your programming skills. Rather than mugging up something that you don’t get, seek help and get the logic behind it. Take your time, don’t have the target of getting everything at once, take it slowly at the starting and then gradually you’ll pick up speed.</p>
+</div>
+<aside class="sidebar">
+	<p>This is the siderbar .We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new.Find a good source of knowledge be it a tutor or online videos or study material and strengthen your basics.  </p>
+</aside>
+
+
+</div>
+
+<footer>
+	<p>&copy; 2019- this is the foorer.</p>
+</footer>
+	</div>
+
+
+</body>
+</html>

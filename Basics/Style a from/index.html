@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Project</title>
+</head>
+<style type="text/css">
+	html{
+		background-color: #869960;
+	}
+	
+.container{
+	max-width: 940px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	padding-left: 40px;
+	padding-right: 40px;
+	box-sizing: border-box;
+
+}
+header{
+		background-image: url(c.jpg);	
+}
+.content-area{
+	border-top: 3px solid #e5e9dc;
+	border-bottom:3px solid #e5e9dc;
+
+}
+.main-area{
+	width: 66%;
+	float: left;
+	padding-right: 40px;
+	box-sizing: border-box;
+	
+}
+.sidebar{
+	width: 34%;
+	float: left;
+	background-color:#e5e9dc;
+	padding:20px 40px;
+	box-sizing: border-box;
+	font-size: 85%; 
+
+}
+
+.group:before,
+.group{
+content: "";
+display: table;
+}
+.group:after{
+
+clear: both;
+}
+.group{
+	zoom:1;
+}
+
+body{
+	font-family: Tahoma;
+	font-size: 87%;
+}
+
+header h1{
+	margin: 0;
+	font-weight: normal;
+	font-size: 165%;
+
+	}
+header p{
+	margin: 0;
+}
+header{
+	border-top: 10px solid white;
+	padding-top: 20px;
+	
+	color: #617140;
+}
+.header-heading{
+	padding-left: 20px;
+	color: white;
+}
+footer{
+	text-align: center;
+	font-size: 85%;
+	color: #999;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+/*Site Navigation */
+.site-nav{
+	margin-top: 20px;
+
+}
+.site-nav a{
+	display: block;
+	color:#617140;
+	text-decoration: none;
+	padding: 10px 20px;
+	border: 3px solid #e5e9dc; 
+	border-bottom: none;
+}
+.site-nav ul{
+	padding: 0;
+	margin: 0;
+}
+.site-nav li{
+	list-style: none;
+	float: left;
+	margin-right: 5px;
+
+}
+.site-nav a{
+	background-color: #83965ea8;
+	color: white;
+}
+.site-nav a:hover{
+	background-color: #e5e9dc;
+	color: #869960;
+	}
+
+/* Form Styles */
+input,select{
+	font-family: Tahoma;
+	font-size: 100%;
+}
+input[type="email"],input[type="password"],select{
+	width: 100%;
+	display: block;
+	box-sizing:border-box;
+	padding: 0 10px;
+	height: 40px;
+	margin-bottom: 15px;
+	border: 1px solid lightgray;
+	outline: none;
+}
+
+form{
+	background-color: #ececec;
+	padding: 30px 40px;
+}
+.hidden-lable,.hidden-password{
+	position: absolute;
+	height: 0;
+	width: 0;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus{
+	border:1px solid #869960;
+	box-shadow: inset 2px 2px 2px rbga(0,0,0,.13);
+}
+
+input[type="submit"]{
+	width: 100%;
+	display: block;
+	box-sizing: border-box;
+	background-color: #869960;
+	color: #fff;
+	padding: 10px 0;
+	border: 1px solid #798a56;
+	border-radius:3px; 
+	margin-bottom: 10px;
+	outline: none;
+}
+input[type="submit"]:hover,
+input[type="submit"]:focus{
+	border: 1px solid #535e3b;
+	background-color: #798a56;
+}
+
+.checkbox-text{
+	font-size: 85%;
+	color: #777;
+}
+
+
+
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<body>
+	<div class="container"> 
+
+<header>
+	<div class="header-heading">
+		<h1> Website title</h1>
+		<p>Website slogan included here.</p>
+	</div>
+
+<nav class="site-nav">
+	<ul class="group">
+		<li><a href="#">Home</a></li>
+		<li><a href="#">About</a></li>
+		<li><a href="#">Postfolio</a></li>
+		<li><a href="#">Contact us</a></li>
+	</ul>
+</nav>
+
+
+
+</header>
+
+
+<div class="content-area group">
+	
+<div  class="main-area">
+	<p>This is the main area or colm.We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new. Take breaks when needed, and go over the examples as many times as needed.We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new. Take breaks when needed,Take breaks when needed, and go over the examples as many times as needed.</p>
+
+
+		
+		<form>
+			<label for="email" class="hidden-lable">Email</label>
+			<input type="email" name="email" id="email" placeholder="Email">
+			<label for="password" class="hidden-password">Password</label>
+			<input type="password" name="password" id="password" placeholder="Password">
+
+			<select>
+				<option>Initially view...</option>
+				<option>My Profile</option>
+				<option>Inbox</option>
+				<option>Account Settings</option>
+			</select>
+			<input type="submit" name="" value="Sign In">
+			<label>
+				<input type="checkbox" name="remember" checked="checked" value="yes">
+				<span class="checkbox-text">Stay signed in</span>
+			</label>
+
+		</form>
+
+
+
+
+
+
+
+
+
+
+
+
+	 <p>Find a good source of knowledge be it a tutor or online videos or study material and strengthen your basics. Understanding basics is a must for further constructing your programming skills. Rather than mugging up something that you don’t get, seek help and get the logic behind it. Take your time, don’t have the target of getting everything at once, take it slowly at the starting and then gradually you’ll pick up speed.</p>
+</div>
+<aside class="sidebar">
+	<p>This is the siderbar .We recommend reading this tutorial, in the sequence listed in the left menu.Java is an object oriented language and some concepts may be new.Find a good source of knowledge be it a tutor or online videos or study material and strengthen your basics.  </p>
+</aside>
+
+
+</div>
+
+<footer>
+	<p>&copy; 2019- this is the foorer.</p>
+</footer>
+	</div>
+
+
+</body>
+</html>
