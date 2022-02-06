@@ -1,0 +1,101 @@
+.container-1,
+.container-3,
+.container-4,
+.container-5 {
+  border: 1px solid black;
+  margin: 0 auto;
+  width: 75%;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.flex-box-container-1,
+.flex-box-rps,
+.flex-blackjack-row-1,
+.flex-blackjack-row-2,
+.flex-blackjack-row-3 {
+  display: flex;
+  border: 1px solid black;
+  padding: 10px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.flex-blackjack-row-1,
+.flex-blackjack-row-2 {
+  background-color: rgb(10, 78, 10);
+  color: aliceblue;
+  padding: 10px;
+}
+.flex-blackjack-row-1 div {
+  border: 1px solid black;
+  padding: 10px;
+  flex: 1;
+  height: 360px;
+  text-align: center;
+}
+#your-box img,
+#dealer-box img {
+  height: 101px;
+  width: auto;
+  padding: 10px;
+}
+.flex-blackjack-row-2 button {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.flex-blackjack-row-2 div {
+  border: 1px solid black;
+  padding: 10px;
+}
+table,
+th,
+td {
+  padding: 5px;
+  border: 1px solid black;
+}
+
+/*
+
+5:25:09
+*/
+
+.flex-box-container-1 div {
+  padding: 10px;
+  border: 1px solid black;
+  align-items: center;
+}
+.container-2 {
+  border: 1px solid red;
+  width: 75%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 5px;
+}
+#cat-generater {
+  margin: 5px;
+}
+#remove {
+  padding: 5px;
+  border-radius: 5px;
+}
+.flex-box-contaienr-2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  border: 1px solid blue;
+}
+.flex-box-contaienr-2 img {
+  background-color: green;
+  border: 2px solid salmon;
+  margin: 5px;
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.7);
+}
+
+.flex-box-rps img:hover {
+  box-shadow: 0px 10px 50px rgba(37, 50, 233, 1);
+}
+/*Style flex-boxrps divs*/
+
+/*Chalange 4: Chage the COlor of All Buttorns!*/
