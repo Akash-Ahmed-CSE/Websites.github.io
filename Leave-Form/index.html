@@ -30,7 +30,16 @@
                             </div>
                             <div class="form-group col-sm-3 flex-column d-flex"> 
                                 <label class="form-control-label px-3" id="textMessage">Live from<span class="text-danger"> *</span></label> 
-                                <input type="text" id="leave-form" name="leave-form" placeholder="Date"> 
+                            
+                                 <!-- Form code begins -->
+                                 <form method="post">
+                                    <div class="form-group"> <!-- Date input -->
+                                      <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="date"/>
+                                    </div>
+                                   </form>
+                                   <!-- Form code ends --> 
+                                  
+                                      
                             </div>
                             <div class="form-group col-sm-3 flex-column d-flex"> 
                                 <label class="form-control-label px-3" id="textMessage">Number of days?<span class="text-danger"> *</span></label> 
@@ -91,16 +100,6 @@
             </div>
         </div>
     </div>	
-
-
-
-
-
-
-
-
-
-
 
 
 </body>
