@@ -1,0 +1,83 @@
+.card{
+    padding: 30px 40px;
+    margin-top: 60px;margin-bottom: 60px;
+    border: none !important;box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2)
+}
+.blue-text{
+color: #00BCD4;
+font-size: 20px;
+}
+
+input, button{
+padding: 8px 15px;
+border-radius: 5px !important;margin: 5px 0px;
+box-sizing: border-box;
+border: 1px solid #ccc;
+font-size: 15px;
+font-weight: 200
+}
+
+#list1{
+    
+    
+  padding: .55rem 1rem;
+}
+input:focus, textarea:focus{
+-moz-box-shadow: none !important;
+-webkit-box-shadow: none !important;
+box-shadow: none !important;
+border: 1px solid #00BCD4;
+outline-width: 0;
+font-weight: 400
+}
+.btn-block{
+text-transform: capitalize;
+font-size: 15px !important;
+font-weight: 400;
+height: 43px;
+cursor: pointer
+}
+#form_message{
+
+    margin: 0px 10px 10px 10px;
+   
+}
+#reason{
+    
+    padding-left:50px;
+}
+#textMessage{
+    font-size: 13px;
+}
+
+@media only screen and (max-width: 1200px) {
+    body {
+      background-color: rgb(255, 206, 71);
+    }
+   
+
+  }
+
+  @media only screen and (max-width: 1034px) {
+    body {
+      background-color: lightblue;
+    }
+   
+
+  }
+  
+  @media only screen and (max-width: 800px) {
+    body {
+      background-color: rgb(33, 81, 97);
+    }
+   
+
+  }
+  
+  @media only screen and (max-width: 600px) {
+    body {
+      background-color: rgb(207, 216, 85);
+    }
+   
+
+  }
