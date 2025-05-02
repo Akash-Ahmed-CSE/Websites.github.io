@@ -104,12 +104,18 @@ function compareCode() {
       }
     }
   
-    // Trim the text to ensure it doesn't exceed the character limit
-    text = text.substring(0, charLimit);
+    // If the generated text doesn't match the desired length, regenerate
+    if (text.length !== charLimit) {
+      return generateParagraph();
+    }
   
     document.getElementById("description").value = text;
     countAll();
   }
+  
+
+
+
   function clearFields() {
     document.getElementById("charLimit").value = ""; // Clear character limit input
     document.getElementById("description").value = ""; // Clear generated paragraph
