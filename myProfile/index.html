@@ -182,8 +182,28 @@ footer{padding:24px 60px;border-top:1px solid var(--border);display:flex;justify
 .edit-mode [data-editable]:hover{outline:1px dashed rgba(0,217,255,.45);cursor:text}
 .edit-mode [data-editable]:focus{outline:1px solid var(--accent);cursor:text}
 [data-editable]:focus{outline:none}
-.edit-mode .img-zone{cursor:pointer}
-.edit-mode .img-zone:hover::after{content:'[ click to edit/remove ]';position:absolute;inset:0;background:rgba(0,217,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+.edit-mode .img-zone{cursor:pointer;position:relative}
+.edit-mode .img-zone:hover::after{content:'[ click to change ]';position:absolute;inset:0;background:rgba(0,217,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+
+.remove-img-btn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: var(--accent3);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1002;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.edit-mode .img-zone:hover .remove-img-btn { display: flex; }
 
 /* GH Modal */
 #gh-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:10001;align-items:center;justify-content:center}
@@ -307,7 +327,7 @@ section{
 }
 </style>
 </head>
-<body class="edit-mode">
+<body>
 
 <!-- ══ NAV ══ -->
 <nav>
@@ -329,10 +349,10 @@ section{
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-content">
-    <div class="hero-tag" data-editable="" contenteditable="true">ISTQB® Certified — Open to Opportunities</div>
-    <h1 class="hero-name" data-editable="" contenteditable="true">Akash <span>Ahmed</span></h1>
+    <div class="hero-tag" data-editable="" contenteditable="false">ISTQB® Certified — Open to Opportunities</div>
+    <h1 class="hero-name" data-editable="" contenteditable="false">Akash <span>Ahmed</span></h1>
     <p class="hero-title">Associate <em>SQA Engineer</em> &amp; Researcher · Dhaka, Bangladesh</p>
-    <p class="hero-bio" data-editable="" contenteditable="true">
+    <p class="hero-bio" data-editable="" contenteditable="false">
       B.Sc. in CSE from Daffodil International University. Currently at Therap (BD) Ltd., ensuring software excellence through meticulous testing across Web, Android &amp; iOS. Deeply engaged in research within Data Science, Machine Learning and Artificial Intelligence.
     </p>
     <div class="hero-cta">
@@ -351,7 +371,7 @@ section{
   </div>
   <div class="about-grid">
     <div>
-      <p class="about-text" data-editable="" contenteditable="true">
+      <p class="about-text" data-editable="" contenteditable="false">
         Greetings, I'm <strong>Akash Ahmed</strong>, and I live in Savar, Dhaka. I have completed my Bachelor's degree in Computer Science and Engineering from <strong>Daffodil International University</strong>. Currently, I excel as a Software Quality Assurance Engineer (<strong>ISTQB® Certified Tester</strong>), showcasing a meticulous approach to ensuring software excellence.<br><br>
         Beyond my testing career, I am deeply engaged in research within the realms of <strong>Data Science, Machine Learning, and Artificial Intelligence</strong>. My commitment to staying at the forefront of technology is a testament to my passion for innovation.1<br><br>
         I believe quality isn't just a phase — it's a culture. Every bug caught before production is a user experience saved.
@@ -371,6 +391,7 @@ section{
     <div class="section-line"></div>
   </div>
   <p class="edu-intro" data-editable="" contenteditable="true">
+  <p class="edu-intro" data-editable="" contenteditable="false">
     My educational life started in 2002 in kindergarten in <strong>Ganbiksh Public Academy School</strong> in Savar. I studied there till class 7. Then in class 8, I was shifted to <strong>ACED School</strong> in Savar, where I passed my SSC and went to college in 2015. I passed my HSC in 2017. I then graduated from Daffodil International University in CSE.
   </p>
   <div class="edu-grid">
@@ -379,24 +400,40 @@ section{
       <div class="edu-degree" data-editable="" contenteditable="true">B.Sc. in Computer Science &amp; Engineering</div>
       <div class="edu-period" data-editable="" contenteditable="true">January 2018 – December 2022</div>
       <div class="edu-gpa" data-editable="" contenteditable="true">CGPA: 3.93 / 4.00</div>
+      <div class="edu-school" data-editable="" contenteditable="false">Daffodil International University</div>
+      <div class="edu-degree" data-editable="" contenteditable="false">B.Sc. in Computer Science &amp; Engineering</div>
+      <div class="edu-period" data-editable="" contenteditable="false">January 2018 – December 2022</div>
+      <div class="edu-gpa" data-editable="" contenteditable="false">CGPA: 3.93 / 4.00</div>
     </div>
     <div class="edu-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="edu-school" data-editable="" contenteditable="true">Savar Model College</div>
       <div class="edu-degree" data-editable="" contenteditable="true">Higher Secondary Certificate (HSC)</div>
       <div class="edu-period" data-editable="" contenteditable="true">May 2015 – April 2017</div>
       <div class="edu-gpa" data-editable="" contenteditable="true">GPA: 4.50 / 5.00</div>
+      <div class="edu-school" data-editable="" contenteditable="false">Savar Model College</div>
+      <div class="edu-degree" data-editable="" contenteditable="false">Higher Secondary Certificate (HSC)</div>
+      <div class="edu-period" data-editable="" contenteditable="false">May 2015 – April 2017</div>
+      <div class="edu-gpa" data-editable="" contenteditable="false">GPA: 4.50 / 5.00</div>
     </div>
     <div class="edu-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="edu-school" data-editable="" contenteditable="true">Chapain New Model School</div>
       <div class="edu-degree" data-editable="" contenteditable="true">Secondary School Certificate (SSC)</div>
       <div class="edu-period" data-editable="" contenteditable="true">January 2013 – February 2015</div>
       <div class="edu-gpa" data-editable="" contenteditable="true">GPA: 5.00 / 5.00</div>
+      <div class="edu-school" data-editable="" contenteditable="false">Chapain New Model School</div>
+      <div class="edu-degree" data-editable="" contenteditable="false">Secondary School Certificate (SSC)</div>
+      <div class="edu-period" data-editable="" contenteditable="false">January 2013 – February 2015</div>
+      <div class="edu-gpa" data-editable="" contenteditable="false">GPA: 5.00 / 5.00</div>
     </div>
     <div class="edu-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="edu-school" data-editable="" contenteditable="true">Chapain New Model School</div>
       <div class="edu-degree" data-editable="" contenteditable="true">Junior School Certificate (JSC)</div>
       <div class="edu-period" data-editable="" contenteditable="true">January 2012</div>
       <div class="edu-gpa" data-editable="" contenteditable="true">GPA: 4.14 / 5.00</div>
+      <div class="edu-school" data-editable="" contenteditable="false">Chapain New Model School</div>
+      <div class="edu-degree" data-editable="" contenteditable="false">Junior School Certificate (JSC)</div>
+      <div class="edu-period" data-editable="" contenteditable="false">January 2012</div>
+      <div class="edu-gpa" data-editable="" contenteditable="false">GPA: 4.14 / 5.00</div>
     </div>
   </div>
 </section>
@@ -410,10 +447,10 @@ section{
   </div>
 
   <div class="exp-item" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
-    <div class="exp-period" data-editable="" contenteditable="true">02 June 2024 — Present</div>
-    <div class="exp-role" data-editable="" contenteditable="true">Associate Software Engineer, QA</div>
-    <div class="exp-company" data-editable="" contenteditable="true">Therap (BD) Ltd.</div>
-    <ul class="exp-list" data-editable="" contenteditable="true">
+    <div class="exp-period" data-editable="" contenteditable="false">02 June 2024 — Present</div>
+    <div class="exp-role" data-editable="" contenteditable="false">Associate Software Engineer, QA</div>
+    <div class="exp-company" data-editable="" contenteditable="false">Therap (BD) Ltd.</div>
+    <ul class="exp-list" data-editable="" contenteditable="false">
       <li>System testing across Web, Android, and iOS platforms</li>
       <li>Test case writing, bug reporting, SDLC-aligned testing</li>
       <li>API testing: Postman + Playwright (JavaScript) for Web &amp; API automation</li>
@@ -427,12 +464,12 @@ section{
   </div>
 
   <div class="exp-item" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
-    <div class="exp-period" data-editable="" contenteditable="true">10 October 2022 — 30 May 2024</div>
-    <div class="exp-role" data-editable="" contenteditable="true">Jr. Software QA Engineer</div>
-    <div class="exp-company" data-editable="" contenteditable="true">ASAI Management Ltd. (ASA International)</div>
+    <div class="exp-period" data-editable="" contenteditable="false">10 October 2022 — 30 May 2024</div>
+    <div class="exp-role" data-editable="" contenteditable="false">Jr. Software QA Engineer</div>
+    <div class="exp-company" data-editable="" contenteditable="false">ASAI Management Ltd. (ASA International)</div>
     <div class="exp-project">
       <div class="exp-project-title">Project 1 — New Mobile App (Microbanking)</div>
-      <ul class="exp-list" data-editable="" contenteditable="true">
+      <ul class="exp-list" data-editable="" contenteditable="false">
         <li>Testing the newly built Microbanking mobile app</li>
         <li>Reporting bugs to developers</li>
         <li>Writing test cases on RTM in Jira</li>
@@ -440,7 +477,7 @@ section{
     </div>
     <div class="exp-project">
       <div class="exp-project-title">Project 2 — Existing Mobile App</div>
-      <ul class="exp-list" data-editable="" contenteditable="true">
+      <ul class="exp-list" data-editable="" contenteditable="false">
         <li>Understanding current business rules for micro banking across different entities</li>
         <li>Reporting bugs to senior QA and assigning to developers</li>
         <li>Testing API using Postman for validation engine</li>
@@ -448,7 +485,7 @@ section{
     </div>
     <div class="exp-project">
       <div class="exp-project-title">Project 3 — Existing Web Application</div>
-      <ul class="exp-list" data-editable="" contenteditable="true">
+      <ul class="exp-list" data-editable="" contenteditable="false">
         <li>Regression testing of existing web platform for multiple entities</li>
         <li>Automation for some modules using Selenium</li>
         <li>Database testing using SQL</li>
@@ -456,7 +493,7 @@ section{
     </div>
     <div class="exp-project">
       <div class="exp-project-title">Project 4 — Next Generation Web Application (New)</div>
-      <ul class="exp-list" data-editable="" contenteditable="true">
+      <ul class="exp-list" data-editable="" contenteditable="false">
         <li>Writing test cases and milestone/sprint-wise bug reporting</li>
         <li>Testing with ISTQB knowledge per SRS and business rule documents</li>
         <li>Attending BA and developer meetings for requirement clarity</li>
@@ -465,10 +502,10 @@ section{
   </div>
 
   <div class="exp-item" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
-    <div class="exp-period" data-editable="" contenteditable="true">14 February 2022 — 24 August 2022</div>
-    <div class="exp-role" data-editable="" contenteditable="true">SAP Data Analyst</div>
-    <div class="exp-company" data-editable="" contenteditable="true">FCI Talisman LTD.</div>
-    <ul class="exp-list" data-editable="" contenteditable="true">
+    <div class="exp-period" data-editable="" contenteditable="false">14 February 2022 — 24 August 2022</div>
+    <div class="exp-role" data-editable="" contenteditable="false">SAP Data Analyst</div>
+    <div class="exp-company" data-editable="" contenteditable="false">FCI Talisman LTD.</div>
+    <ul class="exp-list" data-editable="" contenteditable="false">
       <li>Working with Business Datasets in Garments industry</li>
       <li>Knowledge of garment factory operations and workflows</li>
       <li>SAP and Fast-react expertise</li>
@@ -488,12 +525,12 @@ section{
 
   <div class="pub-section">
     <div class="pub-section-title">Journal Publications</div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Rahman, M. M., Ahmed, A., Mahin, M. F., &amp; Shetu, S. F. (2021).</strong> Impact of COVID-19 on Mental Health: A Quantitative Analysis of Anxiety and Depression Based on Regular Life and Internet Use.
       <em>Current Research in Behavioral Sciences, 100037.</em> Elsevier.
       <span class="pub-doi">doi: 10.1016/j.crbeha.2021.100037</span>
     </div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Shetu, S. F., Rahman, M. M., Ahmed, A., Mahin, M. F., Akib, M. A. U., &amp; Saifuzzaman, M. (2021).</strong> Impactful E-Learning Framework: A New Hybrid Form of Education.
       <em>Current Research in Behavioral Sciences, 100038.</em> Elsevier.
       <span class="pub-doi">doi: 10.1016/j.crbeha.2021.100038</span>
@@ -502,7 +539,7 @@ section{
 
   <div class="pub-section">
     <div class="pub-section-title">Conference Publication</div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Saha, D., Karmakar, S., Nur, F.N., Mariam, A., Moon, N.N., Ahmed, A. (2021).</strong> Mobile Device and Social Media Forensic Analysis: Impacts on Cyber-Crime.
       <em>International Conference On Emerging Smart Technologies And Applications (eSmarTA2021).</em>
       <span class="pub-doi">doi: 10.1109/eSmarTA52612.2021.9515742</span>
@@ -511,16 +548,16 @@ section{
 
   <div class="pub-section">
     <div class="pub-section-title">Research Affiliations &amp; Projects</div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Member of Dreamers Lab</strong> — Writing review papers, research papers, and performing paper review activities.
     </div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Elsevier Reviewer</strong> — Current Research in Behavioral Science (CRBS). Primary research, gold open access journal publishing original papers and short communications on all aspects of behavioral sciences.
     </div>
     <div class="pub-item" data-editable contenteditable="false">
       <strong>Research-Based Projects:</strong> Chronic Kidney Disease Prediction Research using Machine Learning · Heart Disease Prediction Using Machine Learning
     </div>
-    <div class="pub-item" data-editable="" contenteditable="true" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
+    <div class="pub-item" data-editable="" contenteditable="false" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <strong>Handbook:</strong> A Complete Handbook on Compiler Design
     </div>
   </div>
@@ -587,33 +624,33 @@ section{
   <div class="ach-grid">
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">🏅</div>
-      <div class="ach-title" data-editable="" contenteditable="true">ISTQB® Certified Tester</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Foundation Level certified software tester. International recognition for software testing knowledge and best practices.</div>
+      <div class="ach-title" data-editable="" contenteditable="false">ISTQB® Certified Tester</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Foundation Level certified software tester. International recognition for software testing knowledge and best practices.</div>
     </div>
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">📄</div>
-      <div class="ach-title" data-editable="" contenteditable="true">3 Published Papers</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Two Elsevier journal publications and one IEEE conference paper on behavioral sciences and cyber forensics.</div>
+      <div class="ach-title" data-editable="" contenteditable="false">3 Published Papers</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Two Elsevier journal publications and one IEEE conference paper on behavioral sciences and cyber forensics.</div>
     </div>
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">🎓</div>
-      <div class="ach-title" data-editable="" contenteditable="true">CGPA 3.93 / 4.00</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Graduated with distinction from Daffodil International University, B.Sc. in CSE (2018–2022).</div>
+      <div class="ach-title" data-editable="" contenteditable="false">CGPA 3.93 / 4.00</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Graduated with distinction from Daffodil International University, B.Sc. in CSE (2018–2022).</div>
     </div>
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">🔬</div>
-      <div class="ach-title" data-editable="" contenteditable="true">Elsevier Reviewer</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Peer reviewer for Current Research in Behavioral Sciences (CRBS), a gold open-access Elsevier journal.</div>
+      <div class="ach-title" data-editable="" contenteditable="false">Elsevier Reviewer</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Peer reviewer for Current Research in Behavioral Sciences (CRBS), a gold open-access Elsevier journal.</div>
     </div>
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">🧪</div>
-      <div class="ach-title" data-editable="" contenteditable="true">Dreamers Lab Member</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Active research lab member — writing, reviewing, and publishing academic research papers.</div>
+      <div class="ach-title" data-editable="" contenteditable="false">Dreamers Lab Member</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Active research lab member — writing, reviewing, and publishing academic research papers.</div>
     </div>
     <div class="ach-card" style="opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s;">
       <div class="ach-icon">📚</div>
-      <div class="ach-title" data-editable="" contenteditable="true">Compiler Design Handbook</div>
-      <div class="ach-desc" data-editable="" contenteditable="true">Authored "A Complete Handbook on Compiler Design" — a comprehensive technical reference work.</div>
+      <div class="ach-title" data-editable="" contenteditable="false">Compiler Design Handbook</div>
+      <div class="ach-desc" data-editable="" contenteditable="false">Authored "A Complete Handbook on Compiler Design" — a comprehensive technical reference work.</div>
     </div>
   </div>
 </section>
@@ -622,11 +659,11 @@ section{
 <section id="contact">
   <div class="contact-inner">
     <h2 class="contact-big">Let's <span>Connect.</span></h2>
-    <p class="contact-sub" data-editable="" contenteditable="true">
+    <p class="contact-sub" data-editable="" contenteditable="false">
       Open to SQA roles, research collaborations, and conversations about quality engineering &amp; AI.<br>
       Based in Savar, Dhaka, Bangladesh.
     </p>
-    <div class="contact-details" data-editable="" contenteditable="true">
+    <div class="contact-details" data-editable="" contenteditable="false">
       📞 +880 1743304573 &nbsp;·&nbsp; +880 1741578180<br>
       ✉ <a href="mailto:akashahmed.diu@gmail.com">akashahmed.diu@gmail.com</a><br>
       📍 A-9/2 Binodbied, Savar, Dhaka
@@ -684,7 +721,7 @@ section{
 </div>
 
 <!-- ══ GITHUB PUSH MODAL ══ -->
-<div id="gh-modal" class="active">
+<div id="gh-modal" class="">
   <div class="gh-panel">
     <div class="gh-title">Push to GitHub</div>
     <div class="gh-sub">// Deploy changes to Websites.github.io/myProfile/</div>
@@ -722,7 +759,7 @@ section{
 </div>
 
 <!-- ══ EDIT TOOLBAR ══ -->
-<div id="edit-toolbar" class="active">
+<div id="edit-toolbar" class="">
   <span class="toolbar-label">✦ Edit Mode</span>
   <div class="toolbar-sep"></div>
   <button class="tb-btn tb-save" id="tb-save-btn">⬇ Save HTML</button>
@@ -763,6 +800,7 @@ window.addEventListener('load',()=>{
   document.getElementById('admin-overlay')?.classList.remove('active');
   document.getElementById('gh-modal')?.classList.remove('active');
   document.getElementById('edit-toolbar')?.classList.remove('active');
+  disableEdit(); // Ensure everything is locked on load
 });
 
 // ═══════════════════════════════
@@ -860,6 +898,8 @@ function enableEdit(){
   document.querySelectorAll('[data-editable]').forEach(el=>el.setAttribute('contenteditable','true'));
   document.querySelectorAll('.img-zone').forEach(wrap=>{
     wrap.addEventListener('click',handleImgClick);
+    const targetId = wrap.dataset.imgTarget || wrap.id;
+    if(wrap.tagName !== 'IMG') wrap.appendChild(createRemoveBtn(targetId));
   });
   setStatus('Edit mode — click any text to edit');
 }
@@ -871,6 +911,7 @@ function disableEdit(){
   document.querySelectorAll('.img-zone').forEach(wrap=>{
     wrap.removeEventListener('click',handleImgClick);
   });
+  document.querySelectorAll('.remove-img-btn').forEach(btn => btn.remove());
   isAdmin=false;
 }
 
@@ -890,34 +931,45 @@ document.querySelectorAll('[data-editable]').forEach(el=>{
 let currentImgTarget=null;
 const imgInput=document.getElementById('img-file-input');
 
+function createRemoveBtn(targetId) {
+  const btn = document.createElement('button');
+  btn.className = 'remove-img-btn';
+  btn.innerHTML = '✕';
+  btn.title = 'Remove Image';
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    removeImage(targetId);
+  };
+  return btn;
+}
+
+function removeImage(targetId) {
+  if(!confirm('Are you sure you want to remove this image?')) return;
+  const el=document.getElementById(targetId);
+  if(!el) return;
+  const parent=el.parentElement;
+  const ph=document.createElement('div');
+  ph.id=targetId;
+  ph.dataset.imgTarget=targetId;
+  if(targetId==='about-img-el'){
+    ph.className='about-img-ph img-zone';
+    ph.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg><span>No Image</span>';
+  } else {
+    ph.className='proj-img-ph img-zone';
+    ph.innerHTML='<span>[ NO IMAGE ]</span>';
+  }
+  ph.addEventListener('click',handleImgClick);
+  ph.appendChild(createRemoveBtn(targetId));
+  parent.replaceChild(ph,el);
+  setStatus('Image removed — save or push when ready');
+}
+
 function handleImgClick(e){
   if(!isAdmin)return;
+  if(e.target.classList.contains('remove-img-btn')) return;
   e.stopPropagation();
-  const targetId = e.currentTarget.dataset.imgTarget||e.currentTarget.id;
-  
-  if(confirm('Press OK to CHANGE image, or CANCEL to REMOVE/DELETE it.')){
-    currentImgTarget = targetId;
-    imgInput.click();
-  } else {
-    if(confirm('Are you sure you want to remove this image?')){
-      const el=document.getElementById(targetId);
-      if(!el) return;
-      const parent=el.parentElement;
-      const ph=document.createElement('div');
-      ph.id=targetId;
-      ph.dataset.imgTarget=targetId;
-      if(targetId==='about-img-el'){
-        ph.className='about-img-ph img-zone';
-        ph.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg><span>No Image</span>';
-      } else {
-        ph.className='proj-img-ph img-zone';
-        ph.innerHTML='<span>[ NO IMAGE ]</span>';
-      }
-      ph.addEventListener('click',handleImgClick);
-      parent.replaceChild(ph,el);
-      setStatus('Image removed — save or push when ready');
-    }
-  }
+  currentImgTarget = e.currentTarget.dataset.imgTarget||e.currentTarget.id;
+  imgInput.click();
 }
 
 imgInput.addEventListener('change',e=>{
@@ -957,9 +1009,11 @@ imgInput.addEventListener('change',e=>{
 function getCleanHTML(){
   const clone=document.documentElement.cloneNode(true);
 
+  clone.body.classList.remove('edit-mode');
   clone.querySelector('#admin-overlay')?.classList.remove('active');
   clone.querySelector('#gh-modal')?.classList.remove('active');
   clone.querySelector('#edit-toolbar')?.classList.remove('active');
+  clone.querySelectorAll('.remove-img-btn').forEach(btn => btn.remove());
 
   clone.querySelectorAll('[contenteditable]').forEach(el=>{
     el.setAttribute('contenteditable','false');
