@@ -15,11 +15,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.7;cursor:none;overflow-x:hidden}
-
-/* Cursor */
-#cursor{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:screen}
-#cursor-ring{width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.4}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.7;overflow-x:hidden}
 
 /* Scanlines */
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9990}
@@ -61,12 +57,12 @@ section{padding:90px 60px;position:relative}
 
 /* ABOUT */
 #about{background:var(--bg2)}
-.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:center}
+.about-grid{display:grid;grid-template-columns:1.5fr .7fr;gap:40px;align-items:center}
 .about-text{color:var(--text2);line-height:1.9;font-size:13.5px}
 .about-text strong{color:var(--accent2)}
 .about-img-frame{position:relative}
 .about-img-frame::before{content:'';position:absolute;inset:-2px;background:linear-gradient(135deg,var(--accent),var(--accent2));z-index:0;clip-path:polygon(0 0,95% 0,100% 5%,100% 100%,5% 100%,0 95%)}
-.about-img,.about-img-ph{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,95% 0,100% 5%,100% 100%,5% 100%,0 95%)}
+.about-img,.about-img-ph{width:100%;max-width:320px;margin-left:auto;aspect-ratio:3/4;object-fit:cover;object-position:top;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,95% 0,100% 5%,100% 100%,5% 100%,0 95%)}
 .about-img-ph{background:var(--bg3);border:1px dashed var(--border2);color:var(--text3);font-size:12px;flex-direction:column;gap:8px}
 .about-img-ph svg{opacity:.3}
 
@@ -148,9 +144,7 @@ section{padding:90px 60px;position:relative}
 .social-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px)}
 
 /* FOOTER */
-footer{padding:24px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text3);letter-spacing:.05em}
-.footer-secret{opacity:0;transition:opacity .3s;user-select:none;cursor:none}
-footer:hover .footer-secret{opacity:.6}
+footer{padding:24px 60px;border-top:1px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:11px;color:var(--text3);letter-spacing:.05em}
 
 /* ADMIN MODAL */
 #admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:10000;align-items:center;justify-content:center}
@@ -213,6 +207,24 @@ footer:hover .footer-secret{opacity:.6}
 #gh-log{margin-top:14px;font-size:11px;color:var(--accent2);line-height:1.8;min-height:22px}
 #gh-log.error{color:var(--accent3)}
 
+
+.editor-select{
+  background:var(--bg3);
+  color:var(--text);
+  border:1px solid var(--border2);
+  padding:6px 10px;
+  font-family:var(--mono);
+  font-size:11px;
+}
+
+.editor-color{
+  width:40px;
+  height:34px;
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
 /* Responsive */
@@ -225,6 +237,71 @@ footer:hover .footer-secret{opacity:.6}
   footer{padding:18px 24px;flex-direction:column;gap:8px;text-align:center}
   .gh-row{grid-template-columns:1fr}
 }
+
+/* PROFESSIONAL ENHANCEMENTS */
+body{
+  background:
+    radial-gradient(circle at top right, rgba(0,217,255,.08), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(0,255,136,.05), transparent 30%),
+    var(--bg);
+}
+
+.btn,.admin-btn,.gh-confirm,.gh-cancel,.tb-btn,.admin-close{
+  cursor:pointer;
+}
+
+.hero-content{
+  backdrop-filter: blur(2px);
+}
+
+.proj-card,
+.edu-card,
+.ach-card,
+.pub-item,
+.admin-panel,
+.gh-panel{
+  box-shadow: 0 10px 35px rgba(0,0,0,.25);
+}
+
+.nav-links a{
+  font-weight:600;
+}
+
+section{
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+
+.hero-bio,
+.about-text,
+.exp-list li,
+.proj-desc,
+.pub-item,
+.contact-sub{
+  font-size:13.5px;
+}
+
+.social-btn{
+  border-radius:10px;
+}
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#091017;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#163044;
+  border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:#1d425d;
+}
+
+
 @media(max-width:600px){
   .nav-links{display:none}
   .ach-grid{grid-template-columns:1fr}
@@ -232,9 +309,6 @@ footer:hover .footer-secret{opacity:.6}
 </style>
 </head>
 <body>
-
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
 
 <!-- ══ NAV ══ -->
 <nav>
@@ -448,7 +522,7 @@ footer:hover .footer-secret{opacity:.6}
       <strong>Elsevier Reviewer</strong> — Current Research in Behavioral Science (CRBS). Primary research, gold open access journal publishing original papers and short communications on all aspects of behavioral sciences.
     </div>
     <div class="pub-item" data-editable contenteditable="false">
-      <strong>Research-Based Projects:</strong> Chronic Kidney Disease Prediction using Machine Learning · Heart Disease Prediction Using Machine Learning
+      <strong>Research-Based Projects:</strong> Chronic Kidney Disease Prediction Research using Machine Learning · Heart Disease Prediction Using Machine Learning
     </div>
     <div class="pub-item" data-editable contenteditable="false">
       <strong>Handbook:</strong> A Complete Handbook on Compiler Design
@@ -472,35 +546,35 @@ footer:hover .footer-secret{opacity:.6}
 <section id="projects">
   <div class="section-header">
     <span class="section-num">05</span>
-    <h2 class="section-title">Projects</h2>
+    <h2 class="section-title">Research Publications & Works</h2>
     <div class="section-line"></div>
   </div>
   <div class="proj-grid">
     <div class="proj-card">
-      <div class="proj-img-ph img-zone" id="proj1-img" data-img-target="proj1-img">[ Add project image ]</div>
-      <div class="proj-tag" data-editable contenteditable="false">Playwright · JavaScript</div>
-      <div class="proj-title" data-editable contenteditable="false">Web &amp; API Automation at Therap</div>
+      
+      <div class="proj-tag" data-editable contenteditable="false">Automation Research</div>
+      <div class="proj-title" data-editable contenteditable="false">AI Assisted QA Automation Research</div>
       <div class="proj-desc" data-editable contenteditable="false">Built end-to-end test automation using Playwright (JavaScript) for both web UI and API layers. Integrated Gemini AI for test case generation and automation code writing, significantly accelerating QA cycles.</div>
       <div class="tech-wrap"><span class="tech-pill">Playwright</span><span class="tech-pill">JavaScript</span><span class="tech-pill">Postman</span><span class="tech-pill">Gemini AI</span></div>
     </div>
     <div class="proj-card">
-      <div class="proj-img-ph img-zone" id="proj2-img" data-img-target="proj2-img">[ Add project image ]</div>
-      <div class="proj-tag" data-editable contenteditable="false">Machine Learning · Python</div>
-      <div class="proj-title" data-editable contenteditable="false">Chronic Kidney Disease Prediction</div>
+      
+      <div class="proj-tag" data-editable contenteditable="false">Machine Learning Research</div>
+      <div class="proj-title" data-editable contenteditable="false">Chronic Kidney Disease Prediction Research</div>
       <div class="proj-desc" data-editable contenteditable="false">Research-based ML project to predict Chronic Kidney Disease from patient datasets. Applied classification algorithms, feature selection, and model evaluation metrics to achieve high accuracy predictions.</div>
       <div class="tech-wrap"><span class="tech-pill">Python</span><span class="tech-pill">Scikit-learn</span><span class="tech-pill">Pandas</span><span class="tech-pill">Jupyter</span></div>
     </div>
     <div class="proj-card">
-      <div class="proj-img-ph img-zone" id="proj3-img" data-img-target="proj3-img">[ Add project image ]</div>
-      <div class="proj-tag" data-editable contenteditable="false">Selenium · Python</div>
-      <div class="proj-title" data-editable contenteditable="false">Microbanking App Automation</div>
+      
+      <div class="proj-tag" data-editable contenteditable="false">Quality Engineering Research</div>
+      <div class="proj-title" data-editable contenteditable="false">Enterprise Quality Assurance Research</div>
       <div class="proj-desc" data-editable contenteditable="false">Automated regression test suite for an existing microbanking web application. Built using Selenium with Python, covering critical business workflows across multiple entity types.</div>
       <div class="tech-wrap"><span class="tech-pill">Selenium</span><span class="tech-pill">Python</span><span class="tech-pill">SQL</span><span class="tech-pill">Jira</span></div>
     </div>
     <div class="proj-card">
-      <div class="proj-img-ph img-zone" id="proj4-img" data-img-target="proj4-img">[ Add project image ]</div>
-      <div class="proj-tag" data-editable contenteditable="false">Research · Publication</div>
-      <div class="proj-title" data-editable contenteditable="false">COVID-19 Mental Health Analysis</div>
+      
+      <div class="proj-tag" data-editable contenteditable="false">Published Research Paper</div>
+      <div class="proj-title" data-editable contenteditable="false">COVID-19 Behavioral Science Publication</div>
       <div class="proj-desc" data-editable contenteditable="false">Published research in Elsevier's Current Research in Behavioral Sciences. Quantitative analysis of anxiety and depression impacts from COVID-19 on regular life and internet usage patterns.</div>
       <div class="tech-wrap"><span class="tech-pill">Elsevier</span><span class="tech-pill">SPSS</span><span class="tech-pill">Data Analysis</span><span class="tech-pill">Research</span></div>
     </div>
@@ -592,7 +666,6 @@ footer:hover .footer-secret{opacity:.6}
 
 <footer>
   <span>© 2025 Akash Ahmed · Savar, Dhaka, Bangladesh</span>
-  <span class="footer-secret" id="admin-trigger" title="⚙">⬛⬛⬛</span>
 </footer>
 
 <!-- ══ ADMIN LOGIN ══ -->
@@ -661,6 +734,26 @@ footer:hover .footer-secret{opacity:.6}
   <div class="toolbar-sep"></div>
   <span id="tb-status">Click any text to edit</span>
   <div class="toolbar-sep"></div>
+  
+  <div class="toolbar-sep"></div>
+
+  <select id="font-selector" class="editor-select">
+    <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+    <option value="Arial, sans-serif">Arial</option>
+    <option value="'Times New Roman', serif">Times New Roman</option>
+    <option value="'Poppins', sans-serif">Poppins</option>
+  </select>
+
+  <input type="color" id="color-picker" class="editor-color" value="#c8d8e8"/>
+
+  <select id="font-size-selector" class="editor-select">
+    <option value="12px">12px</option>
+    <option value="14px" selected>14px</option>
+    <option value="16px">16px</option>
+    <option value="18px">18px</option>
+    <option value="20px">20px</option>
+  </select>
+
   <button class="tb-btn tb-logout" id="tb-logout-btn">Exit</button>
 </div>
 
@@ -668,17 +761,12 @@ footer:hover .footer-secret{opacity:.6}
 <input type="file" id="img-file-input" accept="image/*" style="display:none"/>
 
 <script>
-// ═══════════════════════════════
-// CURSOR
-// ═══════════════════════════════
-const cur = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
-(function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
-document.querySelectorAll('a,button,[data-editable],.img-zone').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cur.style.width='20px';cur.style.height='20px'});
-  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px'});
+
+// Reset transient UI states on page load
+window.addEventListener('load',()=>{
+  document.getElementById('admin-overlay')?.classList.remove('active');
+  document.getElementById('gh-modal')?.classList.remove('active');
+  document.getElementById('edit-toolbar')?.classList.remove('active');
 });
 
 // ═══════════════════════════════
@@ -716,7 +804,6 @@ let isAdmin = false;
 let backtickCount = 0, backtickTimer = null;
 
 const adminOverlay = document.getElementById('admin-overlay');
-document.getElementById('admin-trigger').addEventListener('click',()=>openAdmin());
 document.getElementById('admin-close-btn').addEventListener('click',()=>adminOverlay.classList.remove('active'));
 adminOverlay.addEventListener('click',e=>{if(e.target===adminOverlay)adminOverlay.classList.remove('active')});
 
@@ -726,7 +813,11 @@ document.addEventListener('keydown',e=>{
   if(e.key==='`'){
     backtickCount++;clearTimeout(backtickTimer);
     backtickTimer=setTimeout(()=>backtickCount=0,1500);
-    if(backtickCount>=3){backtickCount=0;openAdmin()}
+    if(backtickCount>=3){
+      e.preventDefault();
+      backtickCount=0;
+      openAdmin();
+    }
   }
   if(e.key==='Enter'&&adminOverlay.classList.contains('active'))tryLogin();
   if(e.key==='Escape'){adminOverlay.classList.remove('active');document.getElementById('gh-modal').classList.remove('active')}
@@ -829,14 +920,32 @@ imgInput.addEventListener('change',e=>{
 // ═══════════════════════════════
 // SAVE LOCALLY
 // ═══════════════════════════════
+function getCleanHTML(){
+  const clone=document.documentElement.cloneNode(true);
+
+  clone.querySelector('#admin-overlay')?.classList.remove('active');
+  clone.querySelector('#gh-modal')?.classList.remove('active');
+  clone.querySelector('#edit-toolbar')?.classList.remove('active');
+
+  clone.querySelectorAll('[contenteditable]').forEach(el=>{
+    el.setAttribute('contenteditable','false');
+  });
+
+  clone.querySelectorAll('input[type="password"]').forEach(el=>{
+    el.value='';
+  });
+
+  return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
 document.getElementById('tb-save-btn').addEventListener('click',()=>{
-  const html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  const html=getCleanHTML();
   const blob=new Blob([html],{type:'text/html'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download='index.html';
   a.click();
-  setStatus('Downloaded index.html ✓');
+  setStatus('Downloaded clean index.html ✓');
 });
 
 // ═══════════════════════════════
@@ -871,7 +980,7 @@ document.getElementById('gh-push-btn').addEventListener('click',async()=>{
     else{const d=await r.json();throw new Error(d.message||r.status)}
   } catch(err){ghLog.className='error';ghLog.textContent=`✗ ${err.message}`;return}
 
-  const htmlContent='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  const htmlContent=getCleanHTML();
   let encoded;
   try{encoded=btoa(unescape(encodeURIComponent(htmlContent)))}
   catch(e){ghLog.className='error';ghLog.textContent='✗ Encoding error: '+e.message;return}
@@ -889,7 +998,7 @@ document.getElementById('gh-push-btn').addEventListener('click',async()=>{
     });
     if(r.ok){
       ghLog.className='';
-      const liveUrl=`https://${username}.github.io/${repo.replace('.github.io','')}/myProfile/`;
+      const repoName=repo.replace('.github.io',''); const liveUrl=`https://${username}.github.io/${repoName}/myProfile/`;
       ghLog.textContent=`✓ Pushed successfully! Live at: ${liveUrl} (may take ~60s to update)`;
       setStatus('Pushed to GitHub ✓');
       setTimeout(()=>ghModal.classList.remove('active'),5000);
@@ -898,6 +1007,37 @@ document.getElementById('gh-push-btn').addEventListener('click',async()=>{
     }
   } catch(err){ghLog.className='error';ghLog.textContent=`✗ Push failed: ${err.message}`}
 });
+
+// Text styling editor
+let activeEditable = null;
+
+document.querySelectorAll('[data-editable]').forEach(el=>{
+  el.addEventListener('focus',()=>{
+    activeEditable = el;
+  });
+});
+
+document.getElementById('color-picker')?.addEventListener('input',e=>{
+  if(activeEditable){
+    activeEditable.style.color = e.target.value;
+    setStatus('Text color updated');
+  }
+});
+
+document.getElementById('font-selector')?.addEventListener('change',e=>{
+  if(activeEditable){
+    activeEditable.style.fontFamily = e.target.value;
+    setStatus('Font updated');
+  }
+});
+
+document.getElementById('font-size-selector')?.addEventListener('change',e=>{
+  if(activeEditable){
+    activeEditable.style.fontSize = e.target.value;
+    setStatus('Font size updated');
+  }
+});
+
 </script>
 </body>
 </html>
