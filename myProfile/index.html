@@ -755,6 +755,7 @@ section{
       <button class="gh-confirm" id="gh-push-btn">Push to GitHub →</button>
     </div>
     <div id="gh-log" class="">⟳ File found — preparing update...</div>
+    <div id="gh-log" class=""></div>
   </div>
 </div>
 
@@ -1063,10 +1064,12 @@ document.getElementById('gh-push-btn').addEventListener('click',async()=>{
 
   try{
     const r=await fetch(apiUrl,{headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json'}});
+    const r=await fetch(apiUrl,{headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github.v3+json'}});
     if(r.ok){const d=await r.json();sha=d.sha;ghLog.textContent='⟳ File found — preparing update...'}
     else if(r.status===404){ghLog.textContent='⟳ File not found — will create it...'}
     else{const d=await r.json();throw new Error(d.message||r.status)}
   } catch(err){ghLog.className='error';ghLog.textContent=`✗ ${err.message}`;return}
+  } catch(err){ghLog.className='error';ghLog.textContent=`✗ Connection error: ${err.message}`;return}
 
   const htmlContent=getCleanHTML();
   let encoded;
@@ -1082,6 +1085,7 @@ document.getElementById('gh-push-btn').addEventListener('click',async()=>{
     const r=await fetch(apiUrl,{
       method:'PUT',
       headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
     if(r.ok){
