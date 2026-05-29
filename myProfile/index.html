@@ -183,7 +183,7 @@ footer{padding:24px 60px;border-top:1px solid var(--border);display:flex;justify
 .edit-mode [data-editable]:focus{outline:1px solid var(--accent);cursor:text}
 [data-editable]:focus{outline:none}
 .edit-mode .img-zone{cursor:pointer}
-.edit-mode .img-zone:hover::after{content:'[ click to change image ]';position:absolute;inset:0;background:rgba(0,217,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+.edit-mode .img-zone:hover::after{content:'[ click to edit/remove ]';position:absolute;inset:0;background:rgba(0,217,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
 
 /* GH Modal */
 #gh-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:10001;align-items:center;justify-content:center}
@@ -794,7 +794,7 @@ window.addEventListener('scroll',()=>{
 // ADMIN AUTH — ⚙ CHANGE THESE:
 // ═══════════════════════════════
 const ADMIN_USER = 'akash';
-const ADMIN_PASS = 'Akash@SQA2025!';
+const ADMIN_PASS = 'Test@123';
 
 let isAdmin = false;
 let backtickCount = 0, backtickTimer = null;
@@ -817,6 +817,16 @@ document.addEventListener('keydown',e=>{
   }
   if(e.key==='Enter'&&adminOverlay.classList.contains('active'))tryLogin();
   if(e.key==='Escape'){adminOverlay.classList.remove('active');document.getElementById('gh-modal').classList.remove('active')}
+});
+
+// ═══════════════════════════════
+// RELOAD PROTECTION
+// ═══════════════════════════════
+window.addEventListener('beforeunload', (e) => {
+  if (isAdmin) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
 });
 
 document.getElementById('admin-login-btn').addEventListener('click',tryLogin);
@@ -864,7 +874,11 @@ function disableEdit(){
   isAdmin=false;
 }
 
-document.getElementById('tb-logout-btn').addEventListener('click',disableEdit);
+document.getElementById('tb-logout-btn').addEventListener('click', () => {
+  if (confirm('Are you sure you want to exit Edit Mode? Any unsaved changes will be lost.')) {
+    disableEdit();
+  }
+});
 
 document.querySelectorAll('[data-editable]').forEach(el=>{
   el.addEventListener('input',()=>setStatus('Unsaved changes — click Save or Push'));
@@ -878,8 +892,32 @@ const imgInput=document.getElementById('img-file-input');
 
 function handleImgClick(e){
   if(!isAdmin)return;
-  currentImgTarget=e.currentTarget.dataset.imgTarget||e.currentTarget.id;
-  imgInput.click();
+  e.stopPropagation();
+  const targetId = e.currentTarget.dataset.imgTarget||e.currentTarget.id;
+  
+  if(confirm('Press OK to CHANGE image, or CANCEL to REMOVE/DELETE it.')){
+    currentImgTarget = targetId;
+    imgInput.click();
+  } else {
+    if(confirm('Are you sure you want to remove this image?')){
+      const el=document.getElementById(targetId);
+      if(!el) return;
+      const parent=el.parentElement;
+      const ph=document.createElement('div');
+      ph.id=targetId;
+      ph.dataset.imgTarget=targetId;
+      if(targetId==='about-img-el'){
+        ph.className='about-img-ph img-zone';
+        ph.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg><span>No Image</span>';
+      } else {
+        ph.className='proj-img-ph img-zone';
+        ph.innerHTML='<span>[ NO IMAGE ]</span>';
+      }
+      ph.addEventListener('click',handleImgClick);
+      parent.replaceChild(ph,el);
+      setStatus('Image removed — save or push when ready');
+    }
+  }
 }
 
 imgInput.addEventListener('change',e=>{
