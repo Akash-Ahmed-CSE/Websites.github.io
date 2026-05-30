@@ -615,7 +615,7 @@ tr:hover td { background: var(--bg); }
     <div class="modal-sub">Enable automatic updates to data.json</div>
     <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" placeholder="e.g. yourusername" value="Akash-Ahmed-CSE"></div>
     <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="e.g. Websites.github.io" value="Websites.github.io"></div>
-    <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" value="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"></div>
+    <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx"></div>
     <p style="font-size:11px; color:var(--text3); margin-bottom:15px;">Note: The file will be updated at <b>ecommerceWeb/data.json</b>. Changes take ~1 minute to appear live on GitHub Pages.</p>
     <button class="modal-btn" onclick="saveGitHubSettings()">Save & Connect</button>
     <button class="modal-btn-ghost" onclick="testGitHubSync()">Test Connection</button>
@@ -830,7 +830,8 @@ async function initApp() {
     if (data.githubConfig) {
       if (!localStorage.getItem('gh_user')) localStorage.setItem('gh_user', data.githubConfig.user);
       if (!localStorage.getItem('gh_repo')) localStorage.setItem('gh_repo', data.githubConfig.repo);
-      if (!localStorage.getItem('gh_token')) localStorage.setItem('gh_token', data.githubConfig.token);
+      // Always load the token from data.json if available
+      if (data.githubConfig.token) localStorage.setItem('gh_token', data.githubConfig.token);
     }
     await saveData();
   } catch (e) {
@@ -842,7 +843,8 @@ async function initApp() {
     try {
       const sUser = JSON.parse(session);
       const fresh = usersDB.find(u => u.email.toLowerCase() === sUser.email.toLowerCase());
-      setLoggedIn(fresh || sUser);
+      if (fresh) setLoggedIn(fresh); // Only log in if user still exists
+      else localStorage.removeItem('shopnest_session'); // Clear invalid session
     } catch(e) {}
   }
 
@@ -860,10 +862,19 @@ async function saveData() {
 }
 
 function getGitHubConfig() {
+  let token = localStorage.getItem('gh_token');
+  
+  // Decode if Base64 (doesn't start with ghp_). This handles the encoded token from data.json.
+  // If the token is already a raw ghp_ token (e.g., manually entered), it won't be decoded.
+  // If token is null or empty, it will remain so.
+  if (token && !token.startsWith('ghp_')) {
+    try { token = atob(token); } catch(e) { console.error("Token decoding failed"); token = null; }
+  }
+
   return {
     user: localStorage.getItem('gh_user') || 'Akash-Ahmed-CSE',
     repo: localStorage.getItem('gh_repo') || 'Websites.github.io',
-    token: localStorage.getItem('gh_token') || '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'
+    token: token
   };
 }
 
@@ -924,7 +935,7 @@ async function testGitHubSync() {
   const statusEl = document.getElementById('sync-status');
   if (!config.token) return showToast('Configure settings first', 'error');
 
-  statusEl.textContent = '🧪 Testing connection...';
+  if (statusEl) statusEl.textContent = '🧪 Testing connection...';
   await syncWithGitHub({ products, users: usersDB, orders, globalDeliveryCharge }, config);
   showToast('Connection test complete', 'success');
 }
@@ -1324,6 +1335,8 @@ function setLoggedIn(user) {
   const initial = user.name[0].toUpperCase();
   document.getElementById('user-avatar-btn').textContent = initial;
   document.getElementById('user-dropdown-name').textContent = user.name;
+  document.getElementById('gh-user').value = localStorage.getItem('gh_user') || 'Akash-Ahmed-CSE';
+  document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || 'Websites.github.io';
   const adminItem = document.getElementById('admin-menu-item');
   const myOrdersItem = document.getElementById('my-orders-menu-item');
   const syncItem = document.getElementById('sync-menu-item');
@@ -1352,6 +1365,7 @@ function logout() {
   document.getElementById('user-menu-wrap').style.display = 'none';
   document.getElementById('user-dashboard-view').style.display = 'none'; // Hide user dashboard on logout
   document.getElementById('nav-sync-btn').style.display = 'none';
+  document.getElementById('sync-status').textContent = 'Ready to sync...'; // Reset sync status
   toggleUserMenu(false);
   showShop();
   showToast('Logged out successfully.', '');
@@ -1382,12 +1396,10 @@ function showAdminPanel() {
   if (!currentUser?.isAdmin) return;
   toggleUserMenu(false);
   document.getElementById('shop-view').style.display = 'none';
-  document.getElementById('user-dashboard-view').style.display = 'none';
+  if (document.getElementById('user-dashboard-view')) document.getElementById('user-dashboard-view').style.display = 'none';
   document.getElementById('admin-view').style.display = 'block';
+  switchAdminTab('products');
   renderAdminStats();
-  renderAdminProducts();
-  renderAdminOrders();
-  renderAdminUsers();
 }
 
 function showUserDashboard() {
@@ -1408,15 +1420,16 @@ function showShop() {
 }
 
 function switchAdminTab(tab) {
-  const tabs = ['products', 'orders', 'users'];
-  document.querySelectorAll('.admin-tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === tab));
-  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('admin-tab-' + tab).classList.add('active');
-  
-  // Render data for the selected tab
+  const tabs = document.querySelectorAll('.admin-tab');
+  tabs.forEach(t => {
+    const tabName = t.getAttribute('onclick').match(/'([^']+)'/)[1];
+    t.classList.toggle('active', tabName === tab);
+  });
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('active', p.id === 'admin-tab-' + tab));
+
+  if (tab === 'products') renderAdminProducts();
+  if (tab === 'orders') renderAdminOrders();
   if (tab === 'users') renderAdminUsers();
-  else if (tab === 'orders') renderAdminOrders();
-  else if (tab === 'products') renderAdminProducts();
 }
 
 function renderAdminStats() {
