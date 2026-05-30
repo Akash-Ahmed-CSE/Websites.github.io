@@ -878,12 +878,19 @@ async function syncWithGitHub(data, config) {
   }
   
   try {
-    const path = 'ecommerceWeb/data.json';
+    // If your files are in the root of the repo, change this to 'data.json'
+    const path = 'ecommerceWeb/data.json'; 
     const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${path}`;
     
     // 1. Get the current file SHA (required to update)
     const getRes = await fetch(url, { headers: { 'Authorization': `token ${config.token}` }});
-    if (!getRes.ok) throw new Error("Could not find data.json on GitHub.");
+    
+    if (getRes.status === 401) {
+      throw new Error("GitHub Token is invalid or revoked. Please update your token in settings.");
+    } else if (!getRes.ok) {
+      throw new Error(`GitHub API Error: ${getRes.statusText} (${getRes.status}). Check if the path '${path}' is correct.`);
+    }
+    
     const fileData = await getRes.json();
     
     // 2. Push updated content
@@ -900,18 +907,18 @@ async function syncWithGitHub(data, config) {
       })
     });
     
-    if (!pushRes.ok) throw new Error("GitHub update failed.");
+    if (!pushRes.ok) throw new Error(`GitHub Update Failed: ${pushRes.statusText}`);
     if (statusEl) {
       statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
       statusEl.classList.remove('syncing-active');
     }
   } catch (err) {
-    console.error(err);
+    console.error("Sync Error:", err.message);
     if (statusEl) {
-      statusEl.textContent = '❌ Sync Failed';
+      statusEl.textContent = '❌ ' + err.message;
       statusEl.classList.remove('syncing-active');
     }
-    showToast('GitHub Sync Failed. Check Settings.', 'error');
+    showToast(err.message, 'error');
   }
 }
 
