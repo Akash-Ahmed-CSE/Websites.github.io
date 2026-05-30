@@ -1382,6 +1382,7 @@ function showAdminPanel() {
   renderAdminStats();
   renderAdminProducts();
   renderAdminOrders();
+  renderAdminUsers();
 }
 
 function showUserDashboard() {
@@ -1402,10 +1403,15 @@ function showShop() {
 }
 
 function switchAdminTab(tab) {
-  document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', ['products','orders'][i] === tab));
+  const tabs = ['products', 'orders', 'users'];
+  document.querySelectorAll('.admin-tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === tab));
   document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', ['products','orders','users'][i] === tab));
-  document.getElementById('admin-tab-'+tab).classList.add('active');
+  document.getElementById('admin-tab-' + tab).classList.add('active');
+  
+  // Render data for the selected tab
+  if (tab === 'users') renderAdminUsers();
+  else if (tab === 'orders') renderAdminOrders();
+  else if (tab === 'products') renderAdminProducts();
 }
 
 function renderAdminStats() {
