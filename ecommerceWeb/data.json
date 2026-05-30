@@ -158,6 +158,13 @@
       "email": "john@example.com",
       "password": "securePassword123",
       "isAdmin": false
+    },
+    {
+      "id": "u1780163842084",
+      "name": "Akash Ahmed",
+      "email": "akash@gmail.com",
+      "password": "Test@123",
+      "isAdmin": false
     }
   ],
   "orders": [],
