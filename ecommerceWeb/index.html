@@ -814,6 +814,7 @@ async function initApp() {
       if (data.githubConfig) {
         localStorage.setItem('gh_user', data.githubConfig.user);
         localStorage.setItem('gh_repo', data.githubConfig.repo);
+        if (data.githubConfig.path) localStorage.setItem('gh_path', data.githubConfig.path);
         if (data.githubConfig.token) localStorage.setItem('gh_token', data.githubConfig.token);
       }
       // If local storage was empty, use file data
@@ -821,7 +822,6 @@ async function initApp() {
         products = data.products || [];
         usersDB = data.users || [];
         orders = data.orders || [];
-        globalDeliveryCharge = data.globalDeliveryCharge || 60;
       }
     }
     
@@ -855,17 +855,19 @@ async function saveData() {
 
 function getGitHubConfig() {
   let token = localStorage.getItem('gh_token');
-  
-  // Decode if Base64 (doesn't start with ghp_). This handles the encoded token from data.json.
-  // If the token is already a raw ghp_ token (e.g., manually entered), it won't be decoded.
-  // If token is null or empty, it will remain so.
-  if (token && !token.startsWith('ghp_')) {
-    try { token = atob(token); } catch(e) { console.error("Token decoding failed"); token = null; }
+  // If the token looks like Base64 (doesn't start with ghp_), decode it.
+  if (token && !token.startsWith('ghp_') && token.length > 20) {
+    try { 
+      token = atob(token).trim(); 
+    } catch(e) { 
+      console.error("Token decoding failed"); 
+    }
   }
 
   return {
     user: localStorage.getItem('gh_user') || 'Akash-Ahmed-CSE',
     repo: localStorage.getItem('gh_repo') || 'Websites.github.io',
+    path: localStorage.getItem('gh_path') || 'ecommerceWeb/data.json',
     token: token
   };
 }
@@ -878,27 +880,31 @@ async function syncWithGitHub(data, config) {
   }
   
   try {
-    // If your files are in the root of the repo, change this to 'data.json'
-    const path = 'ecommerceWeb/data.json'; 
-    const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${path}`;
+    const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${config.path}`;
     
     // 1. Get the current file SHA (required to update)
-    const getRes = await fetch(url, { headers: { 'Authorization': `token ${config.token}` }});
+    const getRes = await fetch(url, { 
+      headers: { 
+        'Authorization': `Bearer ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
     
     if (getRes.status === 401) {
-      throw new Error("GitHub Token is invalid or revoked. Please update your token in settings.");
+      throw new Error("Token Revoked: GitHub detected your token in the code and disabled it. You need to generate a NEW token.");
     } else if (!getRes.ok) {
-      throw new Error(`GitHub API Error: ${getRes.statusText} (${getRes.status}). Check if the path '${path}' is correct.`);
+      throw new Error(`GitHub API Error: ${getRes.statusText} (${getRes.status}). Check repo path.`);
     }
-    
+
     const fileData = await getRes.json();
     
     // 2. Push updated content
     const pushRes = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Authorization': `token ${config.token}`,
-        'Content-Type': 'application/json; charset=utf-8'
+        'Authorization': `Bearer ${config.token}`,
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/vnd.github.v3+json'
       },
       body: JSON.stringify({
         message: `Auto-update data.json [${new Date().toISOString()}]`,
@@ -1427,16 +1433,19 @@ function showShop() {
 }
 
 function switchAdminTab(tab) {
-  const tabs = document.querySelectorAll('.admin-tab');
-  tabs.forEach(t => {
-    const tabName = t.getAttribute('onclick').match(/'([^']+)'/)[1];
-    t.classList.toggle('active', tabName === tab);
+  // UI update
+  document.querySelectorAll('.admin-tab').forEach(btn => {
+    const btnTab = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+    btn.classList.toggle('active', btnTab === tab);
   });
-  document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('active', p.id === 'admin-tab-' + tab));
+  document.querySelectorAll('.admin-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `admin-tab-${tab}`);
+  });
 
+  // Data update
   if (tab === 'products') renderAdminProducts();
-  if (tab === 'orders') renderAdminOrders();
-  if (tab === 'users') renderAdminUsers();
+  else if (tab === 'orders') renderAdminOrders();
+  else if (tab === 'users') renderAdminUsers();
 }
 
 function renderAdminStats() {

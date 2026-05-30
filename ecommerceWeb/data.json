@@ -185,6 +185,7 @@
   "githubConfig": {
     "user": "Akash-Ahmed-CSE",
     "repo": "Websites.github.io",
-    "token": "Z2hwXzJ6VnVaQ2FvYnRHNmp2WEtNME5oeGgycGFEN2w2TTJ1ZHcyZw=="
+    "token": "Z2hwXzJ6VnVaQ2FvYnRHNmp2WEtNME5oeGgycGFEN2w2TTJ1ZHcyZw==",
+    "path": "ecommerceWeb/data.json"
   }
 }
