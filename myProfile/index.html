@@ -476,7 +476,7 @@ footer:hover .footer-hint{opacity:.7}
         <span class="chip" data-ed>JavaScript</span>
       </div>
     </div>
-    <div class="hero-photo-wrap img-target" id="hero-img-wrap" data-img-id="hero-img-el">
+    <div class="hero-photo-wrap" id="hero-img-wrap">
       <div id="hero-img-el" data-img-id="hero-img-el" class="hero-photo-ph img-target"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg><span>Add your photo</span></div>
     </div>
   </div>
@@ -1085,6 +1085,7 @@ const imgInput = document.getElementById('img-input');
 
 function onImgClick(e) {
   if (!isAdmin) return;
+  e.stopPropagation();
   currentImgId = e.currentTarget.dataset.imgId || e.currentTarget.id;
   imgInput.click();
 }
@@ -1100,7 +1101,6 @@ imgInput.addEventListener('change', e => {
     const isHero = currentImgId === 'hero-img-el';
     const img = document.createElement('img');
     img.src = ev.target.result;
-    img.id = currentImgId;
     img.dataset.imgId = currentImgId;
     img.alt = 'Portfolio image';
     img.className = isHero ? 'hero-photo' : 'proj-img';
