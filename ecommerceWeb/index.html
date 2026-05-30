@@ -442,10 +442,12 @@ tr:hover td { background: var(--bg); }
       <button class="nav-btn nav-btn-primary" onclick="openModal('register-modal')">Sign Up</button>
     </div>
     <div id="user-menu-wrap" class="user-menu-wrap" style="display:none">
+      <button id="nav-sync-btn" class="nav-btn nav-btn-outline" style="display:none; margin-right:8px;" onclick="openModal('github-settings-modal')">⚙️ Sync</button>
       <button class="user-avatar" id="user-avatar-btn" onclick="toggleUserMenu()">A</button>
       <div class="user-dropdown" id="user-dropdown">
         <div class="user-dropdown-name" id="user-dropdown-name">User</div>
         <button class="user-dropdown-item" onclick="showAdminPanel()" id="admin-menu-item" style="display:none">⚙️ Admin Panel</button>
+        <button class="user-dropdown-item" onclick="openModal('github-settings-modal'); toggleUserMenu(false)" id="sync-menu-item" style="display:none">⚙️ GitHub Sync</button>
         <div class="user-dropdown-sep" id="admin-sep" style="display:none"></div>
         <button class="user-dropdown-item" onclick="showShop(); toggleUserMenu()">🛍️ Shop</button>
         <button class="user-dropdown-item danger" onclick="logout()">🚪 Logout</button>
@@ -528,10 +530,10 @@ tr:hover td { background: var(--bg); }
       <div class="admin-header">
         <div>
           <h1>Admin Panel</h1>
-          <div id="sync-status" style="font-size:12px; color:var(--text3); margin-top:4px;">Ready to sync...</div>
+          <div id="sync-status" style="font-size:12px; font-weight:500; color:var(--text3); margin-top:4px;">Ready to sync...</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
-          <button class="nav-btn nav-btn-outline" onclick="openModal('github-settings-modal')" title="Configure GitHub Sync">⚙️ Sync Settings</button>
+          <button id="admin-sync-btn" class="nav-btn nav-btn-outline" onclick="openModal('github-settings-modal')" style="background:var(--blue-light)">⚙️ GitHub Settings</button>
           <button class="nav-btn nav-btn-ghost" onclick="showShop()">← Back to Shop</button>
         </div>
       </div>
@@ -1243,13 +1245,20 @@ function setLoggedIn(user) {
   document.getElementById('user-avatar-btn').textContent = initial;
   document.getElementById('user-dropdown-name').textContent = user.name;
   const adminItem = document.getElementById('admin-menu-item');
+  const syncItem = document.getElementById('sync-menu-item');
   const adminSep = document.getElementById('admin-sep');
+  const navSyncBtn = document.getElementById('nav-sync-btn');
+
   if (user.isAdmin) {
     adminItem.style.display = 'block';
+    syncItem.style.display = 'block';
     adminSep.style.display = 'block';
+    navSyncBtn.style.display = 'inline-flex';
   } else {
     adminItem.style.display = 'none';
+    syncItem.style.display = 'none';
     adminSep.style.display = 'none';
+    navSyncBtn.style.display = 'none';
   }
 }
 
@@ -1257,6 +1266,7 @@ function logout() {
   currentUser = null;
   document.getElementById('auth-btns').style.display = 'flex';
   document.getElementById('user-menu-wrap').style.display = 'none';
+  document.getElementById('nav-sync-btn').style.display = 'none';
   toggleUserMenu(false);
   showShop();
   showToast('Logged out successfully.', '');
