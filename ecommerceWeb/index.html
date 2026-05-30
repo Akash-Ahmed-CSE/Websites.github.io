@@ -380,6 +380,9 @@ tr:hover td { background: var(--bg); }
 #toast.success { background: var(--green); }
 #toast.error { background: var(--red); }
 
+@keyframes syncPulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+.syncing-active { animation: syncPulse 1.5s infinite; color: var(--blue) !important; font-weight: 600; }
+
 /* ── CHECKOUT STEPS ── */
 .checkout-step { display: none; }
 .checkout-step.active { display: block; }
@@ -792,45 +795,36 @@ let usersDB = [];
 // DATA SYNC LOGIC (UPDATED)
 // ═══════════════════════════════════════════
 async function initApp() {
-  const savedData = localStorage.getItem('shopnest_storage');
-  
-  if (savedData) {
-    const data = JSON.parse(savedData);
-    if (data.products && data.products.length > 0) {
-      products = data.products;
-      usersDB = data.users || [];
-      orders = data.orders || [];
-      globalDeliveryCharge = data.globalDeliveryCharge || 60;
-
-      const session = localStorage.getItem('shopnest_session');
-      if (session) {
-        try {
-          const sUser = JSON.parse(session);
-          const fresh = usersDB.find(u => u.email.toLowerCase() === sUser.email.toLowerCase());
-          setLoggedIn(fresh || sUser);
-        } catch(e) {}
-      }
-
-      renderProducts();
-      return;
-    }
-  }
-
   try {
-    const resp = await fetch('data.json');
-    if (!resp.ok) throw new Error("Could not load data.json");
-    
-    const data = await resp.json();
-    products = data.products || [];
-    usersDB = data.users || [];
-    orders = data.orders || [];
-    globalDeliveryCharge = data.globalDeliveryCharge || 60;
-    if (data.githubConfig) {
-      if (!localStorage.getItem('gh_user')) localStorage.setItem('gh_user', data.githubConfig.user);
-      if (!localStorage.getItem('gh_repo')) localStorage.setItem('gh_repo', data.githubConfig.repo);
-      // Always load the token from data.json if available
-      if (data.githubConfig.token) localStorage.setItem('gh_token', data.githubConfig.token);
+    // Load local storage first for quick UI rendering
+    const savedData = localStorage.getItem('shopnest_storage');
+    if (savedData) {
+      const local = JSON.parse(savedData);
+      products = local.products || [];
+      usersDB = local.users || [];
+      orders = local.orders || [];
+      globalDeliveryCharge = local.globalDeliveryCharge || 60;
     }
+
+    // Always fetch data.json to get the latest GitHub Config
+    const resp = await fetch('data.json');
+    if (resp.ok) {
+      const data = await resp.json();
+      // Update config from file (overrides local if changed in repo)
+      if (data.githubConfig) {
+        localStorage.setItem('gh_user', data.githubConfig.user);
+        localStorage.setItem('gh_repo', data.githubConfig.repo);
+        if (data.githubConfig.token) localStorage.setItem('gh_token', data.githubConfig.token);
+      }
+      // If local storage was empty, use file data
+      if (!savedData) {
+        products = data.products || [];
+        usersDB = data.users || [];
+        orders = data.orders || [];
+        globalDeliveryCharge = data.globalDeliveryCharge || 60;
+      }
+    }
+    
     await saveData();
   } catch (e) {
     console.warn("ShopNest: Initial data.json not found, starting with empty state.");
@@ -878,7 +872,10 @@ function getGitHubConfig() {
 
 async function syncWithGitHub(data, config) {
   const statusEl = document.getElementById('sync-status');
-  if (statusEl) statusEl.textContent = '⏳ Syncing with GitHub...';
+  if (statusEl) {
+    statusEl.textContent = '⏳ Syncing with GitHub...';
+    statusEl.classList.add('syncing-active');
+  }
   
   try {
     const path = 'ecommerceWeb/data.json';
@@ -904,10 +901,16 @@ async function syncWithGitHub(data, config) {
     });
     
     if (!pushRes.ok) throw new Error("GitHub update failed.");
-    if (statusEl) statusEl.textContent = '✅ Synced with GitHub';
+    if (statusEl) {
+      statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
+      statusEl.classList.remove('syncing-active');
+    }
   } catch (err) {
     console.error(err);
-    if (statusEl) statusEl.textContent = '❌ Sync Failed';
+    if (statusEl) {
+      statusEl.textContent = '❌ Sync Failed';
+      statusEl.classList.remove('syncing-active');
+    }
     showToast('GitHub Sync Failed. Check Settings.', 'error');
   }
 }
