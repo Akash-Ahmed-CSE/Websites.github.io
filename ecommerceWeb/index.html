@@ -562,6 +562,7 @@ tr:hover td { background: var(--bg); }
       <div class="admin-tabs">
         <button class="admin-tab active" onclick="switchAdminTab('products')">Products</button>
         <button class="admin-tab" onclick="switchAdminTab('orders')">Orders</button>
+        <button class="admin-tab" onclick="switchAdminTab('users')">Users</button>
       </div>
       <div class="admin-panel active" id="admin-tab-products">
         <div class="admin-table-wrap">
@@ -585,6 +586,20 @@ tr:hover td { background: var(--bg); }
               <tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr>
             </thead>
             <tbody id="admin-orders-tbody"></tbody> 
+          </table>
+        </div>
+      </div>
+      <div class="admin-panel" id="admin-tab-users">
+        <div class="admin-table-wrap">
+          <div class="admin-table-header">
+            <h3>All Users</h3>
+            <!-- <button class="add-user-btn" onclick="openAddUser()">+ Add User</button> -->
+          </div>
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Email</th><th>Admin</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="admin-users-tbody"></tbody> 
           </table>
         </div>
       </div>
@@ -730,6 +745,27 @@ tr:hover td { background: var(--bg); }
     <input type="hidden" id="pf-edit-id" value="">
     <div class="err-msg" id="pf-err"></div>
     <button class="modal-btn" onclick="saveProduct()">Save Product</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="edit-user-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('edit-user-modal')">×</button>
+    <div class="modal-title">Edit User Profile</div>
+    <div class="modal-sub">Update user information</div>
+    <div class="field"><label>User ID</label><input type="text" id="eu-id" readonly></div>
+    <div class="field-2">
+      <div class="field"><label>First Name</label><input type="text" id="eu-first" placeholder="John"></div>
+      <div class="field"><label>Last Name</label><input type="text" id="eu-last" placeholder="Doe"></div>
+    </div>
+    <div class="field"><label>Email</label><input type="email" id="eu-email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="eu-pass" placeholder="Leave blank to keep current"></div>
+    <div class="field" style="display:flex; align-items:center; gap:8px; margin-bottom:15px;">
+      <input type="checkbox" id="eu-is-admin" style="width:18px; height:18px; cursor:pointer;">
+      <label for="eu-is-admin" style="margin-bottom:0; cursor:pointer;">Is Admin</label>
+    </div>
+    <div class="err-msg" id="eu-err"></div>
+    <button class="modal-btn" onclick="saveUser()">Save Changes</button>
   </div>
 </div>
 
@@ -1368,6 +1404,7 @@ function showShop() {
 function switchAdminTab(tab) {
   document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', ['products','orders'][i] === tab));
   document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', ['products','orders','users'][i] === tab));
   document.getElementById('admin-tab-'+tab).classList.add('active');
 }
 
