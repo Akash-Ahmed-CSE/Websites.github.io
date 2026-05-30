@@ -781,6 +781,16 @@ async function initApp() {
       usersDB = data.users || [];
       orders = data.orders || [];
       globalDeliveryCharge = data.globalDeliveryCharge || 60;
+
+      const session = localStorage.getItem('shopnest_session');
+      if (session) {
+        try {
+          const sUser = JSON.parse(session);
+          const fresh = usersDB.find(u => u.email.toLowerCase() === sUser.email.toLowerCase());
+          setLoggedIn(fresh || sUser);
+        } catch(e) {}
+      }
+
       renderProducts();
       return;
     }
@@ -799,6 +809,16 @@ async function initApp() {
   } catch (e) {
     console.warn("ShopNest: Initial data.json not found, starting with empty state.");
   }
+
+  const session = localStorage.getItem('shopnest_session');
+  if (session) {
+    try {
+      const sUser = JSON.parse(session);
+      const fresh = usersDB.find(u => u.email.toLowerCase() === sUser.email.toLowerCase());
+      setLoggedIn(fresh || sUser);
+    } catch(e) {}
+  }
+
   renderProducts();
 }
 
@@ -1286,6 +1306,7 @@ async function loginWithGoogle() {
 
 function setLoggedIn(user) {
   currentUser = user;
+  localStorage.setItem('shopnest_session', JSON.stringify(user));
   document.getElementById('auth-btns').style.display = 'none';
   document.getElementById('user-menu-wrap').style.display = 'flex';
   const initial = user.name[0].toUpperCase();
@@ -1314,6 +1335,7 @@ function setLoggedIn(user) {
 
 function logout() {
   currentUser = null;
+  localStorage.removeItem('shopnest_session');
   document.getElementById('auth-btns').style.display = 'flex';
   document.getElementById('user-menu-wrap').style.display = 'none';
   document.getElementById('user-dashboard-view').style.display = 'none'; // Hide user dashboard on logout
