@@ -1532,6 +1532,78 @@ async function updateOrderDeliveryCharge(id, val) {
   }
 }
 
+function renderAdminUsers() {
+  const tbody = document.getElementById('admin-users-tbody');
+  if (usersDB.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px">No users registered yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = usersDB.map(u => `
+    <tr>
+      <td>${u.id}</td>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>${u.isAdmin ? 'Yes' : 'No'}</td>
+      <td>
+        <div class="tbl-actions">
+          <button class="tbl-btn" onclick="openEditUser('${u.id}')">Edit</button>
+          <button class="tbl-btn del" onclick="deleteUser('${u.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+let editingUserId = null;
+function openEditUser(userId) {
+  const user = usersDB.find(u => u.id === userId);
+  if (!user) return;
+  editingUserId = userId;
+  document.getElementById('eu-id').value = user.id;
+  const parts = user.name.split(' ');
+  document.getElementById('eu-first').value = parts[0] || '';
+  document.getElementById('eu-last').value = parts.slice(1).join(' ') || '';
+  document.getElementById('eu-email').value = user.email;
+  document.getElementById('eu-pass').value = ''; 
+  document.getElementById('eu-is-admin').checked = user.isAdmin;
+  document.getElementById('eu-err').classList.remove('show');
+  openModal('edit-user-modal');
+}
+
+async function saveUser() {
+  const user = usersDB.find(u => u.id === editingUserId);
+  if (!user) return;
+  const first = document.getElementById('eu-first').value.trim();
+  const last = document.getElementById('eu-last').value.trim();
+  const email = document.getElementById('eu-email').value.trim().toLowerCase();
+  const pass = document.getElementById('eu-pass').value;
+  
+  user.name = first + (last ? ' ' + last : '');
+  user.email = email;
+  if (pass) user.password = pass; 
+  user.isAdmin = document.getElementById('eu-is-admin').checked;
+  
+  await saveData();
+  closeModal('edit-user-modal');
+  showToast('User profile updated ✓', 'success');
+  renderAdminUsers();
+  renderAdminStats();
+}
+
+async function deleteUser(userId) {
+  const user = usersDB.find(u => u.id === userId);
+  if (user && user.isAdmin) {
+    showToast('Admin accounts cannot be deleted.', 'error');
+    return;
+  }
+  if (!confirm(`Are you sure you want to delete ${user ? user.name : 'this user'}?`)) return;
+  usersDB = usersDB.filter(u => u.id !== userId);
+  await saveData();
+  showToast('User account deleted.', 'success');
+  renderAdminUsers();
+  renderAdminStats();
+  if (currentUser && currentUser.id === userId) logout();
+}
+
 // ═══════════════════════════════════════════
 // ADD / EDIT PRODUCT
 // ═══════════════════════════════════════════
