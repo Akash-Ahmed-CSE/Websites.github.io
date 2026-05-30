@@ -856,6 +856,32 @@ async function syncWithGitHub(data, config) {
   }
 }
 
+function saveGitHubSettings() {
+  const user = document.getElementById('gh-user').value.trim();
+  const repo = document.getElementById('gh-repo').value.trim();
+  const token = document.getElementById('gh-token').value.trim();
+
+  if (!user || !repo || !token) return showToast('Please fill all fields', 'error');
+
+  localStorage.setItem('gh_user', user);
+  localStorage.setItem('gh_repo', repo);
+  localStorage.setItem('gh_token', token);
+
+  closeModal('github-settings-modal');
+  showToast('GitHub Settings Saved', 'success');
+  saveData(); // Trigger first sync
+}
+
+async function testGitHubSync() {
+  const config = getGitHubConfig();
+  const statusEl = document.getElementById('sync-status');
+  if (!config.token) return showToast('Configure settings first', 'error');
+
+  statusEl.textContent = '🧪 Testing connection...';
+  await syncWithGitHub({ products, users: usersDB, orders, globalDeliveryCharge }, config);
+  showToast('Connection test complete', 'success');
+}
+
 // ═══════════════════════════════════════════
 // PRODUCT CARD COLORS
 // ═══════════════════════════════════════════
@@ -1322,6 +1348,7 @@ function showAdminPanel() {
   if (!currentUser?.isAdmin) return;
   toggleUserMenu(false);
   document.getElementById('shop-view').style.display = 'none';
+  document.getElementById('user-dashboard-view').style.display = 'none';
   document.getElementById('admin-view').style.display = 'block';
   renderAdminStats();
   renderAdminProducts();
@@ -1340,6 +1367,7 @@ function showUserDashboard() {
 
 function showShop() {
   document.getElementById('admin-view').style.display = 'none';
+  document.getElementById('user-dashboard-view').style.display = 'none';
   document.getElementById('shop-view').style.display = 'block';
   renderProducts();
 }
