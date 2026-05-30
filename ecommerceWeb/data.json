@@ -165,6 +165,13 @@
       "email": "akash@gmail.com",
       "password": "Test@123",
       "isAdmin": false
+    },
+    {
+      "id": "google1",
+      "name": "Google User",
+      "email": "google@shopnest.com",
+      "password": "",
+      "isAdmin": false
     }
   ],
   "orders": [
