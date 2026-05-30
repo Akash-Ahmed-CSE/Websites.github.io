@@ -526,8 +526,14 @@ tr:hover td { background: var(--bg); }
   <div id="admin-view" style="display:none">
     <div class="admin-wrap">
       <div class="admin-header">
-        <h1>Admin Panel</h1>
-        <button class="nav-btn nav-btn-ghost" onclick="showShop()">← Back to Shop</button>
+        <div>
+          <h1>Admin Panel</h1>
+          <div id="sync-status" style="font-size:12px; color:var(--text3); margin-top:4px;">Ready to sync...</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="nav-btn nav-btn-outline" onclick="openModal('github-settings-modal')" title="Configure GitHub Sync">⚙️ Sync Settings</button>
+          <button class="nav-btn nav-btn-ghost" onclick="showShop()">← Back to Shop</button>
+        </div>
       </div>
       <div class="admin-stats" id="admin-stats"></div>
       <div class="admin-tabs">
@@ -538,10 +544,7 @@ tr:hover td { background: var(--bg); }
         <div class="admin-table-wrap">
           <div class="admin-table-header">
             <h3>All Products</h3>
-            <div style="display: flex; gap: 8px;">
-              <button class="nav-btn nav-btn-outline" onclick="exportData()" title="Download data.json to update your GitHub repo">📥 Export JSON</button>
-              <button class="add-product-btn" onclick="openAddProduct()">+ Add Product</button>
-            </div>
+            <button class="add-product-btn" onclick="openAddProduct()">+ Add Product</button>
           </div>
           <table>
             <thead>
