@@ -320,6 +320,7 @@ input[type=range]::-webkit-slider-thumb { appearance: none; width: 16px; height:
 .admin-table-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
 .admin-table-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
 .add-product-btn {
+  margin-left: 8px;
   padding: 8px 16px; background: var(--blue); color: #fff; border: none;
   border-radius: var(--radius-sm); font-family: var(--sans); font-size: 13px;
   font-weight: 500; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 6px;
@@ -537,7 +538,10 @@ tr:hover td { background: var(--bg); }
         <div class="admin-table-wrap">
           <div class="admin-table-header">
             <h3>All Products</h3>
-            <button class="add-product-btn" onclick="openAddProduct()">+ Add Product</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="nav-btn nav-btn-outline" onclick="exportData()" title="Download data.json to update your GitHub repo">📥 Export JSON</button>
+              <button class="add-product-btn" onclick="openAddProduct()">+ Add Product</button>
+            </div>
           </div>
           <table>
             <thead>
