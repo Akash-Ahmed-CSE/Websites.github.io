@@ -442,13 +442,11 @@ tr:hover td { background: var(--bg); }
       <button class="nav-btn nav-btn-primary" onclick="openModal('register-modal')">Sign Up</button>
     </div>
     <div id="user-menu-wrap" class="user-menu-wrap" style="display:none">
-      <button id="nav-sync-btn" class="nav-btn nav-btn-outline" style="display:none; margin-right:8px;" onclick="openModal('github-settings-modal')">⚙️ Sync</button>
       <button class="user-avatar" id="user-avatar-btn" onclick="toggleUserMenu()">A</button>
       <div class="user-dropdown" id="user-dropdown">
         <div class="user-dropdown-name" id="user-dropdown-name">User</div>
         <button class="user-dropdown-item" onclick="showAdminPanel()" id="admin-menu-item" style="display:none">⚙️ Admin Panel</button>
         <button class="user-dropdown-item" onclick="showUserDashboard()" id="my-orders-menu-item" style="display:none">📦 My Orders</button>
-        <button class="user-dropdown-item" onclick="openModal('github-settings-modal'); toggleUserMenu(false)" id="sync-menu-item" style="display:none">⚙️ GitHub Sync</button>
         <div class="user-dropdown-sep" id="admin-sep" style="display:none"></div>
         <button class="user-dropdown-item" onclick="showShop(); toggleUserMenu()">🛍️ Shop</button>
         <button class="user-dropdown-item danger" onclick="logout()">🚪 Logout</button>
@@ -1364,7 +1362,6 @@ function logout() {
   document.getElementById('auth-btns').style.display = 'flex';
   document.getElementById('user-menu-wrap').style.display = 'none';
   document.getElementById('user-dashboard-view').style.display = 'none'; // Hide user dashboard on logout
-  document.getElementById('nav-sync-btn').style.display = 'none';
   document.getElementById('sync-status').textContent = 'Ready to sync...'; // Reset sync status
   toggleUserMenu(false);
   showShop();
