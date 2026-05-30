@@ -101,14 +101,23 @@ section:last-of-type{border-bottom:none}
 /* ── BADGE ── */
 .nav-badge{
   font-size:12px;font-weight:500;padding:4px 10px;
-  background:var(--green-light);color:var(--green);
-  border-radius:12px;border:1px solid #c6efce;
+  border-radius:12px;
   display:inline-block;
+  transition: all 0.2s;
+}
+.nav-badge.status-open { background: var(--green-light); color: var(--green); border: 1px solid #c6efce; }
+.nav-badge.status-hiring { background: var(--blue-light); color: var(--blue); border: 1px solid #c5d9fb; }
+.nav-badge.status-urgent { background: #fce8e6; color: var(--red); border: 1px solid #f5c6c4; }
+.nav-badge.status-none { display: none; }
+
+.edit-on .nav-badge.status-none { 
+  display: inline-block !important; 
+  opacity: 0.4; 
+  background: var(--surface2); 
+  color: var(--text3); 
+  border: 1px dashed var(--border2); 
 }
 .edit-on .nav-badge:empty::before{content:'[Status]';opacity:.5}
-
-
-/* ── CHIP TAGS ── */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .chip{
   font-size:12px;font-weight:500;padding:4px 10px;border-radius:12px;
@@ -307,15 +316,16 @@ footer:hover .footer-hint{opacity:.7}
 #edit-bar{
   display:none;position:fixed;bottom:0;left:0;right:0;
   background:var(--white);border-top:2px solid var(--blue);
-  padding:10px 24px;z-index:900;
-  flex-direction:row;align-items:center;gap:12px;
+  padding:8px 24px;z-index:900;
+  flex-direction:column;gap:8px;
   box-shadow:0 -2px 8px rgba(0,0,0,.1);
 }
 #edit-bar.open{display:flex}
+.bar-row{display:flex;align-items:center;gap:10px;width:100%}
 .bar-label{font-size:13px;font-weight:600;color:var(--blue);flex-shrink:0}
 .bar-sep{width:1px;height:22px;background:var(--border2);flex-shrink:0}
 .bar-btn{
-  padding:7px 16px;font-family:var(--sans);font-size:13px;font-weight:500;
+  padding:6px 12px;font-family:var(--sans);font-size:13px;font-weight:500;
   border:none;border-radius:4px;cursor:pointer;transition:all .15s;flex-shrink:0;
 }
 .bar-save{background:var(--green-light);color:var(--green);border:1px solid #c6efce}
@@ -326,6 +336,72 @@ footer:hover .footer-hint{opacity:.7}
 .bar-exit:hover{background:#fce8e6}
 .bar-fmt{font-weight:bold;background:var(--surface2);border:1px solid var(--border);color:var(--text)}
 #bar-status{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── EDIT TOOLBAR EXTRA (MORE MENU) ── */
+.bar-extra {
+  display: none; 
+  padding-top: 12px;
+  margin-top: 4px;
+  border-top: 1px dashed var(--border2);
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.bar-extra.show {
+  display: flex; 
+}
+
+.bar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bar-select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.bar-select:focus {
+  border-color: var(--blue);
+}
+
+.bar-control {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar-color {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -361,25 +437,23 @@ footer:hover .footer-hint{opacity:.7}
 </head>
 <body class="">
 
-<!-- NAV -->
 <nav>
-  <a href="#hero" class="nav-logo">Akash <span>Ahmed</span></a>
+  <a href="#hero" class="nav-logo" data-ed>Akash <span>Ahmed</span></a>
   <ul class="nav-links">
-    <li><a href="#hero" class="active">Home</a></li>
-    <li><a href="#about" class="">About</a></li>
-    <li><a href="#education" class="">Education</a></li>
-    <li><a href="#experience" class="">Experience</a></li>
-    <li><a href="#research" class="">Research</a></li>
-    <li><a href="#projects" class="">Projects</a></li>
-    <li><a href="#achievements" class="">Achievements</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#hero" class="active" data-ed>Home</a></li>
+    <li><a href="#about" data-ed>About</a></li>
+    <li><a href="#education" data-ed>Education</a></li>
+    <li><a href="#experience" class="" data-ed>Experience</a></li>
+    <li><a href="#research" class="" data-ed>Research</a></li>
+    <li><a href="#projects" class="" data-ed>Projects</a></li>
+    <li><a href="#achievements" class="" data-ed>Achievements</a></li>
+    <li><a href="#contact" data-ed>Contact</a></li>
   </ul>
   <div class="nav-right">
-    <span class="nav-badge" data-ed="" contenteditable="false">Open to Work</span>
+    <span class="nav-badge status-open" data-ed="" contenteditable="false">Open to Work</span>
   </div>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
     <div>
@@ -388,18 +462,18 @@ footer:hover .footer-hint{opacity:.7}
       <p class="hero-subtitle" data-ed="" contenteditable="false">Software Engineer, QA — Therap (BD) Ltd.</p>
       <p class="hero-bio" data-ed="" contenteditable="false">B.Sc. in CSE from Daffodil International University. Ensuring software excellence through meticulous testing across Web, Android &amp; iOS. Deeply engaged in research within Data Science, Machine Learning, and Artificial Intelligence.&nbsp;</p>
       <div class="hero-actions">
-        <a href="#experience" class="btn-primary">View Experience</a>
-        <a href="#contact" class="btn-outline">Get In Touch</a>
+        <a href="#experience" class="btn-primary" data-ed>View Experience</a>
+        <a href="#contact" class="btn-outline" data-ed>Get In Touch</a>
       </div>
       <div class="chips">
-        <span class="chip">Playwright</span>
-        <span class="chip">Selenium</span>
-        <span class="chip">Postman</span>
-        <span class="chip">Jira</span>
-        <span class="chip">Git</span>
-        <span class="chip">SQL</span>
-        <span class="chip">Python</span>
-        <span class="chip">JavaScript</span>
+        <span class="chip" data-ed>Playwright</span>
+        <span class="chip" data-ed>Selenium</span>
+        <span class="chip" data-ed>Postman</span>
+        <span class="chip" data-ed>Jira</span>
+        <span class="chip" data-ed>Git</span>
+        <span class="chip" data-ed>SQL</span>
+        <span class="chip" data-ed>Python</span>
+        <span class="chip" data-ed>JavaScript</span>
       </div>
     </div>
     <div class="hero-photo-wrap img-target" id="hero-img-wrap" data-img-id="hero-img-el">
@@ -408,11 +482,10 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="page-wrap">
-    <p class="section-label">About</p>
-    <h2 class="section-title">Who I Am</h2>
+    <p class="section-label" data-ed>About</p>
+    <h2 class="section-title" data-ed>Who I Am</h2>
     <p class="about-text reveal in" data-ed="" contenteditable="false">
       Greetings, I'm <strong>Akash Ahmed</strong>, and I live in Savar, Dhaka. I have completed my Bachelor's degree in Computer Science and Engineering from <strong>Daffodil International University</strong>. Currently, I excel as a Software Quality Assurance Engineer (<strong>ISTQB® Certified Tester</strong>), showcasing a meticulous approach to ensuring software excellence.
     </p>
@@ -423,11 +496,10 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </section>
 
-<!-- EDUCATION -->
 <section id="education">
   <div class="page-wrap">
-    <p class="section-label">Education</p>
-    <h2 class="section-title">Academic Background</h2>
+    <p class="section-label" data-ed>Education</p>
+    <h2 class="section-title" data-ed>Academic Background</h2>
     <p class="edu-intro reveal in" data-ed="" contenteditable="false">My educational life started in 2002 in kindergarten in Ganbiksh Public Academy School in Savar. I studied there till class 7, then shifted to ACED School in Savar, passed SSC in 2015, HSC in 2017, and graduated from Daffodil International University in CSE.</p>
     <div class="edu-list">
       <div class="edu-card reveal in">
@@ -466,11 +538,10 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section id="experience">
   <div class="page-wrap">
-    <p class="section-label">Experience</p>
-    <h2 class="section-title">Work History</h2>
+    <p class="section-label" data-ed>Experience</p>
+    <h2 class="section-title" data-ed>Work History</h2>
     <div class="exp-list-wrap">
 
       <div class="exp-card reveal in">
@@ -504,18 +575,18 @@ footer:hover .footer-hint{opacity:.7}
         </div>
         <div class="exp-body">
           <div class="exp-sub">
-            <div class="exp-sub-title">Project 1 — New Mobile App</div>
+            <div class="exp-sub-title" data-ed>Project 1 — New Mobile App</div>
             <ul data-ed="" contenteditable="false"><li>Testing newly built Microbanking mobile app; reporting bugs; writing test cases on RTM in Jira</li></ul>
           </div>
           <div class="exp-sub">
-            <div class="exp-sub-title">Project 2 &amp; 3 — Existing Mobile &amp; Web App</div>
+            <div class="exp-sub-title" data-ed>Project 2 &amp; 3 — Existing Mobile &amp; Web App</div>
             <ul data-ed="" contenteditable="false">
               <li>Business rules analysis for micro banking across multiple entities</li>
               <li>API testing via Postman; automation modules using Selenium; database testing with SQL</li>
             </ul>
           </div>
           <div class="exp-sub">
-            <div class="exp-sub-title">Project 4 — Next Generation Web Application</div>
+            <div class="exp-sub-title" data-ed>Project 4 — Next Generation Web Application</div>
             <ul data-ed="" contenteditable="false">
               <li>Sprint-wise test case writing and bug reporting per SRS documentation</li>
               <li>ISTQB-aligned testing; BA and developer meetings for requirement clarity</li>
@@ -545,14 +616,13 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </section>
 
-<!-- RESEARCH -->
 <section id="research">
   <div class="page-wrap">
-    <p class="section-label">Research</p>
-    <h2 class="section-title">Publications &amp; Research</h2>
+    <p class="section-label" data-ed>Research</p>
+    <h2 class="section-title" data-ed>Publications &amp; Research</h2>
 
     <div class="pub-group">
-      <div class="pub-group-title">Journal Publications</div>
+      <div class="pub-group-title" data-ed>Journal Publications</div>
       <div class="pub-card reveal in" data-ed="" contenteditable="false">
         <strong>Rahman, M. M., Ahmed, A., Mahin, M. F., &amp; Shetu, S. F. (2021).</strong> Impact of COVID-19 on Mental Health: A Quantitative Analysis of Anxiety and Depression Based on Regular Life and Internet Use. <em>Current Research in Behavioral Sciences, 100037.</em> Elsevier.
         <span class="pub-doi">doi: 10.1016/j.crbeha.2021.100037</span>
@@ -564,7 +634,7 @@ footer:hover .footer-hint{opacity:.7}
     </div>
 
     <div class="pub-group">
-      <div class="pub-group-title">Conference Publication</div>
+      <div class="pub-group-title" data-ed>Conference Publication</div>
       <div class="pub-card reveal in" data-ed="" contenteditable="false">
         <strong>Saha, D., Karmakar, S., Nur, F.N., Mariam, A., Moon, N.N., Ahmed, A. (2021).</strong> Mobile Device and Social Media Forensic Analysis: Impacts on Cyber-Crime. <em>International Conference On Emerging Smart Technologies And Applications (eSmarTA2021).</em>
         <span class="pub-doi">doi: 10.1109/eSmarTA52612.2021.9515742</span>
@@ -572,7 +642,7 @@ footer:hover .footer-hint{opacity:.7}
     </div>
 
     <div class="pub-group">
-      <div class="pub-group-title">Affiliations &amp; Projects</div>
+      <div class="pub-group-title" data-ed>Affiliations &amp; Projects</div>
       <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>Member of Dreamers Lab</strong> — Writing review papers, research papers, and performing paper review activities.</div>
       <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>Elsevier Reviewer</strong> — Current Research in Behavioral Science (CRBS), gold open-access journal on all aspects of behavioral sciences.</div>
       <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>ML Research Projects:</strong> Chronic Kidney Disease Prediction · Heart Disease Prediction Using Machine Learning</div>
@@ -580,24 +650,23 @@ footer:hover .footer-hint{opacity:.7}
     </div>
 
     <div class="pub-group">
-      <div class="pub-group-title">Research Interests</div>
+      <div class="pub-group-title" data-ed>Research Interests</div>
       <div class="r-chips">
-        <span class="r-chip">Data Science</span>
-        <span class="r-chip">Artificial Intelligence</span>
-        <span class="r-chip">Machine Learning</span>
-        <span class="r-chip">Psychology</span>
-        <span class="r-chip">Behavioral Sciences</span>
-        <span class="r-chip">Cyber Security</span>
+        <span class="r-chip" data-ed>Data Science</span>
+        <span class="r-chip" data-ed>Artificial Intelligence</span>
+        <span class="r-chip" data-ed>Machine Learning</span>
+        <span class="r-chip" data-ed>Psychology</span>
+        <span class="r-chip" data-ed>Behavioral Sciences</span>
+        <span class="r-chip" data-ed>Cyber Security</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="projects">
   <div class="page-wrap">
-    <p class="section-label">Projects</p>
-    <h2 class="section-title">Featured Work</h2>
+    <p class="section-label" data-ed>Projects</p>
+    <h2 class="section-title" data-ed>Featured Work</h2>
     <div class="proj-grid">
       <div class="proj-card reveal in">
         <div class="proj-img-ph img-target" id="proj1-img" data-img-id="proj1-img">+ Add image</div>
@@ -605,7 +674,7 @@ footer:hover .footer-hint{opacity:.7}
           <div class="proj-tag" data-ed="" contenteditable="false">Playwright · JavaScript</div>
           <div class="proj-title" data-ed="" contenteditable="false">Web &amp; API Automation at Therap</div>
           <div class="proj-desc" data-ed="" contenteditable="false">End-to-end test automation using Playwright (JavaScript) for web UI and API layers. Integrated Gemini AI for test case generation, significantly accelerating QA cycles.</div>
-          <div class="tech-pills"><span class="tech-pill">Playwright</span><span class="tech-pill">JavaScript</span><span class="tech-pill">Postman</span><span class="tech-pill">Gemini AI</span></div>
+          <div class="tech-pills"><span class="tech-pill" data-ed>Playwright</span><span class="tech-pill" data-ed>JavaScript</span><span class="tech-pill" data-ed>Postman</span><span class="tech-pill" data-ed>Gemini AI</span></div>
         </div>
       </div>
       <div class="proj-card reveal in">
@@ -614,7 +683,7 @@ footer:hover .footer-hint{opacity:.7}
           <div class="proj-tag" data-ed="" contenteditable="false">Machine Learning · Python</div>
           <div class="proj-title" data-ed="" contenteditable="false">Chronic Kidney Disease Prediction</div>
           <div class="proj-desc" data-ed="" contenteditable="false">ML research project predicting CKD from patient datasets using classification algorithms, feature selection, and model evaluation metrics.</div>
-          <div class="tech-pills"><span class="tech-pill">Python</span><span class="tech-pill">Scikit-learn</span><span class="tech-pill">Pandas</span><span class="tech-pill">Jupyter</span></div>
+          <div class="tech-pills"><span class="tech-pill" data-ed>Python</span><span class="tech-pill" data-ed>Scikit-learn</span><span class="tech-pill" data-ed>Pandas</span><span class="tech-pill" data-ed>Jupyter</span></div>
         </div>
       </div>
       <div class="proj-card reveal in">
@@ -623,7 +692,7 @@ footer:hover .footer-hint{opacity:.7}
           <div class="proj-tag" data-ed="" contenteditable="false">Selenium · Python</div>
           <div class="proj-title" data-ed="" contenteditable="false">Microbanking App Automation</div>
           <div class="proj-desc" data-ed="" contenteditable="false">Automated regression test suite for a microbanking web application covering critical business workflows across multiple entity types.</div>
-          <div class="tech-pills"><span class="tech-pill">Selenium</span><span class="tech-pill">Python</span><span class="tech-pill">SQL</span><span class="tech-pill">Jira</span></div>
+          <div class="tech-pills"><span class="tech-pill" data-ed>Selenium</span><span class="tech-pill" data-ed>Python</span><span class="tech-pill" data-ed>SQL</span><span class="tech-pill" data-ed>Jira</span></div>
         </div>
       </div>
       <div class="proj-card reveal in">
@@ -632,46 +701,45 @@ footer:hover .footer-hint{opacity:.7}
           <div class="proj-tag" data-ed="" contenteditable="false">Research · Elsevier</div>
           <div class="proj-title" data-ed="" contenteditable="false">COVID-19 Mental Health Analysis</div>
           <div class="proj-desc" data-ed="" contenteditable="false">Published in Elsevier CRBS — quantitative analysis of anxiety and depression impacts from COVID-19 on regular life and internet usage.</div>
-          <div class="tech-pills"><span class="tech-pill">Elsevier</span><span class="tech-pill">SPSS</span><span class="tech-pill">Data Analysis</span></div>
+          <div class="tech-pills"><span class="tech-pill" data-ed>Elsevier</span><span class="tech-pill" data-ed>SPSS</span><span class="tech-pill" data-ed>Data Analysis</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ACHIEVEMENTS -->
 <section id="achievements">
   <div class="page-wrap">
-    <p class="section-label">Achievements</p>
-    <h2 class="section-title">Milestones</h2>
+    <p class="section-label" data-ed>Achievements</p>
+    <h2 class="section-title" data-ed>Milestones</h2>
     <div class="ach-grid">
       <div class="ach-card reveal in">
-        <div class="ach-icon">🏅</div>
+        <div class="ach-icon" data-ed>🏅</div>
         <div class="ach-title" data-ed="" contenteditable="false">ISTQB® Certified Tester</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Foundation Level — international recognition for software testing knowledge and best practices.</div>
       </div>
       <div class="ach-card reveal in">
-        <div class="ach-icon">📄</div>
+        <div class="ach-icon" data-ed>📄</div>
         <div class="ach-title" data-ed="" contenteditable="false">3 Published Papers</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Two Elsevier journal publications and one IEEE conference paper on behavioral sciences and cyber forensics.</div>
       </div>
       <div class="ach-card reveal in">
-        <div class="ach-icon">🎓</div>
+        <div class="ach-icon" data-ed>🎓</div>
         <div class="ach-title" data-ed="" contenteditable="false">CGPA 3.93 / 4.00</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Graduated with distinction from Daffodil International University, B.Sc. in CSE (2018–2022).</div>
       </div>
       <div class="ach-card reveal in">
-        <div class="ach-icon">🔬</div>
+        <div class="ach-icon" data-ed>🔬</div>
         <div class="ach-title" data-ed="" contenteditable="false">Elsevier Reviewer</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Peer reviewer for Current Research in Behavioral Sciences (CRBS), gold open-access Elsevier journal.</div>
       </div>
       <div class="ach-card reveal in">
-        <div class="ach-icon">🧪</div>
+        <div class="ach-icon" data-ed>🧪</div>
         <div class="ach-title" data-ed="" contenteditable="false">Dreamers Lab Member</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Active research lab member writing, reviewing, and publishing academic research papers.</div>
       </div>
       <div class="ach-card reveal in">
-        <div class="ach-icon">📚</div>
+        <div class="ach-icon" data-ed>📚</div>
         <div class="ach-title" data-ed="" contenteditable="false">Compiler Design Handbook</div>
         <div class="ach-desc" data-ed="" contenteditable="false">Authored "A Complete Handbook on Compiler Design" — a comprehensive technical reference work.</div>
       </div>
@@ -679,28 +747,27 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="page-wrap">
-    <p class="section-label">Contact</p>
+    <p class="section-label" data-ed>Contact</p>
     <div class="contact-inner">
       <h2 class="contact-heading">Let's <span>Connect</span></h2>
       <p class="contact-sub" data-ed="" contenteditable="false">Open to SQA roles, research collaborations, and conversations about quality engineering &amp; AI. Based in Savar, Dhaka, Bangladesh.</p>
-      
+
       <div class="contact-cards">
         <div class="contact-card">
           <span class="contact-icon">✉</span>
-          <div class="contact-label">Email</div>
+          <div class="contact-label" data-ed>Email</div>
           <div class="contact-value" data-ed="" contenteditable="false"><a href="mailto:akashahmed.diu@gmail.com">akashahmed.diu@gmail.com</a></div>
         </div>
         <div class="contact-card">
           <span class="contact-icon">📞</span>
-          <div class="contact-label">Phone</div>
+          <div class="contact-label" data-ed>Phone</div>
           <div class="contact-value" data-ed="" contenteditable="false">+880 1743304573</div>
         </div>
         <div class="contact-card">
           <span class="contact-icon">📍</span>
-          <div class="contact-label">Location</div>
+          <div class="contact-label" data-ed>Location</div>
           <div class="contact-value" data-ed="" contenteditable="false">Savar, Dhaka, BD</div>
         </div>
       </div>
@@ -720,10 +787,9 @@ footer:hover .footer-hint{opacity:.7}
 </section>
 
 <footer>
-  <span>© 2025 Akash Ahmed · Savar, Dhaka, Bangladesh</span>
+  <span data-ed>© 2025 Akash Ahmed · Savar, Dhaka, Bangladesh</span>
 </footer>
 
-<!-- ADMIN LOGIN MODAL -->
 <div class="modal-backdrop" id="admin-modal">
   <div class="modal-box">
     <button class="modal-close" id="admin-close">✕</button>
@@ -742,7 +808,6 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </div>
 
-<!-- GITHUB PUSH MODAL -->
 <div class="modal-backdrop" id="gh-modal">
   <div class="modal-box" style="width:480px">
     <button class="modal-close" id="gh-close">✕</button>
@@ -778,19 +843,76 @@ footer:hover .footer-hint{opacity:.7}
   </div>
 </div>
 
-<!-- EDIT TOOLBAR -->
 <div id="edit-bar" class="">
-  <span class="bar-label">✎ Edit Mode</span>
-  <div class="bar-sep"></div>
-  <button class="bar-btn bar-save" id="bar-save">⬇ Save HTML</button>
-  <button class="bar-btn bar-push" id="bar-push">⬆ Push to GitHub</button>
-  <div class="bar-sep"></div>
-  <button class="bar-btn bar-fmt" title="Bold" onclick="document.execCommand('bold',false,null)">B</button>
-  <button class="bar-btn bar-fmt" style="font-style:italic" title="Italic" onclick="document.execCommand('italic',false,null)">I</button>
-  <div class="bar-sep"></div>
-  <span id="bar-status">Image removed</span>
-  <div class="bar-sep"></div>
-  <button class="bar-btn bar-exit" id="bar-exit">Exit Edit Mode</button>
+  <div class="bar-row">
+    <span class="bar-label">✎ Edit Mode</span>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-save" id="bar-save">⬇ Save HTML</button>
+    <button class="bar-btn bar-save" id="bar-save-exit" style="background:var(--blue-light); color:var(--blue); border:1px solid var(--blue)">✓ Save &amp; Exit</button>
+    <button class="bar-btn bar-push" id="bar-push">⬆ Push</button>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-fmt" title="Bold" onmousedown="event.preventDefault()" onclick="q('bold')">B</button>
+    <button class="bar-btn bar-fmt" style="font-style:italic" title="Italic" onmousedown="event.preventDefault()" onclick="q('italic')">I</button>
+    <button class="bar-btn bar-fmt" style="text-decoration:underline" title="Underline" onmousedown="event.preventDefault()" onclick="q('underline')">U</button>
+    <button class="bar-btn bar-fmt" id="toggle-extra" onmousedown="event.preventDefault()" title="More Tools">••• More</button>
+    <div class="bar-sep"></div>
+    <span id="bar-status">Ready</span>
+    <button class="bar-btn bar-exit" id="bar-exit">Exit</button>
+  </div>
+  
+  <div class="bar-extra" id="edit-bar-extra">
+    <div class="bar-group">
+      <span class="bar-group-label">Badge Status</span>
+      <select class="bar-select" onchange="updateBadge(this.value)">
+        <option value="open">Open to Work (Green)</option>
+        <option value="hiring">Hiring (Blue)</option>
+        <option value="urgent">Urgent (Red)</option>
+        <option value="none">None (Hide Badge)</option>
+      </select>
+    </div>
+    <div class="bar-sep"></div>
+    <div class="bar-group">
+      <span class="bar-group-label">Typography</span>
+      <select class="bar-select" onchange="q('fontName', this.value)">
+        <option value="'Inter', sans-serif">Inter (Sans)</option>
+        <option value="'Playfair Display', serif">Playfair (Serif)</option>
+        <option value="Arial, Helvetica, sans-serif">Arial</option>
+        <option value="'Courier New', Courier, monospace">Courier New</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+        <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+      </select>
+      <select class="bar-select" title="Font Size (1-7)" onchange="q('fontSize', this.value)">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Colors</span>
+      <div class="bar-control" title="Text Color">Text <input type="color" class="bar-color" oninput="q('foreColor', this.value)"></div>
+      <div class="bar-control" title="Highlight Color">Bg <input type="color" class="bar-color" value="#ffffff" oninput="q('hiliteColor', this.value)"></div>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Layout</span>
+      <button class="bar-btn bar-fmt" title="Align Left" onmousedown="event.preventDefault()" onclick="q('justifyLeft')">⇐</button>
+      <button class="bar-btn bar-fmt" title="Align Center" onmousedown="event.preventDefault()" onclick="q('justifyCenter')">⇔</button>
+      <button class="bar-btn bar-fmt" title="Align Right" onmousedown="event.preventDefault()" onclick="q('justifyRight')">⇒</button>
+      <button class="bar-btn bar-fmt" title="Bullet List" onmousedown="event.preventDefault()" onclick="q('insertUnorderedList')">• List</button>
+      <button class="bar-btn bar-fmt" title="Clear Formatting" onmousedown="event.preventDefault()" onclick="q('removeFormat')">⊗ Clear</button>
+    </div>
+  </div>
 </div>
 
 <input type="file" id="img-input" accept="image/*" style="display:none">
@@ -879,10 +1001,35 @@ const editBar = document.getElementById('edit-bar');
 
 function setStatus(msg) { document.getElementById('bar-status').textContent = msg; }
 
+let lastFocused = null;
+document.addEventListener('focusin', e => {
+  if (e.target.dataset && e.target.hasAttribute('data-ed')) lastFocused = e.target;
+});
+
+function q(cmd, val = null) {
+  if (lastFocused) lastFocused.focus();
+  document.execCommand(cmd, false, val);
+}
+
+function updateBadge(type) {
+  const b = document.querySelector('.nav-badge');
+  b.className = 'nav-badge status-' + type;
+  if (type === 'open' && b.textContent === 'Hiring') b.textContent = 'Open to Work';
+  if (type === 'hiring' && b.textContent === 'Open to Work') b.textContent = 'Hiring';
+}
+
+const preventLink = (e) => e.preventDefault();
+
 function enableEditMode() {
   document.body.classList.add('edit-on');
   document.getElementById('edit-bar').classList.add('open');
-  document.querySelectorAll('[data-ed]').forEach(el => el.setAttribute('contenteditable', 'true'));
+  document.execCommand('styleWithCSS', false, true);
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    if (el.tagName === 'A') {
+      el.addEventListener('click', preventLink, { capture: true });
+    }
+  });
   document.querySelectorAll('.img-target').forEach(el => {
     el.addEventListener('click', onImgClick);
     attachDelBtn(el);
@@ -908,13 +1055,22 @@ function attachDelBtn(el) {
 function disableEditMode() {
   document.body.classList.remove('edit-on');
   editBar.classList.remove('open');
-  document.querySelectorAll('[data-ed]').forEach(el => el.setAttribute('contenteditable', 'false'));
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'false');
+    if (el.tagName === 'A') {
+      el.removeEventListener('click', preventLink, { capture: true });
+    }
+  });
   document.querySelectorAll('.img-target').forEach(el => el.removeEventListener('click', onImgClick));
   isAdmin = false;
 }
 
 document.getElementById('bar-exit').addEventListener('click', () => {
   if (confirm('Exit edit mode? Unsaved changes will be lost.')) disableEditMode();
+});
+
+document.getElementById('toggle-extra').addEventListener('click', (e) => {
+  document.getElementById('edit-bar-extra').classList.toggle('show');
 });
 
 document.querySelectorAll('[data-ed]').forEach(el => {
@@ -1011,8 +1167,8 @@ function getCleanHTML() {
   clone.querySelectorAll('.img-del-btn').forEach(el => el.remove());
   
   const badge = clone.querySelector('.nav-badge');
-  if (badge && badge.textContent.trim().toLowerCase() === 'hidden') {
-    badge.style.display = 'none';
+  if (badge && badge.classList.contains('status-none')) {
+    badge.remove();
   }
   return '<!DOCTYPE html>\n' + clone.outerHTML;
 }
@@ -1027,6 +1183,10 @@ document.getElementById('bar-save').addEventListener('click', () => {
   a.download = 'index.html';
   a.click();
   setStatus('Saved as index.html ✓');
+});
+
+document.getElementById('bar-save-exit').addEventListener('click', () => {
+  disableEditMode();
 });
 
 // ═══════════════════════════
