@@ -567,6 +567,20 @@ tr:hover td { background: var(--bg); }
 
 </div><div id="toast"></div>
 
+<div class="modal-backdrop" id="github-settings-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('github-settings-modal')">×</button>
+    <div class="modal-title">GitHub Sync Settings</div>
+    <div class="modal-sub">Enable automatic updates to data.json</div>
+    <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" placeholder="e.g. yourusername"></div>
+    <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="e.g. Websites.github.io"></div>
+    <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx"></div>
+    <p style="font-size:11px; color:var(--text3); margin-bottom:15px;">Note: The file will be updated at <b>ecommerceWeb/data.json</b>. Changes take ~1 minute to appear live on GitHub Pages.</p>
+    <button class="modal-btn" onclick="saveGitHubSettings()">Save & Connect</button>
+    <button class="modal-btn-ghost" onclick="testGitHubSync()">Test Connection</button>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="login-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('login-modal')">×</button>
@@ -765,6 +779,55 @@ async function initApp() {
 async function saveData() {
   const data = { products, users: usersDB, orders, globalDeliveryCharge };
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
+  
+  const config = getGitHubConfig();
+  if (config.token && config.user && config.repo) {
+    syncWithGitHub(data, config);
+  }
+}
+
+function getGitHubConfig() {
+  return {
+    user: localStorage.getItem('gh_user'),
+    repo: localStorage.getItem('gh_repo'),
+    token: localStorage.getItem('gh_token')
+  };
+}
+
+async function syncWithGitHub(data, config) {
+  const statusEl = document.getElementById('sync-status');
+  if (statusEl) statusEl.textContent = '⏳ Syncing with GitHub...';
+  
+  try {
+    const path = 'ecommerceWeb/data.json';
+    const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${path}`;
+    
+    // 1. Get the current file SHA (required to update)
+    const getRes = await fetch(url, { headers: { 'Authorization': `token ${config.token}` }});
+    if (!getRes.ok) throw new Error("Could not find data.json on GitHub.");
+    const fileData = await getRes.json();
+    
+    // 2. Push updated content
+    const pushRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${config.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Auto-update data.json [${new Date().toLocaleString()}]`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+        sha: fileData.sha
+      })
+    });
+    
+    if (!pushRes.ok) throw new Error("GitHub update failed.");
+    if (statusEl) statusEl.textContent = '✅ Synced with GitHub';
+  } catch (err) {
+    console.error(err);
+    if (statusEl) statusEl.textContent = '❌ Sync Failed';
+    showToast('GitHub Sync Failed. Check Settings.', 'error');
+  }
 }
 
 // ═══════════════════════════════════════════
