@@ -181,5 +181,10 @@
       "date": "5/30/2026"
     }
   ],
-  "globalDeliveryCharge": 60
+  "globalDeliveryCharge": 60,
+  "githubConfig": {
+    "user": "Akash-Ahmed-CSE",
+    "repo": "Websites.github.io",
+    "token": "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"
+  }
 }
