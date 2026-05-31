@@ -950,11 +950,7 @@ async function syncWithGitHub(data, config) {
     // We must NOT use plain btoa() because it breaks on non-ASCII (Bengali ৳ etc).
     const jsonStr = JSON.stringify(data, null, 2);
     const utf8Bytes = new TextEncoder().encode(jsonStr);
-    let binary = '';
-    for (let i = 0; i < utf8Bytes.length; i++) {
-      binary += String.fromCharCode(utf8Bytes[i]);
-    }
-    const base64Content = btoa(binary);
+    const base64Content = btoa(String.fromCharCode(...utf8Bytes));
 
     // ── Step 3: PUT (create or update) ───────────────────────────
     const body = {
