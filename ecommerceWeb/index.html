@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShopNest — Modern E-Commerce</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
 <style>
 /* ── TOKENS ── */
 :root {
@@ -871,7 +872,7 @@ async function saveData() {
   
   const config = getGitHubConfig();
   if (config.token && config.user && config.repo) {
-    syncWithGitHub(data, config);
+    await syncWithGitHub(data, config);
   }
 }
 
@@ -927,9 +928,12 @@ async function syncWithGitHub(data, config) {
       sha = fileData.sha;
     } else if (getRes.status !== 404) {
       if (getRes.status === 401) {
-        throw new Error("Token Revoked: GitHub detected your token in the code and disabled it. You need to generate a NEW token.");
+        throw new Error("GitHub Token Error (401): Unauthorized. Your token might be expired or invalid.");
       }
-      throw new Error(`GitHub API Error: ${getRes.statusText} (${getRes.status}). Check repo path.`);
+      if (getRes.status === 403) {
+        throw new Error("GitHub Permission Error (403): Forbidden. Check token scopes.");
+      }
+      throw new Error(`GitHub GET Error: ${getRes.statusText} (${getRes.status}). Verify user/repo settings.`);
     }
     
     // 2. Push updated content
@@ -949,7 +953,11 @@ async function syncWithGitHub(data, config) {
       body: JSON.stringify(payload)
     });
     
-    if (!pushRes.ok) throw new Error(`GitHub Update Failed: ${pushRes.statusText}`);
+    if (!pushRes.ok) {
+      let msg = `GitHub Update Failed: ${pushRes.statusText} (${pushRes.status})`;
+      if (pushRes.status === 404) msg += `. Verify that the repository "${config.repo}" exists under user "${config.user}" and that your token has write permissions.`;
+      throw new Error(msg);
+    }
     if (statusEl) {
       statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
       statusEl.classList.remove('syncing-active');
