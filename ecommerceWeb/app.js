@@ -69,8 +69,9 @@ async function updateOrderStatus(orderId, newStatus) {
         return;
     }
 
-    // Security check: Only admins can trigger a status update
-    if (typeof currentUser === 'undefined' || !currentUser?.isAdmin) {
+    // Security check: Only admins can trigger a status update. 
+    // currentUser is managed in index.html
+    if (typeof window.currentUser === 'undefined' || !window.currentUser?.isAdmin) {
         console.error("Unauthorized: Only admins can update order status.");
         return;
     }

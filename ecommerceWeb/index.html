@@ -812,10 +812,11 @@ async function initApp() {
     // ── Step 2: Fetch data.json from the repo (always) ────────────
     // This gives us: latest githubConfig (user/repo/path + encryptedToken)
     // and authoritative product/order data if localStorage was empty.
-    const resp = await fetch('data.json');
+    const resp = await fetch('data.json', { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
-
+      githubConfig = data.githubConfig; // Store the config to preserve it on save
+      
       // ── Decrypt token at runtime — the only safe approach ────────
       // encryptedToken in data.json is a hex XOR cipher blob.
       // The key lives only in this JS file; data.json never holds plaintext.
@@ -837,13 +838,11 @@ async function initApp() {
         }
       }
 
-      // If localStorage was empty on first load, seed from data.json
-      if (!savedData) {
-        products             = data.products             || [];
-        usersDB              = data.users                || [];
-        orders               = data.orders               || [];
-        globalDeliveryCharge = data.globalDeliveryCharge || 60;
-      }
+      // Always sync state with the latest server data
+      products             = data.products             || [];
+      usersDB              = data.users                || [];
+      orders               = data.orders               || [];
+      globalDeliveryCharge = data.globalDeliveryCharge || 60;
 
       await saveData();
     }
@@ -866,7 +865,7 @@ async function initApp() {
 }
 
 async function saveData() {
-  const data = { products, users: usersDB, orders, globalDeliveryCharge };
+  const data = { products, users: usersDB, orders, globalDeliveryCharge, githubConfig };
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
   
   const config = getGitHubConfig();
