@@ -861,6 +861,21 @@ async function fetchLatestData() {
       // Update state with latest data from data.json
       products             = data.products             || products;
       usersDB              = data.users                || usersDB;
+
+      if (currentUser) {
+        const updatedUser = usersDB.find(
+          u => u.id === currentUser.id
+        );
+
+        if (updatedUser) {
+          currentUser = updatedUser;
+          localStorage.setItem(
+            'shopnest_session',
+            JSON.stringify(updatedUser)
+          );
+        }
+      }
+
       orders               = data.orders               || orders;
       globalDeliveryCharge = data.globalDeliveryCharge || globalDeliveryCharge;
 
@@ -888,23 +903,54 @@ async function fetchLatestData() {
 
 async function saveData() {
   if (isSyncingData) return;
+
   isSyncingData = true;
 
-  const data = { 
-    products, 
-    users: usersDB, 
-    orders, 
-    globalDeliveryCharge,
-    githubConfig: cachedGithubConfig 
-  };
-  localStorage.setItem('shopnest_storage', JSON.stringify(data));
-  
-  const config = getGitHubConfig();
-  if (config.token && config.user && config.repo) {
-    await syncWithGitHub(data, config); 
-  }
+  const statusEl = document.getElementById('sync-status');
 
-  isSyncingData = false;
+  try {
+    const data = {
+      products,
+      users: usersDB,
+      orders,
+      globalDeliveryCharge,
+      githubConfig: cachedGithubConfig
+    };
+
+    // Always save locally first
+    localStorage.setItem('shopnest_storage', JSON.stringify(data));
+
+    const config = getGitHubConfig();
+
+    if (!config.user || !config.repo) {
+      throw new Error('GitHub repository settings are missing');
+    }
+
+    if (!config.token || config.token.trim() === '') {
+      throw new Error(
+        'GitHub token was not loaded from data.json'
+      );
+    }
+
+    await syncWithGitHub(data, config);
+
+    // Force reload latest data after successful push
+    setTimeout(() => {
+      fetchLatestData();
+    }, 2000);
+
+  } catch (err) {
+    console.error(err);
+
+    if (statusEl) {
+      statusEl.textContent = '❌ ' + err.message;
+      statusEl.classList.remove('syncing-active');
+    }
+
+    showToast(err.message, 'error');
+  } finally {
+    isSyncingData = false;
+  }
 }
 
 // ── TOKEN ENCRYPTION ────────────────────────────────────────────
