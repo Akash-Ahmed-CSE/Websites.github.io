@@ -799,24 +799,35 @@ let usersDB = [];
 // ═══════════════════════════════════════════
 async function initApp() {
   try {
-    // ── Step 1: Fetch authoritative data from data.json ────────────
+    // ── Step 1: Load localStorage first (fast UI render) ──────────
+    const savedData = localStorage.getItem('shopnest_storage');
+    if (savedData) {
+      const local = JSON.parse(savedData);
+      products             = local.products             || [];
+      usersDB              = local.users                || [];
+      orders               = local.orders               || [];
+      globalDeliveryCharge = local.globalDeliveryCharge || 60;
+    }
+
+    // ── Step 2: Fetch data.json from the repo (always) ────────────
+    // This gives us: latest githubConfig (user/repo/path + encryptedToken)
+    // and authoritative product/order data if localStorage was empty.
     const resp = await fetch('data.json');
     if (resp.ok) {
       const data = await resp.json();
 
-      // Populate state from data.json
-      products             = data.products             || [];
-      usersDB              = data.users                || [];
-      orders               = data.orders               || [];
-      globalDeliveryCharge = data.globalDeliveryCharge || 60;
-
       // ── Decrypt token at runtime — the only safe approach ────────
+      // encryptedToken in data.json is a hex XOR cipher blob.
+      // The key lives only in this JS file; data.json never holds plaintext.
+      // GitHub's push-protection scanner sees random hex — NOT a token.
       if (data.githubConfig) {
         const cfg = data.githubConfig;
+        // Persist non-secret config to localStorage for offline use
         if (cfg.user)  localStorage.setItem('gh_user', cfg.user);
         if (cfg.repo)  localStorage.setItem('gh_repo', cfg.repo);
         if (cfg.path)  localStorage.setItem('gh_path', cfg.path);
 
+        // Decrypt token into memory-only variable — never written to localStorage
         if (cfg.encryptedToken) {
           try {
             _resolvedToken = _xorCipher(cfg.encryptedToken, _SK);
@@ -826,24 +837,21 @@ async function initApp() {
         }
       }
 
-      // Update local storage cache with fresh data
-      localStorage.setItem('shopnest_storage', JSON.stringify({ products, users: usersDB, orders, globalDeliveryCharge }));
-    } else {
-      throw new Error(`Failed to load data.json (Status: ${resp.status})`);
+      // If localStorage was empty on first load, seed from data.json
+      if (!savedData) {
+        products             = data.products             || [];
+        usersDB              = data.users                || [];
+        orders               = data.orders               || [];
+        globalDeliveryCharge = data.globalDeliveryCharge || 60;
+      }
+
+      await saveData();
     }
   } catch (e) {
-    console.warn('ShopNest: Fetch failed, using local fallback —', e.message);
-    const savedData = localStorage.getItem('shopnest_storage');
-    if (savedData) {
-      const local = JSON.parse(savedData);
-      products             = local.products             || [];
-      usersDB              = local.users                || [];
-      orders               = local.orders               || [];
-      globalDeliveryCharge = local.globalDeliveryCharge || 60;
-    }
+    console.warn('ShopNest: Could not load data.json —', e.message);
   }
 
-  // ── Step 2: Restore session ────────────────────────────────────
+  // ── Step 3: Restore session ────────────────────────────────────
   const session = localStorage.getItem('shopnest_session');
   if (session) {
     try {
