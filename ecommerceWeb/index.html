@@ -837,13 +837,12 @@ async function initApp() {
         }
       }
 
-      // If localStorage was empty on first load, seed from data.json
-      if (!savedData) {
-        products             = data.products             || [];
-        usersDB              = data.users                || [];
-        orders               = data.orders               || [];
-        globalDeliveryCharge = data.globalDeliveryCharge || 60;
-      }
+      // Always sync local variables with the latest remote data from data.json
+      // to ensure all users and administrative data are updated simultaneously.
+      products             = data.products             || [];
+      usersDB              = data.users                || [];
+      orders               = data.orders               || [];
+      globalDeliveryCharge = data.globalDeliveryCharge || 60;
 
       await saveData();
     }
