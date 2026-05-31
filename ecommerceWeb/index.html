@@ -812,11 +812,10 @@ async function initApp() {
     // ── Step 2: Fetch data.json from the repo (always) ────────────
     // This gives us: latest githubConfig (user/repo/path + encryptedToken)
     // and authoritative product/order data if localStorage was empty.
-    const resp = await fetch('data.json', { cache: 'no-store' });
+    const resp = await fetch('data.json');
     if (resp.ok) {
       const data = await resp.json();
-      githubConfig = data.githubConfig; // Store the config to preserve it on save
-      
+
       // ── Decrypt token at runtime — the only safe approach ────────
       // encryptedToken in data.json is a hex XOR cipher blob.
       // The key lives only in this JS file; data.json never holds plaintext.
@@ -838,11 +837,13 @@ async function initApp() {
         }
       }
 
-      // Always sync state with the latest server data
-      products             = data.products             || [];
-      usersDB              = data.users                || [];
-      orders               = data.orders               || [];
-      globalDeliveryCharge = data.globalDeliveryCharge || 60;
+      // If localStorage was empty on first load, seed from data.json
+      if (!savedData) {
+        products             = data.products             || [];
+        usersDB              = data.users                || [];
+        orders               = data.orders               || [];
+        globalDeliveryCharge = data.globalDeliveryCharge || 60;
+      }
 
       await saveData();
     }
@@ -865,13 +866,11 @@ async function initApp() {
 }
 
 async function saveData() {
-  const data = { products, users: usersDB, orders, globalDeliveryCharge, githubConfig };
+  const data = { products, users: usersDB, orders, globalDeliveryCharge };
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
   
   const config = getGitHubConfig();
-  
-  // Only sync to GitHub if the logged-in user is an Admin
-  if (currentUser?.isAdmin && config.token && config.user && config.repo) {
+  if (config.token && config.user && config.repo) {
     syncWithGitHub(data, config);
   }
 }
@@ -1619,11 +1618,6 @@ function renderUserOrders() {
 }
 
 async function updateOrderStatus(id, status) {
-  if (!currentUser?.isAdmin) {
-    showToast('Unauthorized action', 'error');
-    return;
-  }
-
   const o = orders.find(x => x.id === id);
   if (o) { o.status = status; renderAdminOrders(); await saveData(); showToast('Order status updated', 'success'); }
 }
