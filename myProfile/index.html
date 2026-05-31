@@ -258,13 +258,6 @@ footer:hover .footer-hint{opacity:.7}
 .edit-on [data-ed]:focus{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px;cursor:text}
 [data-ed]:focus{outline:none}
 .edit-on .img-target{cursor:pointer;position:relative}
-.edit-on .img-target::after{
-  content:'Click to change image';position:absolute;inset:0;
-  background:rgba(26,115,232,.12);display:flex;align-items:center;justify-content:center;
-  font-size:12px;color:var(--blue);opacity:0;transition:opacity .15s;
-  border-radius:inherit;pointer-events:none;
-}
-.edit-on .img-target:hover::after{opacity:1}
 
 .img-del-btn{
   display:none;position:absolute;top:8px;right:8px;z-index:10;
