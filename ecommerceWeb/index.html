@@ -838,21 +838,18 @@ async function initApp() {
         }
       }
 
-      // If localStorage was empty on first load, seed from data.json
-      if (!savedData) {
-        products             = data.products             || [];
-        usersDB              = data.users                || [];
-        orders               = data.orders               || [];
-        globalDeliveryCharge = data.globalDeliveryCharge || 60;
-      }
-
-      await saveData();
+      // Update state with latest data from data.json
+      // We use || to fall back to existing values if keys are missing in data.json
+      products             = data.products             || products;
+      usersDB              = data.users                || usersDB;
+      orders               = data.orders               || orders;
+      globalDeliveryCharge = data.globalDeliveryCharge || globalDeliveryCharge;
     }
   } catch (e) {
     console.warn('ShopNest: Could not load data.json —', e.message);
   }
 
-  // ── Step 3: Restore session ────────────────────────────────────
+  // ── Step 3: Restore session (Must happen before first sync for UI feedback) ──
   const session = localStorage.getItem('shopnest_session');
   if (session) {
     try {
@@ -862,6 +859,9 @@ async function initApp() {
       else localStorage.removeItem('shopnest_session');
     } catch(e) {}
   }
+
+  // ── Step 4: Perform initial sync ──────────────────────────────
+  await saveData();
 
   renderProducts();
 }
