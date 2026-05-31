@@ -843,8 +843,9 @@ async function initApp() {
         usersDB              = data.users                || [];
         orders               = data.orders               || [];
         globalDeliveryCharge = data.globalDeliveryCharge || 60;
-        await saveData();
       }
+
+      await saveData();
     }
   } catch (e) {
     console.warn('ShopNest: Could not load data.json —', e.message);
