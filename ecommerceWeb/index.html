@@ -799,23 +799,10 @@ let usersDB = [];
 // DATA SYNC LOGIC (UPDATED)
 // ═══════════════════════════════════════════
 let isSyncingData = false;
+let cachedGithubConfig = null;
 
 async function initApp() {
-  // ── Step 1: Load localStorage first (fast UI render) ──────────
-  const savedData = localStorage.getItem('shopnest_storage');
-  if (savedData) {
-    const local = JSON.parse(savedData);
-    products             = local.products             || [];
-    usersDB              = local.users                || [];
-    orders               = local.orders               || [];
-    globalDeliveryCharge = local.globalDeliveryCharge || 60;
-  }
-
-  // ── Step 2: Fetch data.json from the repo ────────────
-  // This gives us the latest authoritative data and GitHub config.
-  await fetchLatestData();
-
-  // ── Step 3: Restore session (Must happen before first sync for UI feedback) ──
+  // ── Step 1: Restore session first (Important for UI feedback) ──
   const session = localStorage.getItem('shopnest_session');
   if (session) {
     try {
@@ -826,9 +813,24 @@ async function initApp() {
     } catch(e) {}
   }
 
-  // ── Step 4: Start background sync ─────────────────────────────
+  // ── Step 2: Load localStorage ──────────
+  const savedData = localStorage.getItem('shopnest_storage');
+  if (savedData) {
+    const local = JSON.parse(savedData);
+    products             = local.products             || [];
+    usersDB              = local.users                || [];
+    orders               = local.orders               || [];
+    globalDeliveryCharge = local.globalDeliveryCharge || 60;
+  }
+
+  // ── Step 3: Fetch authoritative data from GitHub ────────────
+  await fetchLatestData();
+
+  // ── Step 4: Start background polling & Trigger initial sync UI ──
   // Check for updates every 30 seconds to keep all users in sync.
   setInterval(fetchLatestData, 30000);
+
+  if (currentUser && currentUser.isAdmin) saveData();
 
   renderProducts();
 }
@@ -840,6 +842,7 @@ async function fetchLatestData() {
     const resp = await fetch('data.json?t=' + Date.now());
     if (resp.ok) {
       const data = await resp.json();
+      if (data.githubConfig) cachedGithubConfig = data.githubConfig;
 
       // Decrypt token if present (only happens once or on config change)
       if (data.githubConfig) {
@@ -887,7 +890,13 @@ async function saveData() {
   if (isSyncingData) return;
   isSyncingData = true;
 
-  const data = { products, users: usersDB, orders, globalDeliveryCharge };
+  const data = { 
+    products, 
+    users: usersDB, 
+    orders, 
+    globalDeliveryCharge,
+    githubConfig: cachedGithubConfig 
+  };
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
   
   const config = getGitHubConfig();
