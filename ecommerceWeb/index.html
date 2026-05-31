@@ -870,7 +870,9 @@ async function saveData() {
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
   
   const config = getGitHubConfig();
-  if (config.token && config.user && config.repo) {
+  
+  // Only sync to GitHub if the logged-in user is an Admin
+  if (currentUser?.isAdmin && config.token && config.user && config.repo) {
     syncWithGitHub(data, config);
   }
 }
@@ -1618,6 +1620,11 @@ function renderUserOrders() {
 }
 
 async function updateOrderStatus(id, status) {
+  if (!currentUser?.isAdmin) {
+    showToast('Unauthorized action', 'error');
+    return;
+  }
+
   const o = orders.find(x => x.id === id);
   if (o) { o.status = status; renderAdminOrders(); await saveData(); showToast('Order status updated', 'success'); }
 }
