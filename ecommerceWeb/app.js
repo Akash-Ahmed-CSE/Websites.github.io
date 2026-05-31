@@ -36,11 +36,11 @@ async function initializeApp() {
         appData = await response.json();
 
         // Bridge to index.html global state
-        window.products = appData.products || [];
-        window.orders = appData.orders || [];
-        window.usersDB = appData.users || [];
-        window.globalDeliveryCharge = appData.globalDeliveryCharge || 60;
-        window.githubConfig = appData.githubConfig;
+        products = appData.products || [];
+        orders = appData.orders || [];
+        usersDB = appData.users || [];
+        globalDeliveryCharge = appData.globalDeliveryCharge || 60;
+        githubConfig = appData.githubConfig;
 
         // Handle Token Decryption if config exists in data.json
         if (appData.githubConfig && appData.githubConfig.encryptedToken) {
@@ -68,8 +68,8 @@ async function initializeApp() {
  */
 async function updateOrderStatus(orderId, newStatus) {
     // Only admins can trigger a status update.
-    if (!window.currentUser?.isAdmin) {
-        if (window.showToast) window.showToast("Unauthorized: Admin access required", "error");
+    if (!currentUser?.isAdmin) {
+        if (typeof showToast === 'function') showToast("Unauthorized: Admin access required", "error");
         return;
     }
 
@@ -81,8 +81,8 @@ async function updateOrderStatus(orderId, newStatus) {
         
         try {
             // 1. Instantly update local UI
-            if (window.renderAdminOrders) window.renderAdminOrders();
-            if (window.showToast) window.showToast(`Order ${orderId} is now ${newStatus}`, "success");
+            if (typeof renderAdminOrders === 'function') renderAdminOrders();
+            if (typeof showToast === 'function') showToast(`Order ${orderId} is now ${newStatus}`, "success");
             
             // 2. Persist the change to GitHub so all users see it
             await saveData(); 
@@ -105,11 +105,11 @@ async function updateOrderStatus(orderId, newStatus) {
 async function saveData() {
     // Prepare payload using current global state
     const data = { 
-        products: window.products, 
-        users: window.usersDB, 
-        orders: window.orders, 
-        globalDeliveryCharge: window.globalDeliveryCharge,
-        githubConfig: window.githubConfig 
+        products: products, 
+        users: usersDB, 
+        orders: orders, 
+        globalDeliveryCharge: globalDeliveryCharge,
+        githubConfig: githubConfig 
     };
     
     localStorage.setItem('shopnest_storage', JSON.stringify(data));
@@ -121,8 +121,8 @@ async function saveData() {
  */
 async function saveDataToGitHub(dataToSave) {
     const config = {
-        user: window.githubConfig?.user || 'Akash-Ahmed-CSE',
-        repo: window.githubConfig?.repo || 'Websites.github.io',
+        user: githubConfig?.user || 'Akash-Ahmed-CSE',
+        repo: githubConfig?.repo || 'Websites.github.io',
         path: 'ecommerceWeb/data.json'
     };
 
