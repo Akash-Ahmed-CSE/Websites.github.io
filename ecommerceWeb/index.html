@@ -798,56 +798,22 @@ let usersDB = [];
 // ═══════════════════════════════════════════
 // DATA SYNC LOGIC (UPDATED)
 // ═══════════════════════════════════════════
+let isSyncingData = false;
+
 async function initApp() {
-  try {
-    // ── Step 1: Load localStorage first (fast UI render) ──────────
-    const savedData = localStorage.getItem('shopnest_storage');
-    if (savedData) {
-      const local = JSON.parse(savedData);
-      products             = local.products             || [];
-      usersDB              = local.users                || [];
-      orders               = local.orders               || [];
-      globalDeliveryCharge = local.globalDeliveryCharge || 60;
-    }
-
-    // ── Step 2: Fetch data.json from the repo (always) ────────────
-    // This gives us: latest githubConfig (user/repo/path + encryptedToken)
-    // and authoritative product/order data if localStorage was empty.
-    const resp = await fetch('data.json');
-    if (resp.ok) {
-      const data = await resp.json();
-
-      // ── Decrypt token at runtime — the only safe approach ────────
-      // encryptedToken in data.json is a hex XOR cipher blob.
-      // The key lives only in this JS file; data.json never holds plaintext.
-      // GitHub's push-protection scanner sees random hex — NOT a token.
-      if (data.githubConfig) {
-        const cfg = data.githubConfig;
-        // Persist non-secret config to localStorage for offline use
-        if (cfg.user)  localStorage.setItem('gh_user', cfg.user);
-        if (cfg.repo)  localStorage.setItem('gh_repo', cfg.repo);
-        if (cfg.path)  localStorage.setItem('gh_path', cfg.path);
-
-        // Decrypt token into memory-only variable — never written to localStorage
-        if (cfg.encryptedToken) {
-          try {
-            _resolvedToken = _xorCipher(cfg.encryptedToken, _SK);
-          } catch(e) {
-            console.warn('ShopNest: token decryption failed', e);
-          }
-        }
-      }
-
-      // Update state with latest data from data.json
-      // We use || to fall back to existing values if keys are missing in data.json
-      products             = data.products             || products;
-      usersDB              = data.users                || usersDB;
-      orders               = data.orders               || orders;
-      globalDeliveryCharge = data.globalDeliveryCharge || globalDeliveryCharge;
-    }
-  } catch (e) {
-    console.warn('ShopNest: Could not load data.json —', e.message);
+  // ── Step 1: Load localStorage first (fast UI render) ──────────
+  const savedData = localStorage.getItem('shopnest_storage');
+  if (savedData) {
+    const local = JSON.parse(savedData);
+    products             = local.products             || [];
+    usersDB              = local.users                || [];
+    orders               = local.orders               || [];
+    globalDeliveryCharge = local.globalDeliveryCharge || 60;
   }
+
+  // ── Step 2: Fetch data.json from the repo ────────────
+  // This gives us the latest authoritative data and GitHub config.
+  await fetchLatestData();
 
   // ── Step 3: Restore session (Must happen before first sync for UI feedback) ──
   const session = localStorage.getItem('shopnest_session');
@@ -860,13 +826,67 @@ async function initApp() {
     } catch(e) {}
   }
 
-  // ── Step 4: Perform initial sync ──────────────────────────────
-  await saveData();
+  // ── Step 4: Start background sync ─────────────────────────────
+  // Check for updates every 30 seconds to keep all users in sync.
+  setInterval(fetchLatestData, 30000);
 
   renderProducts();
 }
 
+async function fetchLatestData() {
+  if (isSyncingData) return;
+  try {
+    // Use cache buster to ensure we get the latest data.json from GitHub Pages
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (resp.ok) {
+      const data = await resp.json();
+
+      // Decrypt token if present (only happens once or on config change)
+      if (data.githubConfig) {
+        const cfg = data.githubConfig;
+        if (cfg.user)  localStorage.setItem('gh_user', cfg.user);
+        if (cfg.repo)  localStorage.setItem('gh_repo', cfg.repo);
+        if (cfg.path)  localStorage.setItem('gh_path', cfg.path);
+        if (cfg.encryptedToken) {
+          try {
+            const decrypted = _xorCipher(cfg.encryptedToken, _SK);
+            if (decrypted !== _resolvedToken) _resolvedToken = decrypted;
+          } catch(e) { console.warn('Token decryption failed', e); }
+        }
+      }
+
+      // Update state with latest data from data.json
+      products             = data.products             || products;
+      usersDB              = data.users                || usersDB;
+      orders               = data.orders               || orders;
+      globalDeliveryCharge = data.globalDeliveryCharge || globalDeliveryCharge;
+
+      // Sync LocalStorage for offline persistence
+      localStorage.setItem('shopnest_storage', JSON.stringify({ 
+        products, users: usersDB, orders, globalDeliveryCharge 
+      }));
+
+      // Refresh the current view
+      if (document.getElementById('admin-view').style.display === 'block') {
+        renderAdminProducts();
+        renderAdminOrders();
+        renderAdminUsers();
+        renderAdminStats();
+      } else if (document.getElementById('user-dashboard-view').style.display === 'block') {
+        renderUserOrders();
+      } else {
+        renderProducts();
+      }
+    }
+  } catch (e) {
+    console.warn('ShopNest: Background sync fetch failed', e);
+  }
+}
+
 async function saveData() {
+  if (isSyncingData) return;
+  isSyncingData = true;
+
   const data = { products, users: usersDB, orders, globalDeliveryCharge };
   localStorage.setItem('shopnest_storage', JSON.stringify(data));
   
@@ -874,6 +894,8 @@ async function saveData() {
   if (config.token && config.user && config.repo) {
     await syncWithGitHub(data, config); 
   }
+
+  isSyncingData = false;
 }
 
 // ── TOKEN ENCRYPTION ────────────────────────────────────────────
