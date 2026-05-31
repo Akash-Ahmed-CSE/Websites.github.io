@@ -872,7 +872,7 @@ async function saveData() {
   
   const config = getGitHubConfig();
   if (config.token && config.user && config.repo) {
-    await syncWithGitHub(data, config);
+    await syncWithGitHub(data, config); 
   }
 }
 
@@ -906,7 +906,10 @@ function getGitHubConfig() {
 
 async function syncWithGitHub(data, config) {
   const statusEl = document.getElementById('sync-status');
-  if (statusEl) {
+  const isAdmin = currentUser && currentUser.isAdmin;
+
+  // Only show sync status for Admin users
+  if (isAdmin && statusEl) {
     statusEl.textContent = '⏳ Syncing with GitHub...';
     statusEl.classList.add('syncing-active');
   }
@@ -958,7 +961,7 @@ async function syncWithGitHub(data, config) {
       if (pushRes.status === 404) msg += `. Verify that the repository "${config.repo}" exists under user "${config.user}" and that your token has write permissions.`;
       throw new Error(msg);
     }
-    if (statusEl) {
+    if (isAdmin && statusEl) {
       statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
       statusEl.classList.remove('syncing-active');
     }
@@ -968,7 +971,10 @@ async function syncWithGitHub(data, config) {
       statusEl.textContent = '❌ ' + err.message;
       statusEl.classList.remove('syncing-active');
     }
-    showToast(err.message, 'error');
+    // Only show sync error toasts to Admin users
+    if (isAdmin) {
+      showToast(err.message, 'error');
+    }
   }
 }
 
@@ -1346,6 +1352,8 @@ async function placeOrder() {
   cart = [];
   updateCartCount();
   renderProducts();
+  // Ensure the user dashboard reflects the new order immediately
+  if (document.getElementById('user-dashboard-view').style.display === 'block') renderUserOrders();
   closeModal('checkout-modal');
   showToast(`Order ${orderId} placed! 🎉`, 'success');
 }
