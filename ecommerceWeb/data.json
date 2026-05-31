@@ -187,5 +187,11 @@
       "date": "5/30/2026"
     }
   ],
-  "globalDeliveryCharge": 60
+  "globalDeliveryCharge": 60,
+  "githubConfig": {
+    "user": "Akash-Ahmed-CSE",
+    "repo": "Websites.github.io",
+    "path": "ecommerceWeb/data.json",
+    "encryptedToken": "Sh\u0001sNest_K9M!mQ\u0016t8@"
+  }
 }
