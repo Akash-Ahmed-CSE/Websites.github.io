@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShopNest — Modern E-Commerce</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/x-icon;base64,AA==">
 <style>
 /* ── TOKENS ── */
 :root {
@@ -484,9 +485,9 @@ tr:hover td { background: var(--bg); }
           </select>
         </div>
         <div class="filter-group">
-          <div class="filter-label">Max Price: <span id="price-label">৳500</span></div>
-          <input type="range" id="price-range" min="0" max="500" value="500" oninput="onPriceRange(this.value)">
-          <div class="price-range-row"><span>৳0</span><span>৳500</span></div>
+          <div class="filter-label">Max Price: <span id="price-label">৳5000</span></div>
+          <input type="range" id="price-range" min="0" max="5000" value="5000" oninput="onPriceRange(this.value)">
+          <div class="price-range-row"><span>৳0</span><span>৳5000</span></div>
         </div>
         <div class="filter-group">
           <div class="filter-label">Popular Products</div>
@@ -871,7 +872,7 @@ async function saveData() {
   
   const config = getGitHubConfig();
   if (config.token && config.user && config.repo) {
-    syncWithGitHub(data, config);
+    await syncWithGitHub(data, config); 
   }
 }
 
@@ -905,89 +906,82 @@ function getGitHubConfig() {
 
 async function syncWithGitHub(data, config) {
   const statusEl = document.getElementById('sync-status');
-  if (statusEl) {
+  const isAdmin = currentUser && currentUser.isAdmin;
+
+  // Only show sync status for Admin users
+  if (isAdmin && statusEl) {
     statusEl.textContent = '⏳ Syncing with GitHub...';
     statusEl.classList.add('syncing-active');
   }
-
+  
   try {
-    // Validate config before attempting
-    if (!config.token) throw new Error('No token available. Check encrypted token in data.json.');
-    if (!config.user || !config.repo) throw new Error('GitHub username or repo not set.');
-
     const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${config.path}`;
-    const headers = {
-      'Authorization': `Bearer ${config.token}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json; charset=utf-8'
-    };
-
-    // ── Step 1: GET current file to retrieve its SHA ──────────────
-    // SHA is required by GitHub API to update an existing file.
-    // If the file doesn't exist yet (404), we CREATE it instead.
+    
+    // 1. Get the current file SHA (required to update)
     let sha = null;
-    const getRes = await fetch(url, { headers });
-
+    const getRes = await fetch(url, { 
+      headers: { 
+        'Authorization': `Bearer ${config.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    
     if (getRes.status === 200) {
-      // File exists — grab SHA for the update
       const fileData = await getRes.json();
       sha = fileData.sha;
-    } else if (getRes.status === 404) {
-      // File doesn't exist yet — we'll create it (PUT without sha)
-      sha = null;
-      if (statusEl) statusEl.textContent = '📄 File not found — creating it...';
-    } else if (getRes.status === 401) {
-      throw new Error('Token rejected (401). Your token may be expired or revoked. Generate a new one.');
-    } else if (getRes.status === 403) {
-      throw new Error('Permission denied (403). Token needs "repo" scope. Check token settings on GitHub.');
-    } else {
-      const errBody = await getRes.text();
-      throw new Error(`GitHub GET failed (${getRes.status}): ${errBody.slice(0, 120)}`);
-    }
-
-    // ── Step 2: Encode file content as Base64 UTF-8 ───────────────
-    // GitHub API requires content as base64-encoded UTF-8.
-    // We must NOT use plain btoa() because it breaks on non-ASCII (Bengali ৳ etc).
-    const jsonStr = JSON.stringify(data, null, 2);
-    const utf8Bytes = new TextEncoder().encode(jsonStr);
-    const base64Content = btoa(String.fromCharCode(...utf8Bytes));
-
-    // ── Step 3: PUT (create or update) ───────────────────────────
-    const body = {
-      message: `ShopNest auto-sync [${new Date().toISOString()}]`,
-      content: base64Content
-    };
-    if (sha) body.sha = sha; // Required for update; omit for create
-
-    const putRes = await fetch(url, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify(body)
-    });
-
-    if (putRes.status === 200 || putRes.status === 201) {
-      // 200 = updated, 201 = created
-      const action = putRes.status === 201 ? 'Created' : 'Updated';
-      if (statusEl) {
-        statusEl.textContent = `✅ ${action} on GitHub at ${new Date().toLocaleTimeString()}`;
-        statusEl.classList.remove('syncing-active');
+    } else if (getRes.status !== 404) {
+      if (getRes.status === 401) {
+        throw new Error("GitHub Token Error (401): Unauthorized. Your token might be expired or invalid.");
       }
-    } else if (putRes.status === 409) {
-      throw new Error('Conflict (409): File was modified elsewhere. Refresh and try again.');
-    } else if (putRes.status === 422) {
-      throw new Error('Validation failed (422): SHA mismatch. The file may have changed. Reload the page.');
-    } else {
-      const errBody = await putRes.text();
-      throw new Error(`GitHub PUT failed (${putRes.status}): ${errBody.slice(0, 160)}`);
+      if (getRes.status === 403) {
+        throw new Error("GitHub Permission Error (403): Forbidden. Check token scopes.");
+      }
+      throw new Error(`GitHub GET Error: ${getRes.statusText} (${getRes.status}). Verify user/repo settings.`);
+    }
+    
+    // 2. Encode content safely to Base64 (avoiding stack limits for large data)
+    const jsonStr = JSON.stringify(data, null, 2);
+    const bytes = new TextEncoder().encode(jsonStr);
+    let binString = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binString += String.fromCharCode(bytes[i]);
     }
 
+    const payload = {
+      message: `Auto-update data.json [${new Date().toISOString()}]`,
+      content: btoa(binString)
+    };
+    if (sha) payload.sha = sha;
+
+    const pushRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${config.token}`,
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!pushRes.ok) {
+      let msg = `GitHub Update Failed: ${pushRes.statusText} (${pushRes.status})`;
+      if (pushRes.status === 404) msg += `. Verify that the repository "${config.repo}" exists under user "${config.user}" and that your token has write permissions.`;
+      throw new Error(msg);
+    }
+    if (isAdmin && statusEl) {
+      statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
+      statusEl.classList.remove('syncing-active');
+    }
   } catch (err) {
-    console.error('ShopNest Sync Error:', err.message);
+    console.error("Sync Error:", err.message);
     if (statusEl) {
       statusEl.textContent = '❌ ' + err.message;
       statusEl.classList.remove('syncing-active');
     }
-    showToast('Sync failed: ' + err.message, 'error');
+    // Only show sync error toasts to Admin users
+    if (isAdmin) {
+      showToast(err.message, 'error');
+    }
   }
 }
 
@@ -1050,11 +1044,11 @@ function onPriceRange(val) {
 
 function resetFilters() {
   searchQuery = '';
-  maxPrice = 500;
+  maxPrice = 5000;
   categoryFilter = '';
   sortMode = 'default';
-  document.getElementById('price-range').value = 500;
-  document.getElementById('price-label').textContent = '৳500'; 
+  document.getElementById('price-range').value = 5000;
+  document.getElementById('price-label').textContent = '৳5000'; 
   document.getElementById('sort-select').value = 'default';
   document.getElementById('sort-select-top').value = 'default';
   document.getElementById('category-filter').value = '';
@@ -1365,6 +1359,8 @@ async function placeOrder() {
   cart = [];
   updateCartCount();
   renderProducts();
+  // Ensure the user dashboard reflects the new order immediately
+  if (document.getElementById('user-dashboard-view').style.display === 'block') renderUserOrders();
   closeModal('checkout-modal');
   showToast(`Order ${orderId} placed! 🎉`, 'success');
 }
