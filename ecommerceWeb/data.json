@@ -1,22 +1,160 @@
 {
   "products": [
-    { "id": "p1", "orderNum": "ORD-001", "name": "Wireless Noise-Cancelling Headphones", "price": 149.99, "inStock": 5, "category": "Electronics", "desc": "Premium sound with active noise cancellation. 30h battery life, comfortable over-ear design.", "img": "", "isPopular": true },
-    { "id": "p2", "orderNum": "ORD-002", "name": "Mechanical Keyboard TKL", "price": 89.99, "inStock": 12, "category": "Electronics", "desc": "Tenkeyless mechanical keyboard with tactile switches. RGB backlit, compact layout.", "img": "", "isPopular": false },
-    { "id": "p3", "orderNum": "ORD-003", "name": "Running Shoes Pro X", "price": 119, "inStock": 8, "category": "Sports", "desc": "Lightweight running shoes with advanced cushioning. Available in multiple colors.", "img": "", "isPopular": true },
-    { "id": "p4", "orderNum": "ORD-004", "name": "Ceramic Coffee Mug Set", "price": 34.99, "inStock": 20, "category": "Home", "desc": "Set of 4 handcrafted ceramic mugs. Microwave and dishwasher safe.", "img": "", "isPopular": false },
-    { "id": "p5", "orderNum": "ORD-005", "name": "The Art of Clean Code", "price": 24.99, "inStock": 15, "category": "Books", "desc": "A practical guide to writing clean, maintainable software. 320 pages.", "img": "", "isPopular": false },
-    { "id": "p6", "orderNum": "ORD-006", "name": "Smart Watch Series 5", "price": 249, "inStock": 3, "category": "Electronics", "desc": "Health tracking, GPS, AMOLED display. Water resistant to 50m.", "img": "", "isPopular": true },
-    { "id": "p7", "orderNum": "ORD-007", "name": "Linen Casual Shirt", "price": 45, "inStock": 10, "category": "Clothing", "desc": "100% linen, breathable fabric. Perfect for warm weather.", "img": "", "isPopular": false },
-    { "id": "p8", "orderNum": "ORD-008", "name": "Yoga Mat Premium", "price": 59.99, "inStock": 0, "category": "Sports", "desc": "Non-slip, 6mm thick yoga mat. Includes carrying strap.", "img": "", "isPopular": false },
-    { "id": "p9", "orderNum": "ORD-009", "name": "Portable Bluetooth Speaker", "price": 79.99, "inStock": 7, "category": "Electronics", "desc": "360° sound, IPX7 waterproof, 24h playtime.", "img": "", "isPopular": false },
-    { "id": "p10", "orderNum": "ORD-010", "name": "Stainless Steel Water Bottle", "price": 28, "inStock": 14, "category": "Sports", "desc": "Insulated, keeps drinks cold 24h / hot 12h. BPA-free.", "img": "", "isPopular": false },
-    { "id": "p11", "orderNum": "ORD-011", "name": "Minimalist Desk Lamp", "price": 42, "inStock": 9, "category": "Home", "desc": "LED, adjustable brightness and color temperature, USB-C charging port.", "img": "", "isPopular": false },
-    { "id": "p12", "orderNum": "ORD-012", "name": "Classic Denim Jacket", "price": 69.99, "inStock": 3, "category": "Clothing", "desc": "Timeless denim jacket, vintage wash. Slim fit.", "img": "", "isPopular": false }
+    {
+      "id": "p1",
+      "orderNum": "ORD-001",
+      "name": "Wireless Noise-Cancelling Headphones",
+      "price": 149.99,
+      "inStock": 5,
+      "category": "Electronics",
+      "desc": "Premium sound with active noise cancellation. 30h battery life, comfortable over-ear design.",
+      "img": "",
+      "isPopular": true
+    },
+    {
+      "id": "p2",
+      "orderNum": "ORD-002",
+      "name": "Mechanical Keyboard TKL",
+      "price": 89.99,
+      "inStock": 12,
+      "category": "Electronics",
+      "desc": "Tenkeyless mechanical keyboard with tactile switches. RGB backlit, compact layout.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p3",
+      "orderNum": "ORD-003",
+      "name": "Running Shoes Pro X",
+      "price": 119,
+      "inStock": 8,
+      "category": "Sports",
+      "desc": "Lightweight running shoes with advanced cushioning. Available in multiple colors.",
+      "img": "",
+      "isPopular": true
+    },
+    {
+      "id": "p4",
+      "orderNum": "ORD-004",
+      "name": "Ceramic Coffee Mug Set",
+      "price": 34.99,
+      "inStock": 20,
+      "category": "Home",
+      "desc": "Set of 4 handcrafted ceramic mugs. Microwave and dishwasher safe.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p5",
+      "orderNum": "ORD-005",
+      "name": "The Art of Clean Code",
+      "price": 24.99,
+      "inStock": 15,
+      "category": "Books",
+      "desc": "A practical guide to writing clean, maintainable software. 320 pages.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p6",
+      "orderNum": "ORD-006",
+      "name": "Smart Watch Series 5",
+      "price": 249,
+      "inStock": 3,
+      "category": "Electronics",
+      "desc": "Health tracking, GPS, AMOLED display. Water resistant to 50m.",
+      "img": "",
+      "isPopular": true
+    },
+    {
+      "id": "p7",
+      "orderNum": "ORD-007",
+      "name": "Linen Casual Shirt",
+      "price": 45,
+      "inStock": 10,
+      "category": "Clothing",
+      "desc": "100% linen, breathable fabric. Perfect for warm weather.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p8",
+      "orderNum": "ORD-008",
+      "name": "Yoga Mat Premium",
+      "price": 59.99,
+      "inStock": 0,
+      "category": "Sports",
+      "desc": "Non-slip, 6mm thick yoga mat. Includes carrying strap.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p9",
+      "orderNum": "ORD-009",
+      "name": "Portable Bluetooth Speaker",
+      "price": 79.99,
+      "inStock": 7,
+      "category": "Electronics",
+      "desc": "360° sound, IPX7 waterproof, 24h playtime.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p10",
+      "orderNum": "ORD-010",
+      "name": "Stainless Steel Water Bottle",
+      "price": 28,
+      "inStock": 14,
+      "category": "Sports",
+      "desc": "Insulated, keeps drinks cold 24h / hot 12h. BPA-free.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p11",
+      "orderNum": "ORD-011",
+      "name": "Minimalist Desk Lamp",
+      "price": 42,
+      "inStock": 9,
+      "category": "Home",
+      "desc": "LED, adjustable brightness and color temperature, USB-C charging port.",
+      "img": "",
+      "isPopular": false
+    },
+    {
+      "id": "p12",
+      "orderNum": "ORD-012",
+      "name": "Classic Denim Jacket",
+      "price": 69.99,
+      "inStock": 3,
+      "category": "Clothing",
+      "desc": "Timeless denim jacket, vintage wash. Slim fit.",
+      "img": "",
+      "isPopular": false
+    }
   ],
   "users": [
-    { "id": "admin", "name": "Admin User", "email": "admin@gmail.com", "password": "admin", "isAdmin": true },
-    { "id": "u2", "name": "John Doe", "email": "john@example.com", "password": "securePassword123", "isAdmin": false },
-    { "id": "u1780161442619", "name": "Akash Ahmed", "email": "akash@gmail.com", "password": "Test@123", "isAdmin": false }
+    {
+      "id": "admin",
+      "name": "Admin User",
+      "email": "admin@gmail.com",
+      "password": "admin",
+      "isAdmin": true
+    },
+    {
+      "id": "u2",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "securePassword123",
+      "isAdmin": false
+    },
+    {
+      "id": "u1780161442619",
+      "name": "Akash Ahmed",
+      "email": "akash@gmail.com",
+      "password": "Test@123",
+      "isAdmin": false
+    }
   ],
   "orders": [
     {
@@ -25,21 +163,23 @@
       "email": "akash@gmail.com",
       "phone": "01743304573",
       "items": [
-        { "name": "Classic Denim Jacket", "qty": 1, "price": 69.99 }
+        {
+          "name": "Akash",
+          "qty": 2,
+          "price": 100
+        },
+        {
+          "name": "Classic Denim Jacket",
+          "qty": 1,
+          "price": 69.99
+        }
       ],
-      "subtotal": 69.99,
+      "subtotal": 269.99,
       "deliveryCharge": 60,
-      "total": 129.99,
+      "total": 329.99,
       "status": "delivered",
       "date": "5/30/2026"
     }
   ],
-  "globalDeliveryCharge": 60,
-  "githubConfig": {
-    "user": "Akash-Ahmed-CSE",
-    "repo": "Websites.github.io",
-    "path": "ecommerceWeb/data.json",
-    "_tokenNote": "Token is XOR-encrypted. Do NOT store plaintext token here.",
-    "encryptedToken": "34001f2f7820403f34111d5b7b403b137b0c5b051d121e2258361a573f333d2a780c0071000f5647"
-  }
+  "globalDeliveryCharge": 60
 }
