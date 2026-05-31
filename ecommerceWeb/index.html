@@ -914,6 +914,7 @@ async function syncWithGitHub(data, config) {
     const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${config.path}`;
     
     // 1. Get the current file SHA (required to update)
+    let sha = null;
     const getRes = await fetch(url, { 
       headers: { 
         'Authorization': `Bearer ${config.token}`,
@@ -921,15 +922,23 @@ async function syncWithGitHub(data, config) {
       }
     });
     
-    if (getRes.status === 401) {
-      throw new Error("Token Revoked: GitHub detected your token in the code and disabled it. You need to generate a NEW token.");
-    } else if (!getRes.ok) {
+    if (getRes.status === 200) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    } else if (getRes.status !== 404) {
+      if (getRes.status === 401) {
+        throw new Error("Token Revoked: GitHub detected your token in the code and disabled it. You need to generate a NEW token.");
+      }
       throw new Error(`GitHub API Error: ${getRes.statusText} (${getRes.status}). Check repo path.`);
     }
-
-    const fileData = await getRes.json();
     
     // 2. Push updated content
+    const payload = {
+      message: `Auto-update data.json [${new Date().toISOString()}]`,
+      content: btoa(Array.from(new TextEncoder().encode(JSON.stringify(data, null, 2)), byte => String.fromCharCode(byte)).join(''))
+    };
+    if (sha) payload.sha = sha;
+
     const pushRes = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -937,11 +946,7 @@ async function syncWithGitHub(data, config) {
         'Content-Type': 'application/json; charset=utf-8',
         'Accept': 'application/vnd.github.v3+json'
       },
-      body: JSON.stringify({
-        message: `Auto-update data.json [${new Date().toISOString()}]`,
-        content: btoa(Array.from(new TextEncoder().encode(JSON.stringify(data, null, 2)), byte => String.fromCharCode(byte)).join('')),
-        sha: fileData.sha
-      })
+      body: JSON.stringify(payload)
     });
     
     if (!pushRes.ok) throw new Error(`GitHub Update Failed: ${pushRes.statusText}`);
@@ -1018,11 +1023,11 @@ function onPriceRange(val) {
 
 function resetFilters() {
   searchQuery = '';
-  maxPrice = 500;
+  maxPrice = 5000;
   categoryFilter = '';
   sortMode = 'default';
-  document.getElementById('price-range').value = 500;
-  document.getElementById('price-label').textContent = '৳500'; 
+  document.getElementById('price-range').value = 5000;
+  document.getElementById('price-label').textContent = '৳5000'; 
   document.getElementById('sort-select').value = 'default';
   document.getElementById('sort-select-top').value = 'default';
   document.getElementById('category-filter').value = '';
