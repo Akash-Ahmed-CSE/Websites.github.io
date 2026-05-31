@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en" style="--bar-h: 156px;"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akash Ahmed — SQA Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --white:#ffffff;
+  --bg:#f8f9fa;
+  --surface:#ffffff;
+  --surface2:#f1f3f4;
+  --border:#e0e0e0;
+  --border2:#dadce0;
+  --text:#202124;
+  --text2:#5f6368;
+  --text3:#9aa0a6;
+  --blue:#1a73e8;
+  --blue-light:#e8f0fe;
+  --green:#137333;
+  --green-light:#e6f4ea;
+  --red:#d93025;
+  --sans:'Inter',sans-serif;
+  --serif:'Playfair Display',serif;
+  --nav-h:64px;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+  --shadow-md:0 2px 8px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;z-index:500;
+}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.3px}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{
+  color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;
+  padding:6px 12px;border-radius:4px;transition:background .15s,color .15s;
+}
+.nav-links a:hover{background:var(--surface2);color:var(--text);text-decoration:none}
+.nav-links a.active{color:var(--blue);background:var(--blue-light)}
+.nav-right{display:flex;align-items:center;gap:10px}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:900px;margin:0 auto;padding:0 24px}
+section{padding:72px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.section-title{font-family:var(--serif);font-size:clamp(26px,3.5vw,34px);font-weight:700;color:var(--text);margin-bottom:32px;line-height:1.2}
+.divider{height:1px;background:var(--border);margin:32px 0}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;align-items:center;
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding-top:var(--nav-h);
+}
+.hero-inner{display:grid;grid-template-columns:1fr 280px;gap:64px;align-items:center;width:100%;max-width:900px;margin:0 auto;padding:0 24px}
+.hero-kicker{font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.hero-name{font-family:var(--serif);font-size:clamp(44px,6vw,72px);font-weight:900;color:var(--text);line-height:1;margin-bottom:10px;letter-spacing:-.5px}
+.hero-name span{color:var(--blue)}
+.hero-subtitle{font-size:17px;color:var(--text2);font-weight:400;margin-bottom:20px}
+.hero-bio{font-size:14px;color:var(--text2);line-height:1.75;margin-bottom:28px;max-width:480px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-block;padding:10px 22px;background:var(--blue);color:#fff;
+  border-radius:4px;font-size:14px;font-weight:500;border:none;cursor:pointer;
+  transition:background .15s,box-shadow .15s;text-decoration:none;
+}
+.btn-primary:hover{background:#1557b0;box-shadow:var(--shadow-md);text-decoration:none;color:#fff}
+.btn-outline{
+  display:inline-block;padding:10px 22px;background:#fff;color:var(--blue);
+  border:1px solid var(--blue);border-radius:4px;font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .15s;text-decoration:none;
+}
+.btn-outline:hover{background:var(--blue-light);text-decoration:none}
+.hero-photo-wrap{position:relative}
+.hero-photo{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:var(--radius);box-shadow:var(--shadow-md)}
+.hero-photo-ph{
+  width:100%;aspect-ratio:3/4;background:var(--surface2);
+  border:2px dashed var(--border2);border-radius:var(--radius);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--text3);font-size:13px;cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.hero-photo-ph:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.hero-photo-ph svg{opacity:.5}
+
+/* ── BADGE ── */
+.nav-badge{
+  font-size:12px;font-weight:500;padding:4px 10px;
+  border-radius:12px;
+  display:inline-block;
+  transition: all 0.2s;
+}
+.nav-badge.status-open { background: var(--green-light); color: var(--green); border: 1px solid #c6efce; }
+.nav-badge.status-hiring { background: var(--blue-light); color: var(--blue); border: 1px solid #c5d9fb; }
+.nav-badge.status-urgent { background: #fce8e6; color: var(--red); border: 1px solid #f5c6c4; }
+.nav-badge.status-none { display: none; }
+
+.edit-on .nav-badge.status-none { 
+  display: inline-block !important; 
+  opacity: 0.4; 
+  background: var(--surface2); 
+  color: var(--text3); 
+  border: 1px dashed var(--border2); 
+}
+.edit-on .nav-badge:empty::before{content:'[Status]';opacity:.5}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{
+  font-size:12px;font-weight:500;padding:4px 10px;border-radius:12px;
+  background:var(--surface2);color:var(--text2);border:1px solid var(--border);
+  white-space:nowrap;
+}
+
+/* ── ABOUT ── */
+#about{background:var(--white)}
+.about-text{font-size:15px;color:var(--text);line-height:1.8;max-width:720px}
+.about-text strong{color:var(--text);font-weight:600}
+
+/* ── EDUCATION ── */
+#education{background:var(--bg)}
+.edu-intro{font-size:14px;color:var(--text2);line-height:1.8;max-width:720px;margin-bottom:32px}
+.edu-list{display:flex;flex-direction:column;gap:16px}
+.edu-card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 24px;display:flex;justify-content:space-between;align-items:flex-start;
+  gap:16px;box-shadow:var(--shadow);transition:box-shadow .15s;
+}
+.edu-card:hover{box-shadow:var(--shadow-md)}
+.edu-card-left{flex:1}
+.edu-school{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px}
+.edu-degree{font-size:13px;color:var(--text2);margin-bottom:2px}
+.edu-period{font-size:12px;color:var(--text3)}
+.edu-gpa{font-size:13px;font-weight:600;color:var(--blue);white-space:nowrap;margin-top:2px}
+
+/* ── EXPERIENCE ── */
+#experience{background:var(--white)}
+.exp-list-wrap{display:flex;flex-direction:column;gap:0}
+.exp-card{
+  padding:28px 0;border-bottom:1px solid var(--border);
+}
+.exp-card:last-child{border-bottom:none}
+.exp-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px}
+.exp-left{}
+.exp-role{font-size:17px;font-weight:600;color:var(--text);margin-bottom:3px}
+.exp-company{font-size:14px;color:var(--blue);font-weight:500}
+.exp-period{font-size:12px;color:var(--text3);white-space:nowrap;margin-top:2px}
+.exp-body{font-size:14px;color:var(--text2);line-height:1.75}
+.exp-body ul{margin:8px 0 0 16px}
+.exp-body li{margin-bottom:4px}
+.exp-sub{margin-top:14px}
+.exp-sub-title{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+
+/* ── RESEARCH ── */
+#research{background:var(--bg)}
+.pub-group{margin-bottom:32px}
+.pub-group-title{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.pub-card{
+  background:var(--white);border:1px solid var(--border);border-left:3px solid var(--blue);
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;
+  font-size:14px;color:var(--text);line-height:1.7;
+}
+.pub-card em{color:var(--text2);font-style:italic}
+.pub-doi{display:inline-block;font-size:12px;color:var(--blue);margin-top:4px}
+.r-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.r-chip{font-size:12px;padding:4px 10px;border-radius:12px;background:var(--blue-light);color:var(--blue);border:1px solid #c5d9fb;font-weight:500}
+
+/* ── PROJECTS ── */
+#projects{background:var(--white)}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.proj-card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s;
+}
+.proj-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.proj-img-ph{
+  width:100%;height:120px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--text3);cursor:pointer;transition:background .15s;
+  border-bottom:1px solid var(--border);
+}
+.proj-img-ph:hover{background:var(--blue-light);color:var(--blue)}
+.proj-img{width:100%;height:120px;object-fit:cover;border-bottom:1px solid var(--border);cursor:pointer}
+.proj-body{padding:16px}
+.proj-tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.proj-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
+.proj-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:10px}
+.tech-pills{display:flex;flex-wrap:wrap;gap:6px}
+.tech-pill{font-size:11px;padding:2px 8px;border-radius:3px;background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+
+/* ── ACHIEVEMENTS ── */
+#achievements{background:var(--bg)}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ach-card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow);
+}
+.ach-icon{font-size:24px;margin-bottom:10px}
+.ach-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px}
+.ach-desc{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ── CONTACT ── */
+#contact{background:var(--white);text-align:center}
+.contact-inner{max-width:760px;margin:0 auto}
+.contact-heading{font-family:var(--serif);font-size:clamp(32px,5vw,48px);font-weight:700;color:var(--text);line-height:1.1;margin-bottom:12px}
+.contact-heading span{color:var(--blue)}
+.contact-sub{font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:48px;max-width:620px;margin:0 auto 48px}
+
+.contact-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+.contact-card{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px 20px;transition:all .2s ease;
+}
+.contact-card:hover{border-color:var(--blue);background:var(--white);box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.contact-icon{font-size:24px;margin-bottom:10px;display:block}
+.contact-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.contact-value{font-size:14px;font-weight:500;color:var(--text);overflow-wrap:break-word}
+.contact-value a{color:inherit;text-decoration:none}
+.contact-value a:hover{color:var(--blue);text-decoration:underline}
+
+.social-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.social-btn{
+  width:44px;height:44px;border:1px solid var(--border);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:var(--text2);
+  text-decoration:none;transition:all .2s;background:var(--white);
+}
+.social-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light);transform:translateY(-3px);text-decoration:none}
+
+/* Cleanup old styles */
+.contact-grid, .contact-detail, .contact-form, .form-row { display: none; }
+
+/* ── FOOTER ── */
+footer{
+  background:var(--white);border-top:1px solid var(--border);
+  padding:20px 48px;display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text3);
+}
+.footer-hint{opacity:0;transition:opacity .3s;font-size:11px;user-select:none}
+footer:hover .footer-hint{opacity:.7}
+#admin-trigger{cursor:pointer;padding:4px 8px;border-radius:3px;transition:background .15s}
+
+/* ── EDITABLE ── */
+[data-ed]{transition:outline .1s}
+.edit-on [data-ed]:hover{outline:2px dashed rgba(26,115,232,.4);outline-offset:2px;cursor:text;border-radius:2px}
+.edit-on [data-ed]:focus{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px;cursor:text}
+[data-ed]:focus{outline:none}
+.edit-on .img-target{cursor:pointer;position:relative}
+.edit-on nav { top: 44px; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + 44px); }
+.edit-on nav { top: var(--bar-h, 50px); transition: top 0.2s; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + var(--bar-h, 50px)); transition: padding-top 0.2s; }
+
+.img-del-btn{
+  display:none;position:absolute;top:8px;right:8px;z-index:10;
+  width:24px;height:24px;background:var(--red);color:#fff;
+  border:none;border-radius:50%;cursor:pointer;font-size:14px;
+  align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.edit-on .img-target:hover .img-del-btn{display:flex}
+
+/* ── CHIP CONTROLS ── */
+.chip-ctrl-btn{
+  display:none;position:absolute;top:-10px;width:22px;height:22px;
+  border-radius:50%;border:1px solid #fff;cursor:pointer;font-size:10px;
+  align-items:center;justify-content:center;color:#fff;font-weight:700;
+  z-index:20;line-height:1;padding:0;box-shadow:0 2px 5px rgba(0,0,0,0.25);
+  transition: transform 0.1s ease;
+}
+.chip-ctrl-btn:hover { transform: scale(1.15); }
+.chip-add{right:18px;background:var(--green)}
+.chip-del{right:0;background:var(--red)}
+.edit-on .chip:hover .chip-ctrl-btn,
+.edit-on .r-chip:hover .chip-ctrl-btn,
+.edit-on .pub-card:hover .chip-ctrl-btn,
+.edit-on .tech-pill:hover .chip-ctrl-btn,
+.edit-on .edu-card:hover .chip-ctrl-btn,
+.edit-on .proj-card:hover .chip-ctrl-btn,
+.edit-on .ach-card:hover .chip-ctrl-btn,
+.edit-on .contact-card:hover .chip-ctrl-btn,
+.edit-on .social-btn:hover .chip-ctrl-btn {display:flex}
+.edit-on .chip, .edit-on .r-chip, .edit-on .tech-pill, .edit-on .pub-card,
+.edit-on .edu-card, .edit-on .proj-card, .edit-on .ach-card,
+.edit-on .contact-card, .edit-on .social-btn {position:relative}
+.edit-on .proj-card, .edit-on .edu-card, .edit-on .ach-card, .edit-on .contact-card {overflow:visible}
+
+/* ── MODALS ── */
+.modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);
+  z-index:1000;align-items:center;justify-content:center;
+}
+.modal-backdrop.open{display:flex}
+.modal-box{
+  background:var(--white);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.2);
+  width:380px;max-width:94vw;padding:32px;position:relative;
+}
+.modal-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+.modal-close {
+  position:absolute;top:14px;right:14px;width:28px;height:28px;
+  border:none;background:none;cursor:pointer;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;color:var(--text2);
+  transition:background .15s;font-size:16px;
+}
+.modal-close:hover{background:var(--surface2)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
+.field input{
+  width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:4px;
+  font-family:var(--sans);font-size:14px;color:var(--text);outline:none;transition:border-color .15s;
+}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,115,232,.15)}
+.field-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err-msg{font-size:12px;color:var(--red);margin-top:8px;display:none}
+.modal-btn{
+  width:100%;padding:10px;background:var(--blue);color:#fff;border:none;
+  border-radius:4px;font-family:var(--sans);font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .15s;margin-top:4px;
+}
+.modal-btn:hover{background:#1557b0}
+.modal-note{font-size:12px;color:var(--text2);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:4px;margin-bottom:16px}
+#gh-log{font-size:13px;margin-top:12px;padding:0;min-height:0;line-height:1.6;color:var(--green)}
+#gh-log.err{color:var(--red)}
+
+/* ── EDIT TOOLBAR ── */
+#edit-bar{
+  display:none;position:fixed;top:0;left:0;right:0;
+  background:var(--white);border-bottom:2px solid var(--blue);
+  padding:8px 24px;z-index:1000;
+  flex-direction:column;gap:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+#edit-bar.open{display:flex}
+.bar-row{display:flex;align-items:center;gap:10px;width:100%}
+.bar-label{font-size:13px;font-weight:600;color:var(--blue);flex-shrink:0}
+.bar-sep{width:1px;height:22px;background:var(--border2);flex-shrink:0}
+.bar-btn{
+  padding:6px 12px;font-family:var(--sans);font-size:13px;font-weight:500;
+  border:none;border-radius:4px;cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.bar-save{background:var(--green-light);color:var(--green);border:1px solid #c6efce}
+.bar-save:hover{background:#c6efce}
+.bar-push{background:var(--blue);color:#fff}
+.bar-push:hover{background:#1557b0}
+.bar-exit{background:var(--white);color:var(--red);border:1px solid #f5c6c4}
+.bar-exit:hover{background:#fce8e6}
+.bar-fmt{font-weight:bold;background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+#bar-status{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── EDIT TOOLBAR EXTRA (MORE MENU) ── */
+.bar-extra {
+  display: none; 
+  padding-top: 12px;
+  border-top: 1px dashed var(--border2);
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.bar-extra.show {
+  display: flex; 
+}
+
+.bar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bar-select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.bar-select:focus {
+  border-color: var(--blue);
+}
+
+.bar-control {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar-color {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-kicker{animation:fadeUp .5s ease both}
+
+.hero-name{animation:fadeUp .5s .08s ease both}
+.hero-subtitle{animation:fadeUp .5s .14s ease both}
+.hero-bio{animation:fadeUp .5s .2s ease both}
+.hero-actions{animation:fadeUp .5s .26s ease both}
+.hero-photo-wrap{animation:fadeUp .5s .1s ease both}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  #hero{padding-top:var(--nav-h)}
+  .hero-inner{grid-template-columns:1fr;gap:32px}
+  .hero-photo-wrap{max-width:200px}
+  section{padding:52px 0}
+  .page-wrap{padding:0 16px}
+  .proj-grid,.ach-grid,.contact-cards{grid-template-columns:1fr}
+  .ach-grid{grid-template-columns:1fr 1fr}
+  footer{padding:16px 20px;flex-direction:column;gap:6px}
+  .field-2{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .ach-grid{grid-template-columns:1fr}
+  .hero-name{letter-spacing:-1px}
+}
+</style>
+</head>
+<body class="">
+
+<nav>
+  <a href="#hero" class="nav-logo" data-ed="" contenteditable="false">Akash <span>Ahmed</span></a>
+  <ul class="nav-links">
+    <li><a href="#hero" class="active" data-ed="" contenteditable="false">Home</a></li>
+    <li><a href="#about" data-ed="" contenteditable="false">About</a></li>
+    <li><a href="#education" data-ed="" contenteditable="false">Education</a></li>
+    <li><a href="#experience" class="" data-ed="" contenteditable="false">Experience</a></li>
+    <li><a href="#research" class="" data-ed="" contenteditable="false">Research</a></li>
+    <li><a href="#projects" class="" data-ed="" contenteditable="false">Projects</a></li>
+    <li><a href="#achievements" class="" data-ed="" contenteditable="false">Achievements</a></li>
+    <li><a href="#contact" data-ed="" contenteditable="false">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-badge status-open" data-ed="" contenteditable="false">Open to Work</span>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-kicker" data-ed="" contenteditable="false">ISTQB® Certified · SQA Engineer · Dhaka, Bangladesh</p>
+      <h1 class="hero-name" data-ed="" contenteditable="false">Akash <span>Ahmed</span></h1>
+      <p class="hero-subtitle" data-ed="" contenteditable="false">Software Engineer, QA — Therap (BD) Ltd.</p>
+      <p class="hero-bio" data-ed="" contenteditable="false">B.Sc. in CSE from Daffodil International University. Ensuring software excellence through meticulous testing across Web, Android &amp; iOS. Deeply engaged in research within Data Science, Machine Learning, and Artificial Intelligence.&nbsp;</p>
+      <div class="hero-actions">
+        <a href="#experience" class="btn-primary" data-ed="" contenteditable="false">View Experience</a>
+        <a href="#contact" class="btn-outline" data-ed="" contenteditable="false">Get In Touch</a>
+      </div>
+      <div class="chips">
+        <span class="chip" data-ed="" contenteditable="false">Playwright</span>
+        <span class="chip" data-ed="" contenteditable="false">Selenium</span>
+        <span class="chip" data-ed="" contenteditable="false">Postman</span>
+        <span class="chip" data-ed="" contenteditable="false">Jira</span>
+        <span class="chip" data-ed="" contenteditable="false">Git</span>
+        <span class="chip" data-ed="" contenteditable="false">SQL</span>
+        <span class="chip" data-ed="" contenteditable="false">Python</span>
+        <span class="chip" data-ed="" contenteditable="false">JavaScript</span>
+      </div>
+    </div>
+    <div class="hero-photo-wrap" id="hero-img-wrap">
+      <div id="hero-img-el" data-img-id="hero-img-el" class="hero-photo-ph img-target"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg><span>Add your photo</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">About</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Who I Am</h2>
+    <p class="about-text reveal in" data-ed="" contenteditable="false">
+      Greetings, I'm <strong>Akash Ahmed</strong>, and I live in Savar, Dhaka. I have completed my Bachelor's degree in Computer Science and Engineering from <strong>Daffodil International University</strong>. Currently, I excel as a Software Quality Assurance Engineer (<strong>ISTQB® Certified Tester</strong>), showcasing a meticulous approach to ensuring software excellence.
+    </p>
+    <div class="divider"></div>
+    <p class="about-text reveal in" data-ed="" contenteditable="false">
+      Beyond my testing career, I am deeply engaged in research within the realms of <strong>Data Science, Machine Learning, and Artificial Intelligence</strong>. My commitment to staying at the forefront of technology is a testament to my passion for innovation. I believe quality isn't just a phase — it's a culture. Every bug caught before production is a user experience saved.
+    </p>
+  </div>
+</section>
+
+<section id="education">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Education</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Academic Background</h2>
+    <p class="edu-intro reveal in" data-ed="" contenteditable="false">My educational life started in 2002 in kindergarten in Ganbiksh Public Academy School in Savar. I studied there till class 7, then shifted to ACED School in Savar, passed SSC in 2015, HSC in 2017, and graduated from Daffodil International University in CSE.</p>
+    <div class="edu-list">
+      <div class="edu-card reveal in">
+        <div class="edu-card-left">
+          <div class="edu-school" data-ed="" contenteditable="false">Daffodil International University</div>
+          <div class="edu-degree" data-ed="" contenteditable="false">B.Sc. in Computer Science &amp; Engineering</div>
+          <div class="edu-period" data-ed="" contenteditable="false">January 2018 – December 2022</div>
+        </div>
+        <div class="edu-gpa" data-ed="" contenteditable="false">3.93 / 4.00</div>
+      </div>
+      <div class="edu-card reveal in">
+        <div class="edu-card-left">
+          <div class="edu-school" data-ed="" contenteditable="false">Savar Model College</div>
+          <div class="edu-degree" data-ed="" contenteditable="false">Higher Secondary Certificate (HSC)</div>
+          <div class="edu-period" data-ed="" contenteditable="false">May 2015 – April 2017</div>
+        </div>
+        <div class="edu-gpa" data-ed="" contenteditable="false">4.50 / 5.00</div>
+      </div>
+      <div class="edu-card reveal in">
+        <div class="edu-card-left">
+          <div class="edu-school" data-ed="" contenteditable="false">Chapain New Model School</div>
+          <div class="edu-degree" data-ed="" contenteditable="false">Secondary School Certificate (SSC)</div>
+          <div class="edu-period" data-ed="" contenteditable="false">January 2013 – February 2015</div>
+        </div>
+        <div class="edu-gpa" data-ed="" contenteditable="false">5.00 / 5.00</div>
+      </div>
+      <div class="edu-card reveal in">
+        <div class="edu-card-left">
+          <div class="edu-school" data-ed="" contenteditable="false">Chapain New Model School</div>
+          <div class="edu-degree" data-ed="" contenteditable="false">Junior School Certificate (JSC)</div>
+          <div class="edu-period" data-ed="" contenteditable="false">January 2012</div>
+        </div>
+        <div class="edu-gpa" data-ed="" contenteditable="false">4.14 / 5.00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Experience</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Work History</h2>
+    <div class="exp-list-wrap">
+
+      <div class="exp-card reveal in">
+        <div class="exp-header">
+          <div class="exp-left">
+            <div class="exp-role" data-ed="" contenteditable="false">Associate Software Engineer, QA</div>
+            <div class="exp-company" data-ed="" contenteditable="false">Therap (BD) Ltd.</div>
+          </div>
+          <div class="exp-period" data-ed="" contenteditable="false">June 2024 – Present</div>
+        </div>
+        <div class="exp-body">
+          <ul data-ed="" contenteditable="false">
+            <li>System testing across Web, Android, and iOS platforms</li>
+            <li>Test case writing, bug reporting, SDLC-aligned testing</li>
+            <li>API testing: Postman + Playwright (JavaScript) for Web &amp; API automation</li>
+            <li>Trained AI (Gemini) to generate test cases &amp; automation code</li>
+            <li>Used Gemini Code Assist (VS Code, Antigravity)</li>
+            <li>Built a JavaScript browser extension for QA workflows</li>
+            <li>Google App Script for Excel automation; version control with Git &amp; Bitbucket</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card reveal in">
+        <div class="exp-header">
+          <div class="exp-left">
+            <div class="exp-role" data-ed="" contenteditable="false">Jr. Software QA Engineer</div>
+            <div class="exp-company" data-ed="" contenteditable="false">ASAI Management Ltd. (ASA International)</div>
+          </div>
+          <div class="exp-period" data-ed="" contenteditable="false">Oct 2022 – May 2024</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-sub">
+            <div class="exp-sub-title" data-ed="" contenteditable="false">Project 1 — New Mobile App</div>
+            <ul data-ed="" contenteditable="false"><li>Testing newly built Microbanking mobile app; reporting bugs; writing test cases on RTM in Jira</li></ul>
+          </div>
+          <div class="exp-sub">
+            <div class="exp-sub-title" data-ed="" contenteditable="false">Project 2 &amp; 3 — Existing Mobile &amp; Web App</div>
+            <ul data-ed="" contenteditable="false">
+              <li>Business rules analysis for micro banking across multiple entities</li>
+              <li>API testing via Postman; automation modules using Selenium; database testing with SQL</li>
+            </ul>
+          </div>
+          <div class="exp-sub">
+            <div class="exp-sub-title" data-ed="" contenteditable="false">Project 4 — Next Generation Web Application</div>
+            <ul data-ed="" contenteditable="false">
+              <li>Sprint-wise test case writing and bug reporting per SRS documentation</li>
+              <li>ISTQB-aligned testing; BA and developer meetings for requirement clarity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-card reveal in">
+        <div class="exp-header">
+          <div class="exp-left">
+            <div class="exp-role" data-ed="" contenteditable="false">SAP Data Analyst</div>
+            <div class="exp-company" data-ed="" contenteditable="false">FCI Talisman LTD.</div>
+          </div>
+          <div class="exp-period" data-ed="" contenteditable="false">Feb 2022 – Aug 2022</div>
+        </div>
+        <div class="exp-body">
+          <ul data-ed="" contenteditable="false">
+            <li>Business Dataset analysis in the Garments industry</li>
+            <li>SAP and Fast-react expertise; backend development on SAP-ABAP language</li>
+            <li>Advanced Excel reporting and team management</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Research</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Publications &amp; Research</h2>
+
+    <div class="pub-group">
+      <div class="pub-group-title" data-ed="" contenteditable="false">Journal Publications</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false">
+        <strong>Rahman, M. M., Ahmed, A., Mahin, M. F., &amp; Shetu, S. F. (2021).</strong> Impact of COVID-19 on Mental Health: A Quantitative Analysis of Anxiety and Depression Based on Regular Life and Internet Use. <em>Current Research in Behavioral Sciences, 100037.</em> Elsevier.
+        <span class="pub-doi">doi: 10.1016/j.crbeha.2021.100037</span>
+      </div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false">
+        <strong>Shetu, S. F., Rahman, M. M., Ahmed, A., Mahin, M. F., Akib, M. A. U., &amp; Saifuzzaman, M. (2021).</strong> Impactful E-Learning Framework: A New Hybrid Form of Education. <em>Current Research in Behavioral Sciences, 100038.</em> Elsevier.
+        <span class="pub-doi">doi: 10.1016/j.crbeha.2021.100038</span>
+      </div>
+    </div>
+
+    <div class="pub-group">
+      <div class="pub-group-title" data-ed="" contenteditable="false">Conference Publication</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false">
+        <strong>Saha, D., Karmakar, S., Nur, F.N., Mariam, A., Moon, N.N., Ahmed, A. (2021).</strong> Mobile Device and Social Media Forensic Analysis: Impacts on Cyber-Crime. <em>International Conference On Emerging Smart Technologies And Applications (eSmarTA2021).</em>
+        <span class="pub-doi">doi: 10.1109/eSmarTA52612.2021.9515742</span>
+      </div>
+    </div>
+
+    <div class="pub-group">
+      <div class="pub-group-title" data-ed="" contenteditable="false">Affiliations &amp; Projects</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>Member of Dreamers Lab</strong> — Writing review papers, research papers, and performing paper review activities.</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>Elsevier Reviewer</strong> — Current Research in Behavioral Science (CRBS), gold open-access journal on all aspects of behavioral sciences.</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>ML Research Projects:</strong> Chronic Kidney Disease Prediction · Heart Disease Prediction Using Machine Learning</div>
+      <div class="pub-card reveal in" data-ed="" contenteditable="false"><strong>Handbook:</strong> A Complete Handbook on Compiler Design</div>
+    </div>
+
+    <div class="pub-group">
+      <div class="pub-group-title" data-ed="" contenteditable="false">Research Interests</div>
+      <div class="r-chips">
+        <span class="r-chip" data-ed="" contenteditable="false">Data Science</span>
+        <span class="r-chip" data-ed="" contenteditable="false">Artificial Intelligence</span>
+        <span class="r-chip" data-ed="" contenteditable="false">Machine Learning</span>
+        <span class="r-chip" data-ed="" contenteditable="false">Psychology</span>
+        <span class="r-chip" data-ed="" contenteditable="false">Behavioral Sciences</span>
+        <span class="r-chip" data-ed="" contenteditable="false">Cyber Security</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Projects</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Featured Work</h2>
+    <div class="proj-grid">
+      <div class="proj-card reveal in">
+        <div class="proj-img-ph img-target" id="proj1-img" data-img-id="proj1-img">+ Add image</div>
+        <div class="proj-body">
+          <div class="proj-tag" data-ed="" contenteditable="false">Playwright · JavaScript</div>
+          <div class="proj-title" data-ed="" contenteditable="false">Web &amp; API Automation at Therap</div>
+          <div class="proj-desc" data-ed="" contenteditable="false">End-to-end test automation using Playwright (JavaScript) for web UI and API layers. Integrated Gemini AI for test case generation, significantly accelerating QA cycles.</div>
+          <div class="tech-pills"><span class="tech-pill" data-ed="" contenteditable="false">Playwright</span><span class="tech-pill" data-ed="" contenteditable="false">JavaScript</span><span class="tech-pill" data-ed="" contenteditable="false">Postman</span><span class="tech-pill" data-ed="" contenteditable="false">Gemini AI</span></div>
+        </div>
+      </div>
+      <div class="proj-card reveal in">
+        <div class="proj-img-ph img-target" id="proj2-img" data-img-id="proj2-img">+ Add image</div>
+        <div class="proj-body">
+          <div class="proj-tag" data-ed="" contenteditable="false">Machine Learning · Python</div>
+          <div class="proj-title" data-ed="" contenteditable="false">Chronic Kidney Disease Prediction</div>
+          <div class="proj-desc" data-ed="" contenteditable="false">ML research project predicting CKD from patient datasets using classification algorithms, feature selection, and model evaluation metrics.</div>
+          <div class="tech-pills"><span class="tech-pill" data-ed="" contenteditable="false">Python</span><span class="tech-pill" data-ed="" contenteditable="false">Scikit-learn</span><span class="tech-pill" data-ed="" contenteditable="false">Pandas</span><span class="tech-pill" data-ed="" contenteditable="false">Jupyter</span></div>
+        </div>
+      </div>
+      <div class="proj-card reveal in">
+        <div class="proj-img-ph img-target" id="proj3-img" data-img-id="proj3-img">+ Add image</div>
+        <div class="proj-body">
+          <div class="proj-tag" data-ed="" contenteditable="false">Selenium · Python</div>
+          <div class="proj-title" data-ed="" contenteditable="false">Microbanking App Automation</div>
+          <div class="proj-desc" data-ed="" contenteditable="false">Automated regression test suite for a microbanking web application covering critical business workflows across multiple entity types.</div>
+          <div class="tech-pills"><span class="tech-pill" data-ed="" contenteditable="false">Selenium</span><span class="tech-pill" data-ed="" contenteditable="false">Python</span><span class="tech-pill" data-ed="" contenteditable="false">SQL</span><span class="tech-pill" data-ed="" contenteditable="false">Jira</span></div>
+        </div>
+      </div>
+      <div class="proj-card reveal in">
+        <div class="proj-img-ph img-target" id="proj4-img" data-img-id="proj4-img">+ Add image</div>
+        <div class="proj-body">
+          <div class="proj-tag" data-ed="" contenteditable="false">Research · Elsevier</div>
+          <div class="proj-title" data-ed="" contenteditable="false">COVID-19 Mental Health Analysis</div>
+          <div class="proj-desc" data-ed="" contenteditable="false">Published in Elsevier CRBS — quantitative analysis of anxiety and depression impacts from COVID-19 on regular life and internet usage.</div>
+          <div class="tech-pills"><span class="tech-pill" data-ed="" contenteditable="false">Elsevier</span><span class="tech-pill" data-ed="" contenteditable="false">SPSS</span><span class="tech-pill" data-ed="" contenteditable="false">Data Analysis</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="achievements">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Achievements</p>
+    <h2 class="section-title" data-ed="" contenteditable="false">Achievements</h2>
+    <div class="ach-grid">
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">🏅</div>
+        <div class="ach-title" data-ed="" contenteditable="false">ISTQB® Certified Tester</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Foundation Level — international recognition for software testing knowledge and best practices.</div>
+      </div>
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">📄</div>
+        <div class="ach-title" data-ed="" contenteditable="false">3 Published Papers</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Two Elsevier journal publications and one IEEE conference paper on behavioral sciences and cyber forensics.</div>
+      </div>
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">🎓</div>
+        <div class="ach-title" data-ed="" contenteditable="false">CGPA 3.93 / 4.00</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Graduated with distinction from Daffodil International University, B.Sc. in CSE (2018–2022).</div>
+      </div>
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">🔬</div>
+        <div class="ach-title" data-ed="" contenteditable="false">Elsevier Reviewer</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Peer reviewer for Current Research in Behavioral Sciences (CRBS), gold open-access Elsevier journal.</div>
+      </div>
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">🧪</div>
+        <div class="ach-title" data-ed="" contenteditable="false">Dreamers Lab Member</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Active research lab member writing, reviewing, and publishing academic research papers.</div>
+      </div>
+      <div class="ach-card reveal in">
+        <div class="ach-icon" data-ed="" contenteditable="false">📚</div>
+        <div class="ach-title" data-ed="" contenteditable="false">Compiler Design Handbook</div>
+        <div class="ach-desc" data-ed="" contenteditable="false">Authored "A Complete Handbook on Compiler Design" — a comprehensive technical reference work.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="page-wrap">
+    <p class="section-label" data-ed="" contenteditable="false">Contact</p>
+    <div class="contact-inner">
+      <h2 class="contact-heading">Let's <span>Connect</span></h2>
+      <p class="contact-sub" data-ed="" contenteditable="false">Open to SQA roles, research collaborations, and conversations about quality engineering &amp; AI. Based in Savar, Dhaka, Bangladesh.</p>
+
+      <div class="contact-cards">
+        <div class="contact-card">
+          <span class="contact-icon">✉</span>
+          <div class="contact-label" data-ed="" contenteditable="false">Email</div>
+          <div class="contact-value" data-ed="" contenteditable="false"><a href="mailto:akashahmed.diu@gmail.com">akashahmed.diu@gmail.com</a></div>
+        </div>
+        <div class="contact-card">
+          <span class="contact-icon">📞</span>
+          <div class="contact-label" data-ed="" contenteditable="false">Phone</div>
+          <div class="contact-value" data-ed="" contenteditable="false">+880 1743304573</div>
+        </div>
+        <div class="contact-card">
+          <span class="contact-icon">📍</span>
+          <div class="contact-label" data-ed="" contenteditable="false">Location</div>
+          <div class="contact-value" data-ed="" contenteditable="false">Savar, Dhaka, BD</div>
+        </div>
+      </div>
+
+        <div class="social-row">
+          <a href="https://facebook.com/" class="social-btn" title="Facebook" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+          <a href="https://linkedin.com/in/" class="social-btn" title="LinkedIn" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"></path><circle cx="4" cy="4" r="2"></circle></svg></a>
+          <a href="https://github.com/Akash-Ahmed-CSE" class="social-btn" title="GitHub" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          <a href="https://wa.me/8801743304573" class="social-btn" title="WhatsApp" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
+          <a href="https://instagram.com/" class="social-btn" title="Instagram" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+          <a href="https://twitter.com/" class="social-btn" title="Twitter/X" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+          <a href="https://researchgate.net/" class="social-btn" title="ResearchGate" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><text y="18" font-size="14" font-weight="bold" font-family="serif">Rg</text></svg></a>
+          <a href="https://scholar.google.com/" class="social-btn" title="Google Scholar" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"></path></svg></a>
+        </div>
+      </div>
+  </div>
+</section>
+
+<footer>
+  <span data-ed="" contenteditable="false">© 2025 Akash Ahmed · Savar, Dhaka, Bangladesh</span>
+</footer>
+
+<div class="modal-backdrop" id="admin-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="admin-close">✕</button>
+    <div class="modal-title">Admin Login</div>
+    <div class="modal-sub">Sign in to unlock edit mode</div>
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="a-user" placeholder="Enter username" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="a-pass" placeholder="Enter password">
+    </div>
+    <div class="err-msg" id="a-err" style="display: none;">Incorrect username or password.</div>
+    <button class="modal-btn" id="a-login-btn">Sign In</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="gh-modal">
+  <div class="modal-box" style="width:480px">
+    <button class="modal-close" id="gh-close">✕</button>
+    <div class="modal-title">Push to GitHub</div>
+    <div class="modal-sub">Deploy your changes to <strong>Akash-Ahmed-CSE/Websites.github.io</strong></div>
+    <div class="field-2">
+      <div class="field">
+        <label>GitHub Username</label>
+        <input type="text" id="gh-user" value="Akash-Ahmed-CSE">
+      </div>
+      <div class="field">
+        <label>Repository</label>
+        <input type="text" id="gh-repo" value="Websites.github.io">
+      </div>
+    </div>
+    <div class="field">
+      <label>File Path in Repo</label>
+      <input type="text" id="gh-path" value="myProfile/index.html">
+    </div>
+    <div class="field">
+      <label>Personal Access Token (Classic, repo scope)</label>
+      <input type="password" id="gh-token" placeholder="ghp_XXXXXXXXXXXXXx">
+    </div>
+    <div class="field">
+      <label>Commit Message</label>
+      <input type="text" id="gh-msg" value="Update portfolio content">
+    </div>
+    <div class="modal-note">
+      ⚠ Token is never stored. Get it at: GitHub → Settings → Developer Settings → Personal Access Tokens (Classic) → Generate — tick the <strong>repo</strong> scope.
+    </div>
+    <button class="modal-btn" id="gh-push-btn">Push to GitHub →</button>
+    <div id="gh-log" class="">⟳ File found — encoding content…</div>
+  </div>
+</div>
+
+<div id="edit-bar" class="">
+  <div class="bar-row">
+    <span class="bar-label">✎ Edit Mode</span>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-save" id="bar-save">⬇ Save HTML</button>
+    <button class="bar-btn bar-save" id="bar-save-exit" style="background:var(--blue-light); color:var(--blue); border:1px solid var(--blue)">✓ Save &amp; Exit</button>
+    <button class="bar-btn bar-push" id="bar-push">⬆ Push</button>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-fmt" title="Bold" onmousedown="event.preventDefault()" onclick="q('bold')">B</button>
+    <button class="bar-btn bar-fmt" style="font-style:italic" title="Italic" onmousedown="event.preventDefault()" onclick="q('italic')">I</button>
+    <button class="bar-btn bar-fmt" style="text-decoration:underline" title="Underline" onmousedown="event.preventDefault()" onclick="q('underline')">U</button>
+    <button class="bar-btn bar-fmt" id="toggle-extra" onmousedown="event.preventDefault()" title="More Tools">••• More</button>
+    <div class="bar-sep"></div>
+    <span id="bar-status">Image removed</span>
+    <button class="bar-btn bar-exit" id="bar-exit">Exit</button>
+  </div>
+  
+  <div class="bar-extra show" id="edit-bar-extra">
+    <div class="bar-group">
+      <span class="bar-group-label">Theme Presets</span>
+      <select class="bar-select" onchange="applyThemePreset(this.value)">
+        <option value="default">Type A (Classic)</option>
+        <option value="dark">Type B (Dark)</option>
+        <option value="forest">Type C (Forest)</option>
+        <option value="berry">Type D (Berry)</option>
+      </select>
+      <button class="bar-btn bar-fmt" title="Shuffle Colors" onmousedown="event.preventDefault()" onclick="shuffleColors()">🎲 Shuffle</button>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Custom Palette</span>
+      <div class="bar-control" title="Global Background">
+        Bg <input type="color" id="theme-bg" class="bar-color" value="#f8f9fa" oninput="updateCustomTheme()">
+      </div>
+      <div class="bar-control" title="Global Text">
+        Text <input type="color" id="theme-text" class="bar-color" value="#202124" oninput="updateCustomTheme()">
+      </div>
+      <div class="bar-control" title="Primary Accent (Buttons/Links)">
+        Primary <input type="color" id="theme-primary" class="bar-color" value="#1a73e8" oninput="updateCustomTheme()">
+      </div>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Badge Status</span>
+      <select class="bar-select" onchange="updateBadge(this.value)">
+        <option value="open">Open to Work (Green)</option>
+        <option value="hiring">Hiring (Blue)</option>
+        <option value="urgent">Urgent (Red)</option>
+        <option value="none">None (Hide Badge)</option>
+      </select>
+    </div>
+    <div class="bar-sep"></div>
+    <div class="bar-group">
+      <span class="bar-group-label">Typography</span>
+      <select class="bar-select" onchange="q('fontName', this.value)">
+        <option value="'Inter', sans-serif">Inter (Sans)</option>
+        <option value="'Playfair Display', serif">Playfair (Serif)</option>
+        <option value="Arial, Helvetica, sans-serif">Arial</option>
+        <option value="'Courier New', Courier, monospace">Courier New</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+        <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+      </select>
+      <select class="bar-select" title="Font Size (1-7)" onchange="q('fontSize', this.value)">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected="">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Text Styles</span>
+      <div class="bar-control" title="Selected Text Color">Color <input type="color" class="bar-color" oninput="q('foreColor', this.value)"></div>
+      <div class="bar-control" title="Selected Text Highlight">Highlight <input type="color" class="bar-color" value="#ffffff" oninput="q('hiliteColor', this.value)"></div>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Layout</span>
+      <button class="bar-btn bar-fmt" title="Align Left" onmousedown="event.preventDefault()" onclick="q('justifyLeft')">⇐</button>
+      <button class="bar-btn bar-fmt" title="Align Center" onmousedown="event.preventDefault()" onclick="q('justifyCenter')">⇔</button>
+      <button class="bar-btn bar-fmt" title="Align Right" onmousedown="event.preventDefault()" onclick="q('justifyRight')">⇒</button>
+      <button class="bar-btn bar-fmt" title="Bullet List" onmousedown="event.preventDefault()" onclick="q('insertUnorderedList')">• List</button>
+      <button class="bar-btn bar-fmt" title="Clear Formatting" onmousedown="event.preventDefault()" onclick="q('removeFormat')">⊗ Clear</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="img-input" accept="image/*" style="display:none">
+
+<script>
+// ═══════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// NAV active state
+const secs = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+}, { passive: true });
+
+// ═══════════════════════════
+// ADMIN AUTH
+// ═══════════════════════════
+// ⚙ CHANGE THESE:
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin';
+
+let isAdmin = false;
+let tapCount = 0, tapTimer = null;
+
+const adminModal = document.getElementById('admin-modal');
+
+// Open modal — trigger: click hidden button OR press ` three times fast
+function openAdminModal() {
+  adminModal.classList.add('open');
+  document.getElementById('a-user').focus();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'e') {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 1400);
+    if (tapCount >= 3) { e.preventDefault(); tapCount = 0; openAdminModal(); }
+  }
+  if (e.key === 'Enter') {
+    if (adminModal.classList.contains('open')) { doLogin(); return; }
+  }
+  if (e.key === 'Escape') {
+    adminModal.classList.remove('open');
+    document.getElementById('gh-modal')?.classList.remove('open');
+  }
+});
+
+document.getElementById('admin-close').addEventListener('click', () => adminModal.classList.remove('open'));
+adminModal.addEventListener('click', e => { if (e.target === adminModal) adminModal.classList.remove('open'); });
+document.getElementById('a-login-btn').addEventListener('click', doLogin);
+
+function doLogin() {
+  const u = document.getElementById('a-user').value.trim();
+  const p = document.getElementById('a-pass').value;
+  const errEl = document.getElementById('a-err');
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    isAdmin = true;
+    adminModal.classList.remove('open');
+    document.getElementById('a-user').value = '';
+    document.getElementById('a-pass').value = '';
+    enableEditMode();
+  } else {
+    errEl.style.display = 'block';
+    document.getElementById('a-pass').value = '';
+    document.getElementById('a-pass').focus();
+    setTimeout(() => { errEl.style.display = 'none'; }, 3000);
+  }
+}
+
+// ═══════════════════════════
+// EDIT MODE
+// ═══════════════════════════
+const editBar = document.getElementById('edit-bar');
+
+function setStatus(msg) { document.getElementById('bar-status').textContent = msg; }
+
+let lastFocused = null;
+document.addEventListener('focusin', e => {
+  if (e.target.dataset && e.target.hasAttribute('data-ed')) lastFocused = e.target;
+});
+
+function q(cmd, val = null) {
+  if (lastFocused) lastFocused.focus();
+  document.execCommand(cmd, false, val);
+}
+
+function updateBadge(type) {
+  const b = document.querySelector('.nav-badge');
+  b.className = 'nav-badge status-' + type;
+  if (type === 'open' && b.textContent === 'Hiring') b.textContent = 'Open to Work';
+  if (type === 'hiring' && b.textContent === 'Open to Work') b.textContent = 'Hiring';
+}
+
+const preventLink = (e) => e.preventDefault();
+
+function updateEditBarHeight() {
+  const h = document.getElementById('edit-bar').offsetHeight;
+  if (h > 0) document.documentElement.style.setProperty('--bar-h', h + 'px');
+}
+
+function enableEditMode() {
+  document.body.classList.add('edit-on');
+  document.getElementById('edit-bar').classList.add('open');
+  document.execCommand('styleWithCSS', false, true);
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    if (el.tagName === 'A') {
+      el.addEventListener('click', preventLink, { capture: true });
+    }
+  });
+  document.querySelectorAll('.img-target').forEach(el => {
+    el.addEventListener('click', onImgClick);
+    attachDelBtn(el);
+  });
+  document.querySelectorAll('.chip, .r-chip, .tech-pill, .pub-card, .edu-card, .proj-card, .ach-card, .contact-card, .social-btn').forEach(attachChipControls);
+  setStatus('Click any text to edit · Click any image placeholder to upload');
+  setTimeout(updateEditBarHeight, 50);
+}
+
+function attachDelBtn(el) {
+  if (el.tagName === 'IMG' || el.querySelector('img')) {
+    if (!el.querySelector('.img-del-btn')) {
+      const del = document.createElement('button');
+      del.className = 'img-del-btn';
+      del.innerHTML = '✕';
+      del.onclick = (e) => {
+        e.stopPropagation();
+        removeImage(el.dataset.imgId || el.id);
+      };
+      el.appendChild(del);
+    }
+  }
+}
+
+function attachChipControls(el) {
+  if (el.querySelector('.chip-ctrl-btn')) return;
+  const add = document.createElement('button');
+  add.className = 'chip-ctrl-btn chip-add';
+  add.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+  add.contentEditable = 'false';
+  add.onclick = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const next = el.cloneNode(true);
+    next.querySelectorAll('.chip-ctrl-btn').forEach(b => b.remove());
+    next.querySelectorAll('.img-del-btn').forEach(b => b.remove());
+
+    // Ensure unique IDs for images inside cloned cards
+    next.querySelectorAll('.img-target').forEach(target => {
+      const newId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+      target.id = newId;
+      target.dataset.imgId = newId;
+      if (target.querySelector('img')) target.querySelector('img').dataset.imgId = newId;
+      target.addEventListener('click', onImgClick);
+      attachDelBtn(target);
+    });
+    el.after(next);
+    attachChipControls(next);
+    // Re-attach controls to all nested bubbles/pills/cards within the clone
+    next.querySelectorAll('.chip, .r-chip, .tech-pill, .pub-card, .edu-card, .proj-card, .ach-card, .contact-card, .social-btn').forEach(attachChipControls);
+    next.addEventListener('input', () => setStatus('Unsaved changes — click Save or Push to GitHub'));
+    next.focus();
+    setStatus('Added ✓');
+  };
+  const del = document.createElement('button');
+  del.className = 'chip-ctrl-btn chip-del';
+  del.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+  del.contentEditable = 'false';
+  del.onclick = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    el.remove();
+    setStatus('Chip removed');
+  };
+  el.appendChild(add);
+  el.appendChild(del);
+}
+
+function disableEditMode() {
+  document.body.classList.remove('edit-on');
+  editBar.classList.remove('open');
+  document.documentElement.style.removeProperty('--bar-h');
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'false');
+    if (el.tagName === 'A') {
+      el.removeEventListener('click', preventLink, { capture: true });
+    }
+  });
+  document.querySelectorAll('.img-target').forEach(el => el.removeEventListener('click', onImgClick));
+  isAdmin = false;
+}
+
+document.getElementById('bar-exit').addEventListener('click', () => {
+  if (confirm('Exit edit mode? Unsaved changes will be lost.')) disableEditMode();
+});
+
+document.getElementById('toggle-extra').addEventListener('click', (e) => {
+  document.getElementById('edit-bar-extra').classList.toggle('show');
+  setTimeout(updateEditBarHeight, 50);
+});
+
+document.querySelectorAll('[data-ed]').forEach(el => {
+  el.addEventListener('input', () => setStatus('Unsaved changes — click Save or Push to GitHub'));
+});
+
+// ═══════════════════════════
+// THEME SYSTEM
+// ═══════════════════════════
+const themePresets = {
+  default: { bg: '#f8f9fa', text: '#202124', primary: '#1a73e8', surface: '#ffffff' },
+  dark: { bg: '#121212', text: '#e8eaed', primary: '#8ab4f8', surface: '#202124' },
+  forest: { bg: '#f1f8e9', text: '#1b5e20', primary: '#2e7d32', surface: '#ffffff' },
+  berry: { bg: '#fff5f8', text: '#4a0e0e', primary: '#d81b60', surface: '#ffffff' }
+};
+
+function applyThemePreset(name) {
+  const t = themePresets[name];
+  if (!t) return;
+  const root = document.documentElement;
+  root.style.setProperty('--bg', t.bg);
+  root.style.setProperty('--text', t.text);
+  root.style.setProperty('--blue', t.primary);
+  root.style.setProperty('--white', t.surface);
+  root.style.setProperty('--surface', t.surface);
+  document.getElementById('theme-bg').value = t.bg;
+  document.getElementById('theme-text').value = t.text;
+  document.getElementById('theme-primary').value = t.primary;
+  setStatus('Theme applied: ' + name);
+}
+function updateCustomTheme() {
+  const bg = document.getElementById('theme-bg').value, txt = document.getElementById('theme-text').value, pri = document.getElementById('theme-primary').value;
+  const root = document.documentElement;
+  root.style.setProperty('--bg', bg);
+  root.style.setProperty('--text', txt);
+  root.style.setProperty('--blue', pri);
+  root.style.setProperty('--white', bg);
+  root.style.setProperty('--surface', bg);
+  setStatus('Custom theme applied');
+}
+function shuffleColors() {
+  const rc = () => '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+  document.getElementById('theme-bg').value = rc();
+  document.getElementById('theme-text').value = rc();
+  document.getElementById('theme-primary').value = rc();
+  // Curated professional palettes to ensure readability and aesthetic harmony
+  const palettes = [
+    { bg: '#f8f9fa', text: '#202124', primary: '#1a73e8' }, // Classic Light
+    { bg: '#121212', text: '#e8eaed', primary: '#8ab4f8' }, // Pro Dark
+    { bg: '#f1f8e9', text: '#1b5e20', primary: '#2e7d32' }, // Soft Forest
+    { bg: '#fff5f8', text: '#4a0e0e', primary: '#d81b60' }, // Berry Sorbet
+    { bg: '#f1f5f9', text: '#0f172a', primary: '#3b82f6' }, // Modern Slate
+    { bg: '#0f172a', text: '#f8fafc', primary: '#38bdf8' }, // Midnight Sea
+    { bg: '#fafaf9', text: '#1c1917', primary: '#d97706' }, // Desert Sand
+    { bg: '#fdfcf0', text: '#433422', primary: '#b45309' }, // Oasis
+    { bg: '#f0fdf4', text: '#064e3b', primary: '#10b981' }, // Mint Emerald
+    { bg: '#f5f3ff', text: '#2e1065', primary: '#8b5cf6' }  // Royal Lavender
+  ];
+  const p = palettes[Math.floor(Math.random() * palettes.length)];
+  document.getElementById('theme-bg').value = p.bg;
+  document.getElementById('theme-text').value = p.text;
+  document.getElementById('theme-primary').value = p.primary;
+  updateCustomTheme();
+}
+
+// ═══════════════════════════
+// IMAGE UPLOAD
+// ═══════════════════════════
+let currentImgId = null;
+const imgInput = document.getElementById('img-input');
+
+function onImgClick(e) {
+  if (!isAdmin) return;
+  e.stopPropagation();
+  currentImgId = e.currentTarget.dataset.imgId || e.currentTarget.id;
+  imgInput.click();
+}
+
+imgInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file || !currentImgId) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const el = document.getElementById(currentImgId);
+    if (!el) return;
+    const parent = el.parentElement;
+    const isHero = currentImgId === 'hero-img-el';
+    const img = document.createElement('img');
+    img.src = ev.target.result;
+    img.dataset.imgId = currentImgId;
+    img.alt = 'Portfolio image';
+    img.className = isHero ? 'hero-photo' : 'proj-img';
+    img.style.position = 'relative';
+    
+    const wrap = document.createElement('div');
+    wrap.id = currentImgId;
+    wrap.dataset.imgId = currentImgId;
+    wrap.className = (isHero ? 'hero-photo-wrap' : 'proj-img-wrap') + ' img-target';
+    wrap.appendChild(img);
+    wrap.addEventListener('click', onImgClick);
+    attachDelBtn(wrap);
+
+    parent.replaceChild(wrap, el);
+    setStatus('Image updated — save or push when ready');
+  };
+  reader.readAsDataURL(file);
+  imgInput.value = '';
+});
+
+function removeImage(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const parent = el.parentElement;
+  const isHero = id === 'hero-img-el';
+
+  const ph = document.createElement('div');
+  ph.id = id;
+  ph.dataset.imgId = id;
+  if (isHero) {
+    ph.className = 'hero-photo-ph img-target';
+    ph.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add your photo</span>`;
+  } else {
+    ph.className = 'proj-img-ph img-target';
+    ph.textContent = '+ Add image';
+  }
+
+  parent.replaceChild(ph, el);
+  ph.addEventListener('click', onImgClick);
+  setStatus('Image removed');
+}
+
+// ═══════════════════════════
+// CLEAN HTML FOR EXPORT
+// ═══════════════════════════
+function getCleanHTML() {
+  const clone = document.documentElement.cloneNode(true);
+
+  // Safely remove classes from elements within the clone to avoid 'classList of undefined' errors
+  const cleanup = (selector, cls) => {
+    const el = clone.querySelector(selector);
+    if (el) el.classList.remove(cls);
+  };
+
+  cleanup('body', 'edit-on');
+  cleanup('#admin-modal', 'open');
+  cleanup('#gh-modal', 'open');
+  cleanup('#edit-bar', 'open');
+
+  clone.querySelectorAll('[contenteditable]').forEach(el => el.setAttribute('contenteditable', 'false'));
+  clone.querySelectorAll('input[type=password]').forEach(el => {
+    if (el.id !== 'gh-token') el.value = '';
+  });
+  clone.querySelectorAll('.img-del-btn').forEach(el => el.remove());
+  clone.querySelectorAll('.chip-ctrl-btn').forEach(el => el.remove());
+  
+  const badge = clone.querySelector('.nav-badge');
+  if (badge && badge.classList.contains('status-none')) {
+    badge.remove();
+  }
+  return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
+// ═══════════════════════════
+// SAVE LOCALLY
+// ═══════════════════════════
+document.getElementById('bar-save').addEventListener('click', () => {
+  const blob = new Blob([getCleanHTML()], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+  setStatus('Saved as index.html ✓');
+});
+
+document.getElementById('bar-save-exit').addEventListener('click', () => {
+  disableEditMode();
+});
+
+// ═══════════════════════════
+// GITHUB PUSH  — fixed: single fetch, Bearer auth
+// ═══════════════════════════
+const ghModal = document.getElementById('gh-modal');
+const ghLog   = document.getElementById('gh-log');
+
+document.getElementById('bar-push').addEventListener('click', () => {
+  ghModal.classList.add('open');
+  ghLog.textContent = '';
+  ghLog.className = '';
+});
+document.getElementById('gh-close').addEventListener('click', () => ghModal.classList.remove('open'));
+ghModal.addEventListener('click', e => { if (e.target === ghModal) ghModal.classList.remove('open'); });
+
+document.getElementById('gh-push-btn').addEventListener('click', async () => {
+  const username = document.getElementById('gh-user').value.trim();
+  const repo     = document.getElementById('gh-repo').value.trim();
+  const path     = document.getElementById('gh-path').value.trim();
+  const token    = document.getElementById('gh-token').value.trim();
+  const message  = document.getElementById('gh-msg').value.trim() || 'Update portfolio';
+
+  if (!username || !repo || !token) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Please fill in username, repository, and token.';
+    return;
+  }
+
+  const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+
+  // Step 1: get existing SHA (needed for update; 404 = new file)
+  ghLog.className = '';
+  ghLog.textContent = '⟳ Checking file on GitHub…';
+  let sha = null;
+  try {
+    const res = await fetch(apiUrl, { headers });
+    if (res.ok) {
+      const data = await res.json();
+      sha = data.sha;
+      ghLog.textContent = '⟳ File found — encoding content…';
+    } else if (res.status === 404) {
+      ghLog.textContent = '⟳ New file — encoding content…';
+    } else {
+      const data = await res.json();
+      throw new Error(data.message || ('HTTP ' + res.status));
+    }
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ ' + err.message;
+    return;
+  }
+
+  // Step 2: encode
+  let encoded;
+  try {
+    encoded = btoa(unescape(encodeURIComponent(getCleanHTML())));
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Encoding error: ' + err.message;
+    return;
+  }
+
+  // Step 3: push
+  ghLog.textContent = '⟳ Pushing to GitHub…';
+  const body = { message, content: encoded };
+  if (sha) body.sha = sha;
+
+  try {
+    const res = await fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (res.ok) {
+      ghLog.className = '';
+      const base = username.toLowerCase().endsWith('.github.io')
+        ? `https://${username}`
+        : `https://${username}.github.io/${repo}`;
+      ghLog.textContent = `✓ Pushed! Live soon at: ${base}/myProfile/`;
+      setStatus('Pushed to GitHub ✓');
+      setTimeout(() => ghModal.classList.remove('open'), 4000);
+    } else {
+      const data = await res.json();
+      throw new Error(data.message || ('HTTP ' + res.status));
+    }
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Push failed: ' + err.message;
+  }
+});
+</script>
+
+
+</body></html>
