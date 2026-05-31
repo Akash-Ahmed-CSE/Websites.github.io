@@ -813,7 +813,8 @@ async function initApp() {
     // ── Step 2: Fetch data.json from the repo (always) ────────────
     // This gives us: latest githubConfig (user/repo/path + encryptedToken)
     // and authoritative product/order data if localStorage was empty.
-    const resp = await fetch('data.json');
+    // Added cache-busting timestamp to ensure the latest data is fetched from the server on every reload.
+    const resp = await fetch(`data.json?t=${Date.now()}`);
     if (resp.ok) {
       const data = await resp.json();
 
@@ -838,15 +839,13 @@ async function initApp() {
         }
       }
 
-      // If localStorage was empty on first load, seed from data.json
-      if (!savedData) {
-        products             = data.products             || [];
-        usersDB              = data.users                || [];
-        orders               = data.orders               || [];
-        globalDeliveryCharge = data.globalDeliveryCharge || 60;
-      }
-
-      await saveData();
+      // Always sync local state with data.json to ensure data consistency across devices and users.
+      products             = data.products             || [];
+      usersDB              = data.users                || [];
+      orders               = data.orders               || [];
+      globalDeliveryCharge = data.globalDeliveryCharge || 60;
+      
+      localStorage.setItem('shopnest_storage', JSON.stringify(data));
     }
   } catch (e) {
     console.warn('ShopNest: Could not load data.json —', e.message);
@@ -857,13 +856,24 @@ async function initApp() {
   if (session) {
     try {
       const sUser = JSON.parse(session);
+      // Find user in the freshly updated users database
       const fresh = usersDB.find(u => u.email.toLowerCase() === sUser.email.toLowerCase());
-      if (fresh) setLoggedIn(fresh);
-      else localStorage.removeItem('shopnest_session');
+      if (fresh) {
+        setLoggedIn(fresh);
+        // Immediately refresh the orders dashboard if the user is currently viewing it.
+        if (document.getElementById('user-dashboard-view').style.display === 'block') {
+          renderUserOrders();
+        }
+        if (document.getElementById('admin-view').style.display === 'block' && fresh.isAdmin) {
+          renderAdminStats();
+        }
+      } else {
+        localStorage.removeItem('shopnest_session');
+      }
     } catch(e) {}
   }
 
-  renderProducts();
+  renderProducts(); // Update the shop grid with latest data
 }
 
 async function saveData() {
