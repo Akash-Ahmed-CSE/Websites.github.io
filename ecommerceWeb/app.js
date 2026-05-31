@@ -33,25 +33,28 @@ async function initializeApp() {
             throw new Error(`Failed to load ${DATA_SOURCE}: ${response.statusText}`);
         }
 
-        const data = await response.json();
-        appData = data;
+        appData = await response.json();
+
+        // Bridge to index.html global state
+        window.products = appData.products || [];
+        window.orders = appData.orders || [];
+        window.usersDB = appData.users || [];
+        window.globalDeliveryCharge = appData.globalDeliveryCharge || 60;
+        window.githubConfig = appData.githubConfig;
 
         // Handle Token Decryption if config exists in data.json
-        if (data.githubConfig && data.githubConfig.encryptedToken) {
+        if (appData.githubConfig && appData.githubConfig.encryptedToken) {
             try {
-                _resolvedToken = _xorCipher(data.githubConfig.encryptedToken, _SK);
+                _resolvedToken = _xorCipher(appData.githubConfig.encryptedToken, _SK);
                 console.log("GitHub Sync Token initialized.");
             } catch (e) {
                 console.error("Token decryption failed:", e);
             }
         }
 
-        // Data is now ready to be used by the application
-        console.log("Application data loaded:", appData);
-
-        // Example: Filter and log popular products from the fetched data
-        const popularProducts = appData.products.filter(p => p.isPopular);
-        console.log("Featured items:", popularProducts);
+        // Trigger UI Rendering (defined in index.html)
+        if (window.renderProducts) window.renderProducts();
+        if (window.restoreSession) window.restoreSession();
 
     } catch (error) {
         console.error("Initialization failed:", error);
@@ -64,15 +67,9 @@ async function initializeApp() {
  * @param {string} newStatus - The new status value (e.g., "shipped", "pending")
  */
 async function updateOrderStatus(orderId, newStatus) {
-    if (!appData || !appData.orders) {
-        console.error("Data has not been loaded yet.");
-        return;
-    }
-
-    // Security check: Only admins can trigger a status update. 
-    // currentUser is managed in index.html
-    if (typeof window.currentUser === 'undefined' || !window.currentUser?.isAdmin) {
-        console.error("Unauthorized: Only admins can update order status.");
+    // Only admins can trigger a status update.
+    if (!window.currentUser?.isAdmin) {
+        if (window.showToast) window.showToast("Unauthorized: Admin access required", "error");
         return;
     }
 
@@ -83,12 +80,12 @@ async function updateOrderStatus(orderId, newStatus) {
         order.status = newStatus;
         
         try {
-            // 1. Instantly update the local UI for the admin
-            console.log(`Updating UI locally: ${orderId} is now ${newStatus}`);
-            // renderOrders(); // Trigger your UI refresh function here
-
+            // 1. Instantly update local UI
+            if (window.renderAdminOrders) window.renderAdminOrders();
+            if (window.showToast) window.showToast(`Order ${orderId} is now ${newStatus}`, "success");
+            
             // 2. Persist the change to GitHub so all users see it
-            await saveDataToGitHub();
+            await saveData(); 
             
             console.log(`Successfully synced Order ${orderId} to GitHub.`);
         } catch (error) {
@@ -103,12 +100,29 @@ async function updateOrderStatus(orderId, newStatus) {
 }
 
 /**
+ * Centralized save function to update localStorage and GitHub
+ */
+async function saveData() {
+    // Prepare payload using current global state
+    const data = { 
+        products: window.products, 
+        users: window.usersDB, 
+        orders: window.orders, 
+        globalDeliveryCharge: window.globalDeliveryCharge,
+        githubConfig: window.githubConfig 
+    };
+    
+    localStorage.setItem('shopnest_storage', JSON.stringify(data));
+    await saveDataToGitHub(data);
+}
+
+/**
  * Pushes the current appData state to the data.json file in the GitHub repository.
  */
-async function saveDataToGitHub() {
+async function saveDataToGitHub(dataToSave) {
     const config = {
-        user: appData.githubConfig?.user || 'Akash-Ahmed-CSE',
-        repo: appData.githubConfig?.repo || 'Websites.github.io',
+        user: window.githubConfig?.user || 'Akash-Ahmed-CSE',
+        repo: window.githubConfig?.repo || 'Websites.github.io',
         path: 'ecommerceWeb/data.json'
     };
 
@@ -122,7 +136,7 @@ async function saveDataToGitHub() {
     const sha = fileData.sha;
 
     // 2. Prepare the new content
-    const utf8Bytes = new TextEncoder().encode(JSON.stringify(appData, null, 2));
+    const utf8Bytes = new TextEncoder().encode(JSON.stringify(dataToSave, null, 2));
     const updatedContent = btoa(String.fromCharCode(...utf8Bytes));
 
     // 3. Update the file via PUT request
