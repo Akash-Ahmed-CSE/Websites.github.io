@@ -258,6 +258,10 @@ footer:hover .footer-hint{opacity:.7}
 .edit-on [data-ed]:focus{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px;cursor:text}
 [data-ed]:focus{outline:none}
 .edit-on .img-target{cursor:pointer;position:relative}
+.edit-on nav { top: 44px; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + 44px); }
+.edit-on nav { top: var(--bar-h, 50px); transition: top 0.2s; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + var(--bar-h, 50px)); transition: padding-top 0.2s; }
 
 .img-del-btn{
   display:none;position:absolute;top:8px;right:8px;z-index:10;
@@ -332,11 +336,11 @@ footer:hover .footer-hint{opacity:.7}
 
 /* ── EDIT TOOLBAR ── */
 #edit-bar{
-  display:none;position:fixed;bottom:0;left:0;right:0;
-  background:var(--white);border-top:2px solid var(--blue);
-  padding:8px 24px;z-index:900;
+  display:none;position:fixed;top:0;left:0;right:0;
+  background:var(--white);border-bottom:2px solid var(--blue);
+  padding:8px 24px;z-index:1000;
   flex-direction:column;gap:8px;
-  box-shadow:0 -2px 8px rgba(0,0,0,.1);
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
 #edit-bar.open{display:flex}
 .bar-row{display:flex;align-items:center;gap:10px;width:100%}
@@ -1038,6 +1042,11 @@ function updateBadge(type) {
 
 const preventLink = (e) => e.preventDefault();
 
+function updateEditBarHeight() {
+  const h = document.getElementById('edit-bar').offsetHeight;
+  if (h > 0) document.documentElement.style.setProperty('--bar-h', h + 'px');
+}
+
 function enableEditMode() {
   document.body.classList.add('edit-on');
   document.getElementById('edit-bar').classList.add('open');
@@ -1054,6 +1063,7 @@ function enableEditMode() {
   });
   document.querySelectorAll('.chip, .r-chip, .tech-pill, .pub-card, .edu-card, .proj-card, .ach-card, .contact-card, .social-btn').forEach(attachChipControls);
   setStatus('Click any text to edit · Click any image placeholder to upload');
+  setTimeout(updateEditBarHeight, 50);
 }
 
 function attachDelBtn(el) {
@@ -1116,6 +1126,7 @@ function attachChipControls(el) {
 function disableEditMode() {
   document.body.classList.remove('edit-on');
   editBar.classList.remove('open');
+  document.documentElement.style.removeProperty('--bar-h');
   document.querySelectorAll('[data-ed]').forEach(el => {
     el.setAttribute('contenteditable', 'false');
     if (el.tagName === 'A') {
@@ -1132,6 +1143,7 @@ document.getElementById('bar-exit').addEventListener('click', () => {
 
 document.getElementById('toggle-extra').addEventListener('click', (e) => {
   document.getElementById('edit-bar-extra').classList.toggle('show');
+  setTimeout(updateEditBarHeight, 50);
 });
 
 document.querySelectorAll('[data-ed]').forEach(el => {
