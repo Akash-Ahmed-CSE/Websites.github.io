@@ -172,7 +172,7 @@
       "subtotal": 69.99,
       "deliveryCharge": 60,
       "total": 129.99,
-      "status": "delivered",
+      "status": "processing",
       "date": "5/30/2026"
     }
   ],
