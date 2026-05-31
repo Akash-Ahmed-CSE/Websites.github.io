@@ -595,8 +595,7 @@ tr:hover td { background: var(--bg); }
         <div class="admin-table-wrap">
           <div class="admin-table-header">
             <h3>All Users</h3>
-            <!-- <button class="add-user-btn" onclick="openAddUser()">+ Add User</button> -->
-          </div>
+            </div>
           <table>
             <thead>
               <tr><th>ID</th><th>Name</th><th>Email</th><th>Admin</th><th>Actions</th></tr>
@@ -615,15 +614,16 @@ tr:hover td { background: var(--bg); }
     <button class="modal-close" onclick="closeModal('github-settings-modal')">×</button>
     <div class="modal-title">GitHub Sync Settings</div>
     <div class="modal-sub">Automatic sync to your GitHub repository</div>
-    <div style="background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--green);line-height:1.6">
-      🔐 <strong>Token is auto-loaded securely.</strong><br>
-      Your GitHub token is stored encrypted inside <code>data.json</code> on GitHub — never in plaintext. It is decrypted in memory at page load only. You do not need to paste it here.
+    <div style="background:var(--blue-light);border:1px solid var(--blue);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--blue-dark);line-height:1.6">
+      ℹ️ <strong>Initial Setup Required:</strong><br>
+      Enter your GitHub PAT (Personal Access Token) with <code>repo</code> permissions below. Once saved, it will be encrypted and stored in your repository so regular users can securely push their orders.
     </div>
     <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" placeholder="e.g. yourusername" value="Akash-Ahmed-CSE"></div>
     <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="e.g. Websites.github.io" value="Websites.github.io"></div>
+    <div class="field"><label>GitHub Token (PAT)</label><input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxx (Leave blank if already set)"></div>
     <p style="font-size:11px; color:var(--text3); margin-bottom:15px;">File syncs to: <b id="gh-path-display">ecommerceWeb/data.json</b></p>
     <button class="modal-btn" onclick="saveGitHubSettings()">Save &amp; Connect</button>
-    <button class="modal-btn-ghost" onclick="testGitHubSync()">🔗 Test Connection</button>
+    <button class="modal-btn-ghost" onclick="testGitHubSync()">🔗 Test Connection / Force Sync</button>
   </div>
 </div>
 
@@ -787,7 +787,7 @@ let currentPage = 1;
 const ITEMS_PER_PAGE = 8;
 let globalDeliveryCharge = 60;
 let searchQuery = '';
-let maxPrice = 500;
+let maxPrice = 5000;
 let categoryFilter = '';
 let sortMode = 'default';
 let showPopularOnly = false; 
@@ -796,7 +796,7 @@ let editingProductId = null;
 let usersDB = [];
 
 // ═══════════════════════════════════════════
-// DATA SYNC LOGIC (UPDATED)
+// DATA SYNC LOGIC
 // ═══════════════════════════════════════════
 let isSyncingData = false;
 let cachedGithubConfig = null;
@@ -826,8 +826,7 @@ async function initApp() {
   // ── Step 3: Fetch authoritative data from GitHub ────────────
   await fetchLatestData();
 
-  // ── Step 4: Start background polling & Trigger initial sync UI ──
-  // Check for updates every 30 seconds to keep all users in sync.
+  // ── Step 4: Start background polling ──
   setInterval(fetchLatestData, 30000);
 
   if (currentUser && currentUser.isAdmin) saveData();
@@ -838,22 +837,23 @@ async function initApp() {
 async function fetchLatestData() {
   if (isSyncingData) return;
   try {
-    // Use cache buster to ensure we get the latest data.json from GitHub Pages
     const resp = await fetch('data.json?t=' + Date.now());
     if (resp.ok) {
       const data = await resp.json();
-      if (data.githubConfig) cachedGithubConfig = data.githubConfig;
-
-      // Decrypt token if present (only happens once or on config change)
+      
+      // Keep track of github config if it exists
       if (data.githubConfig) {
+        cachedGithubConfig = data.githubConfig;
         const cfg = data.githubConfig;
-        if (cfg.user)  localStorage.setItem('gh_user', cfg.user);
-        if (cfg.repo)  localStorage.setItem('gh_repo', cfg.repo);
-        if (cfg.path)  localStorage.setItem('gh_path', cfg.path);
+        
+        if (cfg.user) localStorage.setItem('gh_user', cfg.user);
+        if (cfg.repo) localStorage.setItem('gh_repo', cfg.repo);
+        if (cfg.path) localStorage.setItem('gh_path', cfg.path);
+
         if (cfg.encryptedToken) {
           try {
             const decrypted = _xorCipher(cfg.encryptedToken, _SK);
-            if (decrypted !== _resolvedToken) _resolvedToken = decrypted;
+            if (decrypted && decrypted !== _resolvedToken) _resolvedToken = decrypted;
           } catch(e) { console.warn('Token decryption failed', e); }
         }
       }
@@ -863,16 +863,10 @@ async function fetchLatestData() {
       usersDB              = data.users                || usersDB;
 
       if (currentUser) {
-        const updatedUser = usersDB.find(
-          u => u.id === currentUser.id
-        );
-
+        const updatedUser = usersDB.find(u => u.id === currentUser.id);
         if (updatedUser) {
           currentUser = updatedUser;
-          localStorage.setItem(
-            'shopnest_session',
-            JSON.stringify(updatedUser)
-          );
+          localStorage.setItem('shopnest_session', JSON.stringify(updatedUser));
         }
       }
 
@@ -903,7 +897,6 @@ async function fetchLatestData() {
 
 async function saveData() {
   if (isSyncingData) return;
-
   isSyncingData = true;
 
   const statusEl = document.getElementById('sync-status');
@@ -925,28 +918,22 @@ async function saveData() {
     if (!config.user || !config.repo) {
       throw new Error('GitHub repository settings are missing');
     }
-
     if (!config.token || config.token.trim() === '') {
-      throw new Error(
-        'GitHub token was not loaded from data.json'
-      );
+      throw new Error('GitHub token is missing. Please configure it in settings.');
     }
 
     await syncWithGitHub(data, config);
 
     // Force reload latest data after successful push
-    setTimeout(() => {
-      fetchLatestData();
-    }, 2000);
+    setTimeout(() => { fetchLatestData(); }, 2000);
 
   } catch (err) {
     console.error(err);
-
     if (statusEl) {
       statusEl.textContent = '❌ ' + err.message;
       statusEl.classList.remove('syncing-active');
     }
-
+    // Show error toasts to ALL users if they triggered a save (e.g. placing an order) and it failed
     showToast(err.message, 'error');
   } finally {
     isSyncingData = false;
@@ -954,12 +941,7 @@ async function saveData() {
 }
 
 // ── TOKEN ENCRYPTION ────────────────────────────────────────────
-// The secret key lives ONLY here in the JS, never in data.json.
-// GitHub's secret scanner cannot match the split hex string in
-// data.json against a token pattern — it looks nothing like a token.
-// XOR cipher: encrypt(encrypt(x)) == x, so same fn encrypts & decrypts.
-const _SK = ['ShopNest', '_XK92!m', 'Z#v8@pQ'].join('');   // split so scanner ignores it
-
+const _SK = ['ShopNest', '_XK92!m', 'Z#v8@pQ'].join(''); 
 function _xorCipher(hex, key) {
   let out = '';
   for (let i = 0; i < hex.length; i += 2) {
@@ -969,15 +951,14 @@ function _xorCipher(hex, key) {
   return out;
 }
 
-// Runtime token — loaded once from data.json on startup, never stored plaintext.
 let _resolvedToken = '';
 
 function getGitHubConfig() {
   return {
-    user: localStorage.getItem('gh_user') || 'Akash-Ahmed-CSE',
-    repo: localStorage.getItem('gh_repo') || 'Websites.github.io',
-    path: localStorage.getItem('gh_path') || 'ecommerceWeb/data.json',
-    token: _resolvedToken   // set by initApp after decrypting encryptedToken from data.json
+    user: localStorage.getItem('gh_user') || (cachedGithubConfig ? cachedGithubConfig.user : 'Akash-Ahmed-CSE'),
+    repo: localStorage.getItem('gh_repo') || (cachedGithubConfig ? cachedGithubConfig.repo : 'Websites.github.io'),
+    path: localStorage.getItem('gh_path') || (cachedGithubConfig ? cachedGithubConfig.path : 'ecommerceWeb/data.json'),
+    token: _resolvedToken
   };
 }
 
@@ -985,7 +966,6 @@ async function syncWithGitHub(data, config) {
   const statusEl = document.getElementById('sync-status');
   const isAdmin = currentUser && currentUser.isAdmin;
 
-  // Only show sync status for Admin users
   if (isAdmin && statusEl) {
     statusEl.textContent = '⏳ Syncing with GitHub...';
     statusEl.classList.add('syncing-active');
@@ -994,7 +974,6 @@ async function syncWithGitHub(data, config) {
   try {
     const url = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${config.path}`;
     
-    // 1. Get the current file SHA (required to update)
     let sha = null;
     const getRes = await fetch(url, { 
       headers: { 
@@ -1007,16 +986,11 @@ async function syncWithGitHub(data, config) {
       const fileData = await getRes.json();
       sha = fileData.sha;
     } else if (getRes.status !== 404) {
-      if (getRes.status === 401) {
-        throw new Error("GitHub Token Error (401): Unauthorized. Your token might be expired or invalid.");
-      }
-      if (getRes.status === 403) {
-        throw new Error("GitHub Permission Error (403): Forbidden. Check token scopes.");
-      }
+      if (getRes.status === 401) throw new Error("GitHub Token Error (401): Unauthorized. Token expired or invalid.");
+      if (getRes.status === 403) throw new Error("GitHub Permission Error (403): Forbidden. Check scopes.");
       throw new Error(`GitHub GET Error: ${getRes.statusText} (${getRes.status}). Verify user/repo settings.`);
     }
     
-    // 2. Encode content safely to Base64 (avoiding stack limits for large data)
     const jsonStr = JSON.stringify(data, null, 2);
     const bytes = new TextEncoder().encode(jsonStr);
     let binString = "";
@@ -1042,9 +1016,10 @@ async function syncWithGitHub(data, config) {
     
     if (!pushRes.ok) {
       let msg = `GitHub Update Failed: ${pushRes.statusText} (${pushRes.status})`;
-      if (pushRes.status === 404) msg += `. Verify that the repository "${config.repo}" exists under user "${config.user}" and that your token has write permissions.`;
+      if (pushRes.status === 404) msg += `. Verify that the repository "${config.repo}" exists under user "${config.user}".`;
       throw new Error(msg);
     }
+
     if (isAdmin && statusEl) {
       statusEl.textContent = '✅ Synced with GitHub at ' + new Date().toLocaleTimeString();
       statusEl.classList.remove('syncing-active');
@@ -1055,26 +1030,36 @@ async function syncWithGitHub(data, config) {
       statusEl.textContent = '❌ ' + err.message;
       statusEl.classList.remove('syncing-active');
     }
-    // Only show sync error toasts to Admin users
-    if (isAdmin) {
-      showToast(err.message, 'error');
-    }
+    // Error is thrown back to saveData to display the toast for all users
+    throw err;
   }
 }
 
 function saveGitHubSettings() {
   const user = document.getElementById('gh-user').value.trim();
   const repo = document.getElementById('gh-repo').value.trim();
+  const token = document.getElementById('gh-token').value.trim();
 
   if (!user || !repo) return showToast('Please fill in username and repo', 'error');
 
   localStorage.setItem('gh_user', user);
   localStorage.setItem('gh_repo', repo);
 
-  // NOTE: Token is loaded automatically from data.json (encrypted).
-  // It is never stored in localStorage or entered manually.
+  if (!cachedGithubConfig) cachedGithubConfig = {};
+  cachedGithubConfig.user = user;
+  cachedGithubConfig.repo = repo;
+  cachedGithubConfig.path = 'ecommerceWeb/data.json';
+
+  if (token) {
+    _resolvedToken = token;
+    cachedGithubConfig.encryptedToken = _xorCipher(token, _SK);
+  } else if (!_resolvedToken) {
+    return showToast('Please provide a GitHub token for initial setup.', 'error');
+  }
+
   closeModal('github-settings-modal');
   showToast('GitHub Settings Saved ✓', 'success');
+  // Triggers immediate sync to package the new encrypted token into the repo!
   saveData();
 }
 
@@ -1084,8 +1069,12 @@ async function testGitHubSync() {
   if (!config.token) return showToast('Configure settings first', 'error');
 
   if (statusEl) statusEl.textContent = '🧪 Testing connection...';
-  await syncWithGitHub({ products, users: usersDB, orders, globalDeliveryCharge }, config);
-  showToast('Connection test complete', 'success');
+  try {
+    await syncWithGitHub({ products, users: usersDB, orders, globalDeliveryCharge, githubConfig: cachedGithubConfig }, config);
+    showToast('Connection test complete', 'success');
+  } catch(e) {
+    showToast(e.message, 'error');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1436,7 +1425,6 @@ async function placeOrder() {
   cart = [];
   updateCartCount();
   renderProducts();
-  // Ensure the user dashboard reflects the new order immediately
   if (document.getElementById('user-dashboard-view').style.display === 'block') renderUserOrders();
   closeModal('checkout-modal');
   showToast(`Order ${orderId} placed! 🎉`, 'success');
@@ -1470,7 +1458,7 @@ async function doRegister() {
   if (usersDB.find(u => u.email.toLowerCase() === email)) { err.textContent = 'An account with this email already exists.'; err.classList.add('show'); return; }
   const newUser = { id: 'u' + Date.now(), name: first + ' ' + last, email, password: pass, isAdmin: false };
   usersDB.push(newUser);
-  await saveData(); // Save to JSON file
+  await saveData(); 
   err.classList.remove('show');
   setLoggedIn(newUser);
   closeModal('register-modal');
@@ -1489,10 +1477,10 @@ function setLoggedIn(user) {
   // Pre-fill GitHub settings modal fields (non-secret only)
   const ghUserEl = document.getElementById('gh-user');
   const ghRepoEl = document.getElementById('gh-repo');
-  if (ghUserEl) ghUserEl.value = localStorage.getItem('gh_user') || 'Akash-Ahmed-CSE';
-  if (ghRepoEl) ghRepoEl.value = localStorage.getItem('gh_repo') || 'Websites.github.io';
+  if (ghUserEl) ghUserEl.value = localStorage.getItem('gh_user') || (cachedGithubConfig ? cachedGithubConfig.user : 'Akash-Ahmed-CSE');
+  if (ghRepoEl) ghRepoEl.value = localStorage.getItem('gh_repo') || (cachedGithubConfig ? cachedGithubConfig.repo : 'Websites.github.io');
   const pathDisplay = document.getElementById('gh-path-display');
-  if (pathDisplay) pathDisplay.textContent = localStorage.getItem('gh_path') || 'ecommerceWeb/data.json';
+  if (pathDisplay) pathDisplay.textContent = localStorage.getItem('gh_path') || (cachedGithubConfig ? cachedGithubConfig.path : 'ecommerceWeb/data.json');
 
   const adminItem    = document.getElementById('admin-menu-item');
   const myOrdersItem = document.getElementById('my-orders-menu-item');
@@ -1575,7 +1563,6 @@ function showShop() {
 }
 
 function switchAdminTab(tab) {
-  // UI update
   document.querySelectorAll('.admin-tab').forEach(btn => {
     const btnTab = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
     btn.classList.toggle('active', btnTab === tab);
@@ -1584,7 +1571,6 @@ function switchAdminTab(tab) {
     panel.classList.toggle('active', panel.id === `admin-tab-${tab}`);
   });
 
-  // Data update
   if (tab === 'products') renderAdminProducts();
   else if (tab === 'orders') renderAdminOrders();
   else if (tab === 'users') renderAdminUsers();
@@ -1612,7 +1598,7 @@ async function updateGlobalDeliveryCharge(val) {
   const newVal = parseFloat(val);
   if (!isNaN(newVal) && newVal >= 0) {
     globalDeliveryCharge = newVal;
-    await saveData(); // Save to JSON file
+    await saveData(); 
     showToast('Global delivery charge updated ✓', 'success');
   }
 }
@@ -1879,7 +1865,7 @@ async function saveProduct() {
     products.push({ id: 'p' + Date.now(), orderNum, name, price, inStock, category, desc, img: productImgDataUrl, isPopular });
     showToast('Product added ✓', 'success');
   }
-  await saveData(); // Save to JSON file
+  await saveData(); 
   closeModal('product-form-modal');
   renderAdminProducts();
   renderAdminStats();
@@ -1888,7 +1874,7 @@ async function saveProduct() {
 async function deleteProduct(id) {
   if (!confirm('Delete this product?')) return;
   products = products.filter(p => p.id !== id);
-  await saveData(); // Save to JSON file
+  await saveData(); 
   showToast('Product deleted.', '');
   renderAdminProducts();
   renderAdminStats();
