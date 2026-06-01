@@ -1427,7 +1427,7 @@ document.getElementById('gh-push-btn').addEventListener('click', async () => {
       const base = username.toLowerCase().endsWith('.github.io')
         ? `https://${username}`
         : `https://${username}.github.io/${repo}`;
-      ghLog.textContent = `✓ Pushed! Live soon at: ${base}/myProfile/`;
+      ghLog.textContent = `✓ Pushed! Live soon at: ${base}/myProfileTemplate/`;
       setStatus('Pushed to GitHub ✓');
       setTimeout(() => ghModal.classList.remove('open'), 4000);
     } else {
