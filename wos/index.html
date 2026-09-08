@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en" style="--bar-h: 156px;"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wall of Shame</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --white:#ffffff;
+  --bg:#f8f9fa;
+  --surface:#ffffff;
+  --surface2:#f1f3f4;
+  --border:#e0e0e0;
+  --border2:#dadce0;
+  --text:#202124;
+  --text2:#5f6368;
+  --text3:#9aa0a6;
+  --blue:#1a73e8;
+  --blue-light:#e8f0fe;
+  --green:#137333;
+  --green-light:#e6f4ea;
+  --red:#d93025;
+  --sans:'Inter',sans-serif;
+  --serif:'Playfair Display',serif;
+  --nav-h:64px;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+  --shadow-md:0 2px 8px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;z-index:500;
+}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.3px}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{
+  color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;
+  padding:6px 12px;border-radius:4px;transition:background .15s,color .15s;
+}
+.nav-links a:hover{background:var(--surface2);color:var(--text);text-decoration:none}
+.nav-links a.active{color:var(--blue);background:var(--blue-light)}
+.nav-right{display:flex;align-items:center;gap:10px}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:80px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;text-align:center}
+.section-title{font-family:var(--serif);font-size:clamp(26px,3.5vw,34px);font-weight:700;color:var(--text);margin-bottom:32px;line-height:1.2;text-align:center}
+
+/* ── COVER SECTION (FRAMED CENTERED) ── */
+#cover {
+  background: var(--white);
+  padding-top: calc(var(--nav-h) + 60px);
+}
+.cover-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.cover-frame {
+  background: var(--white);
+  border: 12px solid var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.5s ease;
+}
+.cover-info {
+  margin-top: 16px;
+}
+.cover-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+.cover-desc {
+  font-family: var(--serif);
+  font-size: clamp(20px, 3vw, 26px);
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.4;
+  max-width: 650px;
+  margin: 0 auto;
+  outline: none;
+}
+
+/* ── CAROUSEL SECTION ── */
+#carousel {
+  background: var(--bg);
+  overflow: hidden;
+}
+.carousel-container {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: 10px 0;
+  overflow: hidden;
+}
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scrollLeftToRight 40s linear infinite;
+  padding: 10px;
+}
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+.carousel-card {
+  width: 280px;
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.carousel-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+.carousel-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.carousel-card-desc {
+  padding: 16px;
+  font-size: 14px;
+  color: var(--text2);
+  white-space: normal;
+  line-height: 1.5;
+}
+
+/* ── GALLERY MANAGER (ADMIN GRID) ── */
+#gallery-manager {
+  display: none;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.edit-on #gallery-manager {
+  display: block;
+}
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.manager-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+}
+.manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.manager-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: visible;
+  position: relative;
+  padding: 12px;
+}
+.manager-img-wrapper {
+  width: 100%;
+  height: 140px;
+  background: var(--surface2);
+  border-radius: calc(var(--radius) - 4px);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.manager-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.manager-desc {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text);
+  min-height: 48px;
+  padding: 6px;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  outline: none;
+  line-height: 1.4;
+}
+.edit-on .manager-desc:hover {
+  border-color: var(--blue);
+  background: var(--white);
+}
+.manager-card-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.1s ease;
+}
+.manager-card-del:hover {
+  transform: scale(1.15);
+}
+
+/* ── ARCHIVE GRID SECTION ── */
+#archive {
+  background: var(--white);
+  padding: 80px 0;
+}
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.archive-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.archive-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+.archive-card-img-wrap {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+.archive-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.5s ease;
+}
+.archive-card:hover img {
+  scale: 1.05;
+}
+.archive-card-desc {
+  padding: 16px;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+@media(max-width: 1024px) {
+  .archive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media(max-width: 768px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media(max-width: 480px) {
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cleanup old styles */
+.contact-grid, .contact-detail, .contact-form, .form-row { display: none; }
+
+/* ── FOOTER ── */
+footer{
+  background:var(--white);border-top:1px solid var(--border);
+  padding:20px 48px;display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text3);
+}
+.footer-hint{opacity:0;transition:opacity .3s;font-size:11px;user-select:none}
+footer:hover .footer-hint{opacity:.7}
+#admin-trigger{cursor:pointer;padding:4px 8px;border-radius:3px;transition:background .15s}
+
+/* ── EDITABLE ── */
+[data-ed]{transition:outline .1s}
+.edit-on [data-ed]:hover{outline:2px dashed rgba(26,115,232,.4);outline-offset:2px;cursor:text;border-radius:2px}
+.edit-on [data-ed]:focus{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px;cursor:text}
+[data-ed]:focus{outline:none}
+.edit-on .img-target{cursor:pointer;position:relative}
+.edit-on nav { top: 44px; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + 44px); }
+.edit-on nav { top: var(--bar-h, 50px); transition: top 0.2s; }
+.edit-on #hero { padding-top: calc(var(--nav-h) + var(--bar-h, 50px)); transition: padding-top 0.2s; }
+
+.img-del-btn{
+  display:none;position:absolute;top:8px;right:8px;z-index:10;
+  width:24px;height:24px;background:var(--red);color:#fff;
+  border:none;border-radius:50%;cursor:pointer;font-size:14px;
+  align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.edit-on .img-target:hover .img-del-btn{display:flex}
+
+/* ── CHIP CONTROLS ── */
+.chip-ctrl-btn{
+  display:none;position:absolute;top:-10px;width:22px;height:22px;
+  border-radius:50%;border:1px solid #fff;cursor:pointer;font-size:10px;
+  align-items:center;justify-content:center;color:#fff;font-weight:700;
+  z-index:20;line-height:1;padding:0;box-shadow:0 2px 5px rgba(0,0,0,0.25);
+  transition: transform 0.1s ease;
+}
+.chip-ctrl-btn:hover { transform: scale(1.15); }
+.chip-add{right:18px;background:var(--green)}
+.chip-del{right:0;background:var(--red)}
+.edit-on .chip:hover .chip-ctrl-btn,
+.edit-on .r-chip:hover .chip-ctrl-btn,
+.edit-on .pub-card:hover .chip-ctrl-btn,
+.edit-on .tech-pill:hover .chip-ctrl-btn,
+.edit-on .edu-card:hover .chip-ctrl-btn,
+.edit-on .proj-card:hover .chip-ctrl-btn,
+.edit-on .ach-card:hover .chip-ctrl-btn,
+.edit-on .contact-card:hover .chip-ctrl-btn,
+.edit-on .social-btn:hover .chip-ctrl-btn {display:flex}
+.edit-on .chip, .edit-on .r-chip, .edit-on .tech-pill, .edit-on .pub-card,
+.edit-on .edu-card, .edit-on .proj-card, .edit-on .ach-card,
+.edit-on .contact-card, .edit-on .social-btn {position:relative}
+.edit-on .proj-card, .edit-on .edu-card, .edit-on .ach-card, .edit-on .contact-card {overflow:visible}
+
+/* ── MODALS ── */
+.modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);
+  z-index:1000;align-items:center;justify-content:center;
+}
+.modal-backdrop.open{display:flex}
+.modal-box{
+  background:var(--white);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.2);
+  width:380px;max-width:94vw;padding:32px;position:relative;
+}
+.modal-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+.modal-close {
+  position:absolute;top:14px;right:14px;width:28px;height:28px;
+  border:none;background:none;cursor:pointer;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;color:var(--text2);
+  transition:background .15s;font-size:16px;
+}
+.modal-close:hover{background:var(--surface2)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
+.field input{
+  width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:4px;
+  font-family:var(--sans);font-size:14px;color:var(--text);outline:none;transition:border-color .15s;
+}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,115,232,.15)}
+.field-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err-msg{font-size:12px;color:var(--red);margin-top:8px;display:none}
+.modal-btn{
+  width:100%;padding:10px;background:var(--blue);color:#fff;border:none;
+  border-radius:4px;font-family:var(--sans);font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .15s;margin-top:4px;
+}
+.modal-btn:hover{background:#1557b0}
+.modal-note{font-size:12px;color:var(--text2);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:4px;margin-bottom:16px}
+#gh-log{font-size:13px;margin-top:12px;padding:0;min-height:0;line-height:1.6;color:var(--green)}
+#gh-log.err{color:var(--red)}
+
+/* ── EDIT TOOLBAR ── */
+#edit-bar{
+  display:none;position:fixed;top:0;left:0;right:0;
+  background:var(--white);border-bottom:2px solid var(--blue);
+  padding:8px 24px;z-index:1000;
+  flex-direction:column;gap:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+#edit-bar.open{display:flex}
+.bar-row{display:flex;align-items:center;gap:10px;width:100%}
+.bar-label{font-size:13px;font-weight:600;color:var(--blue);flex-shrink:0}
+.bar-sep{width:1px;height:22px;background:var(--border2);flex-shrink:0}
+.bar-btn{
+  padding:6px 12px;font-family:var(--sans);font-size:13px;font-weight:500;
+  border:none;border-radius:4px;cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.bar-save{background:var(--green-light);color:var(--green);border:1px solid #c6efce}
+.bar-save:hover{background:#c6efce}
+.bar-push{background:var(--blue);color:#fff}
+.bar-push:hover{background:#1557b0}
+.bar-exit{background:var(--white);color:var(--red);border:1px solid #f5c6c4}
+.bar-exit:hover{background:#fce8e6}
+.bar-fmt{font-weight:bold;background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+#bar-status{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── EDIT TOOLBAR EXTRA (MORE MENU) ── */
+.bar-extra {
+  display: none; 
+  padding-top: 12px;
+  border-top: 1px dashed var(--border2);
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.bar-extra.show {
+  display: flex; 
+}
+
+.bar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bar-select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.bar-select:focus {
+  border-color: var(--blue);
+}
+
+.bar-control {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar-color {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes scrollLeftToRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-kicker{animation:fadeUp .5s ease both}
+
+.hero-name{animation:fadeUp .5s .08s ease both}
+.hero-subtitle{animation:fadeUp .5s .14s ease both}
+.hero-bio{animation:fadeUp .5s .2s ease both}
+.hero-actions{animation:fadeUp .5s .26s ease both}
+.hero-photo-wrap{animation:fadeUp .5s .1s ease both}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  #hero{padding-top:var(--nav-h)}
+  .hero-inner{grid-template-columns:1fr;gap:32px}
+  .hero-photo-wrap{max-width:200px}
+  section{padding:52px 0}
+  .page-wrap{padding:0 16px}
+  .proj-grid,.ach-grid,.contact-cards{grid-template-columns:1fr}
+  .ach-grid{grid-template-columns:1fr 1fr}
+  footer{padding:16px 20px;flex-direction:column;gap:6px}
+  .field-2{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .ach-grid{grid-template-columns:1fr}
+  .hero-name{letter-spacing:-1px}
+}
+</style>
+</head>
+<body class="">
+
+<nav>
+  <a href="#cover" class="nav-logo" data-ed="" contenteditable="false">Wall of <span>Shame</span></a>
+  <ul class="nav-links">
+    <li><a href="#cover" class="active" data-ed="" contenteditable="false">Home</a></li>
+    <li><a href="#carousel" data-ed="" contenteditable="false">Old Shames</a></li>
+  </ul>
+</nav>
+
+<section id="cover">
+  <div class="page-wrap cover-inner">
+    <p class="section-label" data-ed="" contenteditable="false">Latest Shame</p>
+    <div class="cover-frame img-target" id="main-cover-frame" title="Click to upload a new shame when in Edit Mode">
+      <img id="main-cover-img" src="" alt="Latest Upload" class="cover-img">
+    </div>
+    <div class="cover-info">
+      <p class="cover-kicker" data-ed="" contenteditable="false">LATEST SHAME</p>
+      <div id="main-cover-desc" class="cover-desc" data-ed="" contenteditable="false">This is where the latest uploaded shame description will go.</div>
+    </div>
+  </div>
+</section>
+
+<section id="carousel">
+  <div class="page-wrap">
+    <p class="section-label">Wall of Shame</p>
+    <h2 class="section-title">Older Shames</h2>
+  </div>
+  <div class="carousel-container">
+    <div class="carousel-track" id="carousel-track">
+      <!-- Carousel cards will be dynamically injected here -->
+    </div>
+  </div>
+</section>
+
+<section id="gallery-manager">
+  <div class="page-wrap">
+    <div class="manager-header">
+      <h2 class="manager-title">✎ Wall of Shame Database Manager</h2>
+    </div>
+    <div class="manager-grid" id="manager-grid">
+      <!-- Manager cards will be dynamically injected here in Edit Mode -->
+    </div>
+  </div>
+</section>
+
+<!-- Our Static Gallery Database (Hidden source of truth) -->
+<div id="gallery-db" style="display: none;">
+  <div class="db-item" data-id="img-1">
+    <img class="db-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=600&amp;h=600&amp;q=80" alt="Shocked portrait">
+    <div class="db-desc">When you push directly to production on a Friday afternoon and break the build.</div>
+  </div>
+  <div class="db-item" data-id="img-2">
+    <img class="db-img" src="https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&amp;fit=crop&amp;w=600&amp;h=600&amp;q=80" alt="Regret portrait">
+    <div class="db-desc">Forgot to run unit tests locally and blamed the CI/CD server for failing.</div>
+  </div>
+  <div class="db-item" data-id="img-3">
+    <img class="db-img" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&amp;fit=crop&amp;w=600&amp;h=600&amp;q=80" alt="Awkward grin portrait">
+    <div class="db-desc">Our backend cluster microservices architecture after a 'super simple' hotfix.</div>
+  </div>
+</div>
+
+<section id="archive">
+  <div class="page-wrap">
+    <p class="section-label">All Shames</p>
+    <h2 class="section-title">The Complete Archive</h2>
+    <div class="archive-grid" id="archive-grid">
+      <!-- Archive cards will be dynamically injected here -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span data-ed="" contenteditable="false">© 2026 Wall of Shame</span>
+</footer>
+
+<div class="modal-backdrop" id="admin-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="admin-close">✕</button>
+    <div class="modal-title">Admin Login</div>
+    <div class="modal-sub">Sign in to unlock edit mode</div>
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="a-user" placeholder="Enter username" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="a-pass" placeholder="Enter password">
+    </div>
+    <div class="err-msg" id="a-err" style="display: none;">Incorrect username or password.</div>
+    <button class="modal-btn" id="a-login-btn">Sign In</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="gh-modal">
+  <div class="modal-box" style="width:480px">
+    <button class="modal-close" id="gh-close">✕</button>
+    <div class="modal-title">Push to GitHub</div>
+    <div class="modal-sub">Deploy your changes to <strong>Akash-Ahmed-CSE/Websites.github.io</strong></div>
+    <div class="field-2">
+      <div class="field">
+        <label>GitHub Username</label>
+        <input type="text" id="gh-user" value="Akash-Ahmed-CSE">
+      </div>
+      <div class="field">
+        <label>Repository</label>
+        <input type="text" id="gh-repo" value="Websites.github.io">
+      </div>
+    </div>
+    <div class="field">
+      <label>File Path in Repo</label>
+      <input type="text" id="gh-path" value="wos/index.html">
+    </div>
+    <div class="field">
+      <label>Personal Access Token (Classic, repo scope)</label>
+      <input type="password" id="gh-token" placeholder="ghp_XXXXXXXXXXXXXx">
+    </div>
+    <div class="field">
+      <label>Commit Message</label>
+      <input type="text" id="gh-msg" value="Update portfolio content">
+    </div>
+    <div class="modal-note">
+      ⚠ Token is never stored. Get it at: GitHub → Settings → Developer Settings → Personal Access Tokens (Classic) → Generate — tick the <strong>repo</strong> scope.
+    </div>
+    <button class="modal-btn" id="gh-push-btn">Push to GitHub →</button>
+    <div id="gh-log" class="">⟳ File found — encoding content…</div>
+  </div>
+</div>
+
+<div id="edit-bar" class="">
+  <div class="bar-row">
+    <span class="bar-label">✎ Edit Mode</span>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-save" id="bar-save">⬇ Save HTML</button>
+    <button class="bar-btn bar-save" id="bar-save-exit" style="background:var(--blue-light); color:var(--blue); border:1px solid var(--blue)">✓ Save &amp; Exit</button>
+    <button class="bar-btn bar-push" id="bar-push">⬆ Push</button>
+    <div class="bar-sep"></div>
+    <button class="bar-btn bar-fmt" title="Bold" onmousedown="event.preventDefault()" onclick="q('bold')">B</button>
+    <button class="bar-btn bar-fmt" style="font-style:italic" title="Italic" onmousedown="event.preventDefault()" onclick="q('italic')">I</button>
+    <button class="bar-btn bar-fmt" style="text-decoration:underline" title="Underline" onmousedown="event.preventDefault()" onclick="q('underline')">U</button>
+    <button class="bar-btn bar-fmt" id="toggle-extra" onmousedown="event.preventDefault()" title="More Tools">••• More</button>
+    <div class="bar-sep"></div>
+    <span id="bar-status">Click any text to edit · Click any image placeholder to upload</span>
+    <button class="bar-btn bar-exit" id="bar-exit">Exit</button>
+  </div>
+  
+  <div class="bar-extra show" id="edit-bar-extra">
+    <div class="bar-group">
+      <span class="bar-group-label">Theme Presets</span>
+      <select class="bar-select" onchange="applyThemePreset(this.value)">
+        <option value="default">Type A (Classic)</option>
+        <option value="dark">Type B (Dark)</option>
+        <option value="forest">Type C (Forest)</option>
+        <option value="berry">Type D (Berry)</option>
+      </select>
+      <button class="bar-btn bar-fmt" title="Shuffle Colors" onmousedown="event.preventDefault()" onclick="shuffleColors()">🎲 Shuffle</button>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Custom Palette</span>
+      <div class="bar-control" title="Global Background">
+        Bg <input type="color" id="theme-bg" class="bar-color" value="#f8f9fa" oninput="updateCustomTheme()">
+      </div>
+      <div class="bar-control" title="Global Text">
+        Text <input type="color" id="theme-text" class="bar-color" value="#202124" oninput="updateCustomTheme()">
+      </div>
+      <div class="bar-control" title="Primary Accent (Buttons/Links)">
+        Primary <input type="color" id="theme-primary" class="bar-color" value="#1a73e8" oninput="updateCustomTheme()">
+      </div>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Badge Status</span>
+      <select class="bar-select" onchange="updateBadge(this.value)">
+        <option value="open">Open to Work (Green)</option>
+        <option value="hiring">Hiring (Blue)</option>
+        <option value="urgent">Urgent (Red)</option>
+        <option value="none">None (Hide Badge)</option>
+      </select>
+    </div>
+    <div class="bar-sep"></div>
+    <div class="bar-group">
+      <span class="bar-group-label">Typography</span>
+      <select class="bar-select" onchange="q('fontName', this.value)">
+        <option value="'Inter', sans-serif">Inter (Sans)</option>
+        <option value="'Playfair Display', serif">Playfair (Serif)</option>
+        <option value="Arial, Helvetica, sans-serif">Arial</option>
+        <option value="'Courier New', Courier, monospace">Courier New</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+        <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+      </select>
+      <select class="bar-select" title="Font Size (1-7)" onchange="q('fontSize', this.value)">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected="">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Text Styles</span>
+      <div class="bar-control" title="Selected Text Color">Color <input type="color" class="bar-color" oninput="q('foreColor', this.value)"></div>
+      <div class="bar-control" title="Selected Text Highlight">Highlight <input type="color" class="bar-color" value="#ffffff" oninput="q('hiliteColor', this.value)"></div>
+    </div>
+
+    <div class="bar-sep"></div>
+
+    <div class="bar-group">
+      <span class="bar-group-label">Layout</span>
+      <button class="bar-btn bar-fmt" title="Align Left" onmousedown="event.preventDefault()" onclick="q('justifyLeft')">⇐</button>
+      <button class="bar-btn bar-fmt" title="Align Center" onmousedown="event.preventDefault()" onclick="q('justifyCenter')">⇔</button>
+      <button class="bar-btn bar-fmt" title="Align Right" onmousedown="event.preventDefault()" onclick="q('justifyRight')">⇒</button>
+      <button class="bar-btn bar-fmt" title="Bullet List" onmousedown="event.preventDefault()" onclick="q('insertUnorderedList')">• List</button>
+      <button class="bar-btn bar-fmt" title="Clear Formatting" onmousedown="event.preventDefault()" onclick="q('removeFormat')">⊗ Clear</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="img-input" accept="image/*" style="display:none">
+
+<script>
+// ═══════════════════════════
+// SCROLL REVEAL & NAV ACTIVE
+// ═══════════════════════════
+const secs = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+}, { passive: true });
+
+// ═══════════════════════════
+// ADMIN AUTH
+// ═══════════════════════════
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin';
+
+let isAdmin = false;
+let tapCount = 0, tapTimer = null;
+
+const adminModal = document.getElementById('admin-modal');
+
+function openAdminModal() {
+  adminModal.classList.add('open');
+  document.getElementById('a-user').focus();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'e') {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 1400);
+    if (tapCount >= 3) { e.preventDefault(); tapCount = 0; openAdminModal(); }
+  }
+  if (e.key === 'Enter') {
+    if (adminModal.classList.contains('open')) { doLogin(); return; }
+  }
+  if (e.key === 'Escape') {
+    adminModal.classList.remove('open');
+    document.getElementById('gh-modal')?.classList.remove('open');
+  }
+});
+
+document.getElementById('admin-close').addEventListener('click', () => adminModal.classList.remove('open'));
+adminModal.addEventListener('click', e => { if (e.target === adminModal) adminModal.classList.remove('open'); });
+document.getElementById('a-login-btn').addEventListener('click', doLogin);
+
+function doLogin() {
+  const u = document.getElementById('a-user').value.trim();
+  const p = document.getElementById('a-pass').value;
+  const errEl = document.getElementById('a-err');
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    isAdmin = true;
+    adminModal.classList.remove('open');
+    document.getElementById('a-user').value = '';
+    document.getElementById('a-pass').value = '';
+    enableEditMode();
+  } else {
+    errEl.style.display = 'block';
+    document.getElementById('a-pass').value = '';
+    document.getElementById('a-pass').focus();
+    setTimeout(() => { errEl.style.display = 'none'; }, 3000);
+  }
+}
+
+// ═══════════════════════════
+// EDIT MODE
+// ═══════════════════════════
+const editBar = document.getElementById('edit-bar');
+
+function setStatus(msg) { document.getElementById('bar-status').textContent = msg; }
+
+let lastFocused = null;
+document.addEventListener('focusin', e => {
+  if (e.target.dataset && e.target.hasAttribute('data-ed')) lastFocused = e.target;
+});
+
+function q(cmd, val = null) {
+  if (lastFocused) lastFocused.focus();
+  document.execCommand(cmd, false, val);
+}
+
+function updateBadge(type) {
+  const b = document.querySelector('.nav-badge');
+  if (!b) return;
+  b.className = 'nav-badge status-' + type;
+  if (type === 'open' && b.textContent === 'Hiring') b.textContent = 'Open to Work';
+  if (type === 'hiring' && b.textContent === 'Open to Work') b.textContent = 'Hiring';
+}
+
+const preventLink = (e) => e.preventDefault();
+
+function updateEditBarHeight() {
+  const h = document.getElementById('edit-bar').offsetHeight;
+  if (h > 0) document.documentElement.style.setProperty('--bar-h', h + 'px');
+}
+
+function enableEditMode() {
+  document.body.classList.add('edit-on');
+  document.getElementById('edit-bar').classList.add('open');
+  document.execCommand('styleWithCSS', false, true);
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    if (el.tagName === 'A') {
+      el.addEventListener('click', preventLink, { capture: true });
+    }
+  });
+  renderGallery(); // Re-render to build the active Gallery Manager grid
+  setStatus('Gallery Manager unlocked! Upload new images, delete, or click descriptions to edit.');
+  setTimeout(updateEditBarHeight, 50);
+}
+
+function disableEditMode() {
+  document.body.classList.remove('edit-on');
+  editBar.classList.remove('open');
+  document.documentElement.style.removeProperty('--bar-h');
+  document.querySelectorAll('[data-ed]').forEach(el => {
+    el.setAttribute('contenteditable', 'false');
+    if (el.tagName === 'A') {
+      el.removeEventListener('click', preventLink, { capture: true });
+    }
+  });
+  isAdmin = false;
+  renderGallery(); // Re-render to hide the Manager and freeze edits
+}
+
+document.getElementById('bar-exit').addEventListener('click', () => {
+  if (confirm('Exit edit mode? Unsaved changes will be lost.')) disableEditMode();
+});
+
+document.getElementById('toggle-extra').addEventListener('click', (e) => {
+  document.getElementById('edit-bar-extra').classList.toggle('show');
+  setTimeout(updateEditBarHeight, 50);
+});
+
+document.querySelectorAll('[data-ed]').forEach(el => {
+  el.addEventListener('input', () => setStatus('Unsaved changes — click Save or Push to GitHub'));
+});
+
+// ═══════════════════════════
+// THEME SYSTEM
+// ═══════════════════════════
+const themePresets = {
+  default: { bg: '#f8f9fa', text: '#202124', primary: '#1a73e8', surface: '#ffffff' },
+  dark: { bg: '#121212', text: '#e8eaed', primary: '#8ab4f8', surface: '#202124' },
+  forest: { bg: '#f1f8e9', text: '#1b5e20', primary: '#2e7d32', surface: '#ffffff' },
+  berry: { bg: '#fff5f8', text: '#4a0e0e', primary: '#d81b60', surface: '#ffffff' }
+};
+
+function applyThemePreset(name) {
+  const t = themePresets[name];
+  if (!t) return;
+  const root = document.documentElement;
+  root.style.setProperty('--bg', t.bg);
+  root.style.setProperty('--text', t.text);
+  root.style.setProperty('--blue', t.primary);
+  root.style.setProperty('--white', t.surface);
+  root.style.setProperty('--surface', t.surface);
+  document.getElementById('theme-bg').value = t.bg;
+  document.getElementById('theme-text').value = t.text;
+  document.getElementById('theme-primary').value = t.primary;
+  setStatus('Theme applied: ' + name);
+}
+
+function updateCustomTheme() {
+  const bg = document.getElementById('theme-bg').value, txt = document.getElementById('theme-text').value, pri = document.getElementById('theme-primary').value;
+  const root = document.documentElement;
+  root.style.setProperty('--bg', bg);
+  root.style.setProperty('--text', txt);
+  root.style.setProperty('--blue', pri);
+  root.style.setProperty('--white', bg);
+  root.style.setProperty('--surface', bg);
+  setStatus('Custom theme applied');
+}
+
+function shuffleColors() {
+  const palettes = [
+    { bg: '#0a0b10', text: '#f8fafc', primary: '#00e676', surface: '#11121a' }, // Cyber Terminal (Neon Green)
+    { bg: '#0d0d0d', text: '#e2e8f0', primary: '#ff1744', surface: '#1a1a1a' }, // Incident Code Red
+    { bg: '#f1f5f9', text: '#1e293b', primary: '#0ea5e9', surface: '#ffffff' }, // Nordic Slate
+    { bg: '#1e1e2f', text: '#f8f8f2', primary: '#ff79c6', surface: '#282a36' }, // Dracula Dark (Pink)
+    { bg: '#0f172a', text: '#f8fafc', primary: '#38bdf8', surface: '#1e293b' }, // Midnight Steel (Cyan)
+    { bg: '#fafaf9', text: '#1c1917', primary: '#d97706', surface: '#ffffff' }, // Saffron Amber Gold
+    { bg: '#f4f6f0', text: '#1c2813', primary: '#556b2f', surface: '#ffffff' }, // Mossy Defect Green
+    { bg: '#050c0e', text: '#e0f2f1', primary: '#00bfa5', surface: '#0b1a1c' }  // Obsidian Teal
+  ];
+  const p = palettes[Math.floor(Math.random() * palettes.length)];
+  
+  const root = document.documentElement;
+  root.style.setProperty('--bg', p.bg);
+  root.style.setProperty('--text', p.text);
+  root.style.setProperty('--blue', p.primary);
+  root.style.setProperty('--white', p.surface);
+  root.style.setProperty('--surface', p.surface);
+  
+  document.getElementById('theme-bg').value = p.bg;
+  document.getElementById('theme-text').value = p.text;
+  document.getElementById('theme-primary').value = p.primary;
+  
+  setStatus('Professional dashboard theme preset applied! 🎲');
+}
+
+// ═══════════════════════════
+// GALLERY ENGINE (DOM DATABASE DRIVEN)
+// ═══════════════════════════
+let uploadMode = null; // 'new' or 'replace'
+let targetReplaceId = null;
+const imgInput = document.getElementById('img-input');
+
+function renderGallery() {
+  const dbItems = Array.from(document.querySelectorAll('#gallery-db .db-item'));
+  const coverImg = document.getElementById('main-cover-img');
+  const coverDesc = document.getElementById('main-cover-desc');
+  const track = document.getElementById('carousel-track');
+  
+  if (dbItems.length === 0) {
+    coverImg.src = 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=800&q=80';
+    coverDesc.textContent = 'Welcome to my gallery. Log in as Admin to upload some stunning images!';
+    track.innerHTML = '<div style="color:var(--text3); padding:40px; font-size:14px; width:100%; text-align:center;">No older moments yet. Upload more to fill the collection!</div>';
+    
+    if (isAdmin) renderManagerGrid([]);
+    return;
+  }
+  
+  // 1. Render Cover Photo (First element is the latest)
+  const latestItem = dbItems[0];
+  coverImg.src = latestItem.querySelector('.db-img').src;
+  coverDesc.innerHTML = latestItem.querySelector('.db-desc').innerHTML;
+  
+  // Set contenteditable dynamically based on admin state
+  if (isAdmin) {
+    coverDesc.setAttribute('contenteditable', 'true');
+    coverDesc.addEventListener('click', preventLink, { capture: true });
+  } else {
+    coverDesc.setAttribute('contenteditable', 'false');
+  }
+  
+  // 2. Render Bottom Carousel Track (Elements 1 to N)
+  const olderItems = dbItems.slice(1);
+  track.innerHTML = '';
+  
+  if (olderItems.length === 0) {
+    track.innerHTML = '<div style="color:var(--text3); padding:40px; font-size:14px; width:100%; text-align:center;">No older showcases yet. Go ahead and add some!</div>';
+  } else {
+    // Helper function to build a carousel card
+    const buildCarouselCard = (dbItem) => {
+      const card = document.createElement('div');
+      card.className = 'carousel-card';
+      
+      const img = document.createElement('img');
+      img.src = dbItem.querySelector('.db-img').src;
+      img.alt = 'Showcase';
+      
+      const desc = document.createElement('div');
+      desc.className = 'carousel-card-desc';
+      desc.innerHTML = dbItem.querySelector('.db-desc').innerHTML;
+      
+      card.appendChild(img);
+      card.appendChild(desc);
+      return card;
+    };
+    
+    // Duplicate cards sufficiently to ensure a seamless infinite scroll loop on wide screens
+    let totalSet = [];
+    const repeatCount = Math.max(3, Math.ceil(12 / olderItems.length));
+    for (let i = 0; i < repeatCount; i++) {
+      totalSet = totalSet.concat(olderItems);
+    }
+    totalSet.forEach(dbItem => {
+      track.appendChild(buildCarouselCard(dbItem));
+    });
+  }
+  
+  // 3. Render Bottom Archive Grid (All elements in 4-column layout)
+  const archiveGrid = document.getElementById('archive-grid');
+  if (archiveGrid) {
+    archiveGrid.innerHTML = '';
+    const buildArchiveCard = (dbItem) => {
+      const card = document.createElement('div');
+      card.className = 'archive-card';
+      
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'archive-card-img-wrap';
+      
+      const img = document.createElement('img');
+      img.src = dbItem.querySelector('.db-img').src;
+      img.alt = 'Archive Showcase';
+      
+      imgWrap.appendChild(img);
+      
+      const desc = document.createElement('div');
+      desc.className = 'archive-card-desc';
+      desc.innerHTML = dbItem.querySelector('.db-desc').innerHTML;
+      
+      card.appendChild(imgWrap);
+      card.appendChild(desc);
+      return card;
+    };
+    
+    dbItems.forEach(dbItem => {
+      archiveGrid.appendChild(buildArchiveCard(dbItem));
+    });
+  }
+  
+  // 4. Render Admin Manager if in Edit Mode
+  if (isAdmin) {
+    renderManagerGrid(dbItems);
+  }
+}
+
+function renderManagerGrid(dbItems) {
+  const grid = document.getElementById('manager-grid');
+  grid.innerHTML = '';
+  
+  dbItems.forEach(item => {
+    const id = item.dataset.id;
+    const src = item.querySelector('.db-img').src;
+    const descText = item.querySelector('.db-desc').innerHTML;
+    
+    const card = document.createElement('div');
+    card.className = 'manager-card';
+    card.dataset.id = id;
+    
+    // Del btn
+    const del = document.createElement('button');
+    del.className = 'manager-card-del';
+    del.innerHTML = '✕';
+    del.title = 'Delete Image';
+    del.onclick = (e) => {
+      e.stopPropagation();
+      deleteImage(id);
+    };
+    
+    // Image wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'manager-img-wrapper';
+    wrapper.onclick = () => triggerReplaceUpload(id);
+    
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Gallery manager preview';
+    
+    wrapper.appendChild(img);
+    
+    // Description text box
+    const desc = document.createElement('div');
+    desc.className = 'manager-desc';
+    desc.innerHTML = descText;
+    desc.setAttribute('contenteditable', 'true');
+    desc.setAttribute('data-ed', 'true');
+    desc.placeholder = 'Type short description here...';
+    
+    card.appendChild(del);
+    card.appendChild(wrapper);
+    card.appendChild(desc);
+    
+    grid.appendChild(card);
+  });
+}
+
+// Global Image Upload trigger functions
+function triggerNewUpload() {
+  uploadMode = 'new';
+  imgInput.click();
+}
+
+function triggerReplaceUpload(id) {
+  uploadMode = 'replace';
+  targetReplaceId = id;
+  imgInput.click();
+}
+
+imgInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const base64 = ev.target.result;
+    const db = document.getElementById('gallery-db');
+    
+    if (uploadMode === 'new') {
+      const newId = 'img-' + Date.now();
+      const newItem = document.createElement('div');
+      newItem.className = 'db-item';
+      newItem.dataset.id = newId;
+      
+      const img = document.createElement('img');
+      img.className = 'db-img';
+      img.src = base64;
+      
+      const desc = document.createElement('div');
+      desc.className = 'db-desc';
+      desc.innerHTML = 'New team shame details. Click here to edit.';
+      
+      newItem.appendChild(img);
+      newItem.appendChild(desc);
+      
+      // Prepend to database so it shows as the latest (Cover)
+      db.insertBefore(newItem, db.firstChild);
+      setStatus('New image uploaded successfully! It is now the Cover Photo.');
+    } else if (uploadMode === 'replace' && targetReplaceId) {
+      const targetItem = document.querySelector(`#gallery-db .db-item[data-id="${targetReplaceId}"]`);
+      if (targetItem) {
+        targetItem.querySelector('.db-img').src = base64;
+        setStatus('Image replaced successfully.');
+      }
+    }
+    
+    uploadMode = null;
+    targetReplaceId = null;
+    renderGallery();
+  };
+  reader.readAsDataURL(file);
+  imgInput.value = '';
+});
+
+function deleteImage(id) {
+  if (!confirm('Are you sure you want to delete this gallery item? This action is irreversible.')) return;
+  const item = document.querySelector(`#gallery-db .db-item[data-id="${id}"]`);
+  if (item) {
+    item.remove();
+    setStatus('Gallery item deleted.');
+    renderGallery();
+  }
+}
+
+// Bidirectional dynamic input syncing
+document.addEventListener('input', e => {
+  if (e.target.id === 'main-cover-desc') {
+    const firstDbItem = document.querySelector('#gallery-db .db-item');
+    if (firstDbItem) {
+      firstDbItem.querySelector('.db-desc').innerHTML = e.target.innerHTML;
+      const managerCard = document.querySelector(`.manager-card[data-id="${firstDbItem.dataset.id}"]`);
+      if (managerCard) managerCard.querySelector('.manager-desc').innerHTML = e.target.innerHTML;
+    }
+    setStatus('Unsaved changes — click Save or Push to GitHub');
+  }
+  if (e.target.classList.contains('manager-desc')) {
+    const card = e.target.closest('.manager-card');
+    if (card) {
+      const dbItem = document.querySelector(`#gallery-db .db-item[data-id="${card.dataset.id}"]`);
+      if (dbItem) {
+        dbItem.querySelector('.db-desc').innerHTML = e.target.innerHTML;
+        // If this is the latest item (first card), update main cover photo desc
+        const firstDbItem = document.querySelector('#gallery-db .db-item');
+        if (firstDbItem && firstDbItem.dataset.id === card.dataset.id) {
+          document.getElementById('main-cover-desc').innerHTML = e.target.innerHTML;
+        }
+      }
+    }
+    setStatus('Unsaved changes — click Save or Push to GitHub');
+  }
+});
+
+// Run engine on page load
+renderGallery();
+
+// Cover image click-to-upload in edit mode
+document.getElementById('main-cover-frame').addEventListener('click', (e) => {
+  if (!isAdmin) return;
+  e.stopPropagation();
+  triggerNewUpload();
+});
+
+// ═══════════════════════════
+// CLEAN HTML FOR EXPORT
+// ═══════════════════════════
+function getCleanHTML() {
+  const clone = document.documentElement.cloneNode(true);
+
+  const cleanup = (selector, cls) => {
+    const el = clone.querySelector(selector);
+    if (el) el.classList.remove(cls);
+  };
+
+  cleanup('body', 'edit-on');
+  cleanup('#admin-modal', 'open');
+  cleanup('#gh-modal', 'open');
+  cleanup('#edit-bar', 'open');
+
+  clone.querySelectorAll('[contenteditable]').forEach(el => el.setAttribute('contenteditable', 'false'));
+  clone.querySelectorAll('input[type=password]').forEach(el => {
+    if (el.id !== 'gh-token') el.value = '';
+  });
+  clone.querySelectorAll('.img-del-btn').forEach(el => el.remove());
+  clone.querySelectorAll('.chip-ctrl-btn').forEach(el => el.remove());
+  
+  const badge = clone.querySelector('.nav-badge');
+  if (badge && badge.classList.contains('status-none')) {
+    badge.remove();
+  }
+  return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
+// ═══════════════════════════
+// SAVE LOCALLY
+// ═══════════════════════════
+document.getElementById('bar-save').addEventListener('click', () => {
+  const blob = new Blob([getCleanHTML()], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+  setStatus('Saved as index.html ✓');
+});
+
+document.getElementById('bar-save-exit').addEventListener('click', () => {
+  disableEditMode();
+});
+
+// ═══════════════════════════
+// GITHUB PUSH
+// ═══════════════════════════
+const ghModal = document.getElementById('gh-modal');
+const ghLog   = document.getElementById('gh-log');
+
+document.getElementById('bar-push').addEventListener('click', () => {
+  ghModal.classList.add('open');
+  ghLog.textContent = '';
+  ghLog.className = '';
+});
+document.getElementById('gh-close').addEventListener('click', () => ghModal.classList.remove('open'));
+ghModal.addEventListener('click', e => { if (e.target === ghModal) ghModal.classList.remove('open'); });
+
+document.getElementById('gh-push-btn').addEventListener('click', async () => {
+  const username = document.getElementById('gh-user').value.trim();
+  const repo     = document.getElementById('gh-repo').value.trim();
+  const path     = document.getElementById('gh-path').value.trim();
+  const token    = document.getElementById('gh-token').value.trim();
+  const message  = document.getElementById('gh-msg').value.trim() || 'Update portfolio';
+
+  if (!username || !repo || !token) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Please fill in username, repository, and token.';
+    return;
+  }
+
+  const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+
+  ghLog.className = '';
+  ghLog.textContent = '⟳ Checking file on GitHub…';
+  let sha = null;
+  try {
+    const res = await fetch(apiUrl, { headers });
+    if (res.ok) {
+      const data = await res.json();
+      sha = data.sha;
+      ghLog.textContent = '⟳ File found — encoding content…';
+    } else if (res.status === 404) {
+      ghLog.textContent = '⟳ New file — encoding content…';
+    } else {
+      const data = await res.json();
+      throw new Error(data.message || ('HTTP ' + res.status));
+    }
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ ' + err.message;
+    return;
+  }
+
+  let encoded;
+  try {
+    encoded = btoa(unescape(encodeURIComponent(getCleanHTML())));
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Encoding error: ' + err.message;
+    return;
+  }
+
+  ghLog.textContent = '⟳ Pushing to GitHub…';
+  const body = { message, content: encoded };
+  if (sha) body.sha = sha;
+
+  try {
+    const res = await fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (res.ok) {
+      ghLog.className = '';
+      const base = username.toLowerCase().endsWith('.github.io')
+        ? `https://${username}`
+        : `https://${username}.github.io/${repo}`;
+      ghLog.textContent = `✓ Pushed! Live soon at: ${base}/myProfileTemplate/`;
+      setStatus('Pushed to GitHub ✓');
+      setTimeout(() => ghModal.classList.remove('open'), 4000);
+    } else {
+      const data = await res.json();
+      throw new Error(data.message || ('HTTP ' + res.status));
+    }
+  } catch (err) {
+    ghLog.className = 'err';
+    ghLog.textContent = '✗ Push failed: ' + err.message;
+  }
+});
+</script>
+
+
+</body></html>
