@@ -1307,9 +1307,13 @@ document.getElementById('gh-push-btn').addEventListener('click', async () => {
   }
 
   const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+  
+  // High-powered compatibility support for both classic and fine-grained PATs
+  const authHeader = token.startsWith('github_pat_') ? 'Bearer ' + token : 'token ' + token;
   const headers = {
-    'Authorization': 'Bearer ' + token,
-    'Accept': 'application/vnd.github.v3+json',
+    'Authorization': authHeader,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
     'Content-Type': 'application/json'
   };
 
@@ -1330,13 +1334,17 @@ document.getElementById('gh-push-btn').addEventListener('click', async () => {
     }
   } catch (err) {
     ghLog.className = 'err';
-    ghLog.textContent = '✗ ' + err.message;
+    ghLog.textContent = '✗ Check failed: ' + err.message;
     return;
   }
 
+  // Robust modern MDN Unicode-safe Base64 encoder (prevents crashes with emoji/unicode symbols)
   let encoded;
   try {
-    encoded = btoa(unescape(encodeURIComponent(getCleanHTML())));
+    const cleanHtml = getCleanHTML();
+    encoded = btoa(encodeURIComponent(cleanHtml).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+      return String.fromCharCode(parseInt(p1, 16));
+    }));
   } catch (err) {
     ghLog.className = 'err';
     ghLog.textContent = '✗ Encoding error: ' + err.message;
@@ -1354,9 +1362,15 @@ document.getElementById('gh-push-btn').addEventListener('click', async () => {
       const base = username.toLowerCase().endsWith('.github.io')
         ? `https://${username}`
         : `https://${username}.github.io/${repo}`;
-      ghLog.textContent = `✓ Pushed! Live soon at: ${base}/myProfileTemplate/`;
+      
+      // Calculate directory path dynamically so it points to /wos/ instead of hardcoded old templates
+      const lastSlashIdx = path.lastIndexOf('/');
+      const dirPath = lastSlashIdx !== -1 ? path.substring(0, lastSlashIdx) : '';
+      const liveUrl = dirPath ? `${base}/${dirPath}/` : `${base}/`;
+      
+      ghLog.textContent = `✓ Pushed! Live soon at: ${liveUrl}`;
       setStatus('Pushed to GitHub ✓');
-      setTimeout(() => ghModal.classList.remove('open'), 4000);
+      setTimeout(() => ghModal.classList.remove('open'), 5000);
     } else {
       const data = await res.json();
       throw new Error(data.message || ('HTTP ' + res.status));
